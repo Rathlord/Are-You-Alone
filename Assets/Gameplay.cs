@@ -477,7 +477,6 @@ public class Gameplay : MonoBehaviour {
         {
             if (input == "yes")
             {
-                RefreshScreen();
                 MainScreen();
             }
             else
@@ -1066,7 +1065,6 @@ public class Gameplay : MonoBehaviour {
     void GirlList()
     {
         Terminal.WriteLine("You have a friend.");
-        AddSpace();
         if (Lina == true)
         {
             Terminal.WriteLine("You know Lina");
@@ -1115,27 +1113,14 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("What would your like your character name to be?");
     }
 
-    void RefreshScreen()
-    {
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-        Terminal.WriteLine("Test");
-    }
-
-    void Temp()  //holding stupid refreshscreen shit
+    void RefreshScreen() 
     {
         Terminal.ClearScreen();
-        Terminal.WriteLine(" ");
-        Terminal.WriteLine("Are You Alone?     Current Money: " + money + "       Current Spoons: " + spoons);
-        Terminal.WriteLine("Type 'home' to get back to the home screen at any time.  ");
+        AddSpace();
+        Terminal.WriteLine("Are You Alone?            Current Money: " + money + "           Current Spoons: " + spoons);
+        Terminal.WriteLine("           Type 'home' to get back to the home screen at any time.  ");
+        Terminal.WriteLine("------------------------------------------------------------------------");
+        AddSpace();
     }
 
     void AddSpace() //Quick Method for adding spaces

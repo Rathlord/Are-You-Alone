@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4027389112089032}
-  - component: {fileID: 114726168226683580}
+  - component: {fileID: 114768594534027812}
   m_Layer: 0
   m_Name: WM2000
   m_TagString: Untagged
@@ -389,7 +389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectedToTerminal: {fileID: 114578242904794280}
   charactersWide: 90
-  charactersHigh: 12
+  charactersHigh: 24
 --- !u!114 &114511547698080430
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -494,7 +494,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114726168226683580
+--- !u!114 &114768594534027812
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -509,7 +509,7 @@ MonoBehaviour:
   character: default
   turn: 0
   money: 25
-  dailyRand: 19
+  dailyRand: 0
   focus: 50
   happiness: 50
   pride: 50
@@ -549,10 +549,26 @@ MonoBehaviour:
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 0
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Hit Play or Ctrl+P to turn me on.
+  m_Text: 'Hit Play or Ctrl+P to turn me on.
+
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque consequat
+    porta nunc porta laoreet. Nam tempor orci consequat ipsum volutpat, non tristique
+    neque viverra. Aenean sit amet sagittis lacus. Proin eu semper mi, ut tincidunt
+    dolor. Integer tortor felis, mollis vitae quam in, efficitur porta enim. Proin
+    sit amet commodo augue, accumsan mollis mi. Duis aliquam in diam sed tincidunt.
+    Aliquam ultrices eget ipsum at efficitur. Integer orci est, condimentum nec facilisis
+    ac, rutrum eu ex. Nullam sodales leo id bibendum dictum. Lorem ipsum dolor sit
+    amet, consectetur adipiscing elit. Pellentesque consequat porta nunc porta laoreet.
+    Nam tempor orci consequat ipsum volutpat, non tristique neque viverra. Aenean
+    sit amet sagittis lacus. Proin eu semper mi, ut tincidunt dolor. Integer tortor
+    felis, mollis vitae quam in, efficitur porta enim. Proin sit amet commodo augue,
+    accumsan mollis mi. Duis aliquam in diam sed tincidunt. Aliquam ultrices eget
+    ipsum at efficitur. Integer orci est, condimentum nec facilisis ac, rutrum eu
+    ex. Nullam sodales leo id bibendum dictum.'
 --- !u!222 &222462908678986682
 CanvasRenderer:
   m_ObjectHideFlags: 1
