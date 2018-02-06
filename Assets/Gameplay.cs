@@ -56,6 +56,7 @@ public class Gameplay : MonoBehaviour {
     int yesterdayStress;
     int yesterdayHappiness;
     int yesterdayPride;
+    bool employedYesterday;
 
     // List of girls to know
 
@@ -79,6 +80,7 @@ public class Gameplay : MonoBehaviour {
         yesterdayStress = stress;
         yesterdayPride = pride;
         yesterdayHappiness = happiness;
+        employedYesterday = false;
     }
 
     void MainScreen()
@@ -130,6 +132,14 @@ public class Gameplay : MonoBehaviour {
         yesterdayStress = stress;
         yesterdayHappiness = happiness;
         yesterdayPride = pride;
+        if (employed == true)
+        {
+            employedYesterday = true;
+        }
+        else
+        {
+            employedYesterday = false;
+        }
     }
 
     void Night()
@@ -160,11 +170,11 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.NightStats;
         RefreshScreen();
-        if (schoolDay == true && schooledToday == false && school == true)
+        if (schoolDay == true && schooledToday == false && school == true && enrolledInSchoolYesterday == true)
         {
             Terminal.WriteLine("You skipped school today. Hopefully there aren't any consequences...");
         }
-        if (workDay == true && workedToday == false && employed == true)
+        if (workDay == true && workedToday == false && employed == true && employedYesterday == true)
         {
             Terminal.WriteLine("You skipped work today. Better not do that too often...");
         }
@@ -325,7 +335,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentHouse == House.Parents)
         {
-            Terminal.WriteLine("You're living with your parents. It's free, but makes you unhappy.");
+            Terminal.WriteLine("You're living with your parents. It's free, but not good for you.");
             happiness = (happiness - 3);
             stress = (stress - 3);
             pride = (pride - 5);
@@ -488,11 +498,11 @@ public class Gameplay : MonoBehaviour {
 
     void Abscences() // Checks if the player showed up to work/school and fires them if they've missed too much
     {
-        if (workedToday == false && workDay == true)
+        if (workedToday == false && workDay == true && employedYesterday == true)
         {
             workAbscence++;
         }
-        if (schooledToday == false && schoolDay == false)
+        if (schooledToday == false && schoolDay == false &&)
         {
             schoolAbscence++;
         }
