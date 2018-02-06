@@ -9,14 +9,17 @@ public class Gameplay : MonoBehaviour {
 
     [SerializeField] int spoons = 3;
     [SerializeField] string character = "default";
-    enum Screen { Tutorial, Gameplay, Night, Gameover };
+    enum Screen { Tutorial, Gameplay, Night, NightStats, Gameover };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
-    bool schoolDay = false;
+    bool schoolDay = true;
     bool workDay = false;
     bool workedToday;
     bool schooledToday;
+    int dailyExpenses = 1;
+    int housingExpenses;
+    int totalExpenses;
 
     // Special value, daily random number, impacts many things
 
@@ -128,7 +131,10 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.Night;
         RefreshScreen();
+        totalExpenses = (dailyExpenses + housingExpenses);
         AddSpace();
+        Terminal.WriteLine("Your expense for the day is -" + totalExpenses + "$");
+        money = (money - totalExpenses);
         KickedOutCheck();
         AddSpace();
         HousingCheck();
@@ -137,6 +143,13 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         FulfillmentCheck();
         AddSpace();
+        Terminal.WriteLine("Write 'next' to proceed");
+    }
+
+    void NightStats()
+    {
+        currentScreen = Screen.NightStats;
+        RefreshScreen();
         int picker = UnityEngine.Random.Range(0, 4);
         string[] happinessGreat = { "You feel ecstatic", "You fall asleep with a big grin", "You feel like partying!", "Today was an awesome day" };
         string[] happinessGood = { "You feel happier", "This was a good day", "You fall asleep with a slight smile", "You're feeling good" };
@@ -155,6 +168,7 @@ public class Gameplay : MonoBehaviour {
         PrideCheck(picker, prideGreat, prideGood, prideBad, prideTerrible);
         AddSpace();
         ImprovementCheck();
+        AddSpace();
         Terminal.WriteLine("Write 'next' to continue to a new day.");
     }
 
@@ -184,7 +198,7 @@ public class Gameplay : MonoBehaviour {
         RefreshScreen();
         Terminal.WriteLine("The goal of the game is to balance your character and be happy.");
         Terminal.WriteLine("You may game over if you become too unhappy.");
-        Terminal.WriteLine("If your stress gets too low you won't be able to do things.");
+        Terminal.WriteLine("If your stress gets too high you won't be able to do things.");
         Terminal.WriteLine("If you aren't proud of yourself, you won't take care of yourself.");
         AddSpace();
         Terminal.WriteLine("Increase your happiness by doing things you enjoy.");
@@ -278,14 +292,16 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness - 20);
             stress = (stress - 10);
             pride = (pride - 20);
+            housingExpenses = 0;
         }
         if (currentHouse == House.Friend)
         {
-            Terminal.WriteLine("You're crashing with a friend. It's free, but makes him unhappy.");
+            Terminal.WriteLine("You're crashing with a friend. It's cheap, but makes him unhappy.");
             happiness = (happiness + 1);
             stress = (stress - 2);
             pride = (pride - 3);
             friendAttitude = (friendAttitude - 4);
+            housingExpenses = 1;
         }
         if (currentHouse == House.Parents)
         {
@@ -294,6 +310,7 @@ public class Gameplay : MonoBehaviour {
             stress = (stress - 3);
             pride = (pride - 5);
             parentsAttitude = (parentsAttitude - 2);
+            housingExpenses = 0;
         }
         if (currentHouse == House.Rent)
         {
@@ -301,6 +318,7 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness + 3);
             stress = (stress - 1);
             pride = (pride + 5);
+            housingExpenses = 3;
         }
     }
 
@@ -527,6 +545,13 @@ public class Gameplay : MonoBehaviour {
         {
             if (input == "next")
             {
+                NightStats();
+            }
+        }
+        else if (currentScreen == Screen.NightStats)
+        {
+            if (input == "next")
+            {
                 Morning();
             }
         }
@@ -546,26 +571,70 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("online");
         }
+        else
+        {
+            Terminal.WriteLine("*Already went online today*");
+        }
         if (friendToday == false)
         {
             Terminal.WriteLine("friend");
         }
+        else
+        {
+            Terminal.WriteLine("*Already interacted with your friend today*");
+        }
         Terminal.WriteLine("jobsearch");
-        if (school == true)
+        if (school == true && schoolDay == true && schooledToday == false)
         {
             Terminal.WriteLine("school");
+        }
+        else if (school == false)
+        {
+            Terminal.WriteLine("*You dropped out of school*");
+        }
+        else if (schooledToday == true)
+        {
+            Terminal.WriteLine("*You're done with school for today*");
+        }
+        else
+        {
+            Terminal.WriteLine("*No school today*");
         }
         if (knownGirls > 0)
         {
             Terminal.WriteLine("flirt");
         }
-        if ((girlfriend == true || knownGirls > 0) && money > 0)
+        else
+        {
+            Terminal.WriteLine("*You don't know anyone to flirt with*");
+        }
+        if ((girlfriend == true || knownGirls > 0) && money > 3)
         {
             Terminal.WriteLine("date");
         }
-        if (employed == true  && workedToday == false)
+        else if (money < 4)
+        {
+            Terminal.WriteLine("*You can't afford to go on a date*");
+        }
+        else
+        {
+            Terminal.WriteLine("*You don't know anyone to take on a date*");
+        }
+        if (employed == true  && workedToday == false && workDay == true)
         {
             Terminal.WriteLine("work");
+        }
+        else if (employed == false)
+        {
+            Terminal.WriteLine("*You don't have a job*");
+        }
+        else if (workedToday == true)
+        {
+            Terminal.WriteLine("*You already worked today*");
+        }
+        else
+        {
+            Terminal.WriteLine("*You're not scheduled to work today*");
         }
         AddSpace();  
     }
@@ -592,7 +661,7 @@ public class Gameplay : MonoBehaviour {
             JobSearch();
             spoons--;
         }
-        if (input == "school" && school == true)
+        if (input == "school" && school == true && schoolDay == true && schooledToday == false)
         {
             School();
             spoons--;
@@ -607,7 +676,7 @@ public class Gameplay : MonoBehaviour {
             Date();
             spoons--;
         }
-        if (input == "work" && employed == true && workedToday == false)
+        if (input == "work" && employed == true && workedToday == false && workDay == true)
         {
             Work();
             spoons--;
@@ -1166,27 +1235,11 @@ public class Gameplay : MonoBehaviour {
         throw new NotImplementedException();
     }
 
-    void EnterName(string input)
-    {
-        character = input;
-        AddSpace();
-        Terminal.WriteLine("Name: " + input);
-        Terminal.WriteLine("Type 'yes' to accept this name or enter another name");
-    }
-
-    void DisplayIntro()
-    {
-        AddSpace();
-        Terminal.WriteLine("Welcome to 'Are You Alone'"); // Ask about tutorial later
-        AddSpace();
-        Terminal.WriteLine("What would your like your character name to be?");
-    }
-
     void RefreshScreen() 
     {
         Terminal.ClearScreen();
         AddSpace();
-        Terminal.WriteLine("Are You Alone?            Current Money: " + money + "           Current Spoons: " + spoons);
+        Terminal.WriteLine("Are You Alone?            Current Money: " + money +"$           Current Spoons: " + spoons);
         Terminal.WriteLine("           Type 'home' to get back to the home screen at any time.  ");
         Terminal.WriteLine("------------------------------------------------------------------------");
         AddSpace();
