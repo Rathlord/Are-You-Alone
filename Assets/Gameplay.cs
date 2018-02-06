@@ -125,7 +125,6 @@ public class Gameplay : MonoBehaviour {
         spoons = 3;
         CheckDays();
         dailyRand = UnityEngine.Random.Range(0, 101);
-        Abscences();
         Attitudes();
         Invoke("MainScreen", 3f);
         yesterdayStress = stress;
@@ -143,9 +142,9 @@ public class Gameplay : MonoBehaviour {
         money = (money - totalExpenses);
         if (employed == true && workDay == true && workedToday == true)
         {
-            Terminal.WriteLine("You earned" +earnings + "$ today.");
+            Terminal.WriteLine("You earned " + earnings + "$ today.");
+            money = (money + earnings);
         }
-        money = (money + earnings);
         KickedOutCheck();
         AddSpace();
         HousingCheck();
@@ -189,6 +188,7 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         ImprovementCheck();
         AddSpace();
+        Abscences();
         Terminal.WriteLine("Write 'next' to continue to a new day.");
     }
 
@@ -497,6 +497,8 @@ public class Gameplay : MonoBehaviour {
             schoolAbscence++;
         }
         AddSpace();
+        workedToday = false;
+        schooledToday = false;
         if (workAbscence > 5)
         {
             Terminal.WriteLine("You get fired for not showing up to work!");
@@ -562,7 +564,7 @@ public class Gameplay : MonoBehaviour {
         {
             InputManager(input);
         }
-        else if (input != "home" && currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
+        else if (currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
         {
             RefreshScreen();
             Terminal.WriteLine("You can't do that, you're all out of spoons!");
@@ -648,7 +650,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*You dropped out of school*");
         }
-        else if (schooledToday == true)
+        else if (schooledToday == true && schoolDay == true)
         {
             Terminal.WriteLine("*You're done with school for today*");
         }
@@ -684,7 +686,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*You don't have a job*");
         }
-        else if (workedToday == true)
+        else if (workedToday == true && workDay == true)
         {
             Terminal.WriteLine("*You already worked today*");
         }
@@ -1164,6 +1166,7 @@ public class Gameplay : MonoBehaviour {
     void JobSearch()
     {
         RefreshScreen();
+        dailyRand = UnityEngine.Random.Range(0, 101);
         Terminal.WriteLine("You search for a job...");
         if (dailyRand == 100)
         {
