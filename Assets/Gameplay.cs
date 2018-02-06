@@ -9,7 +9,7 @@ public class Gameplay : MonoBehaviour {
 
     [SerializeField] int spoons = 3;
     [SerializeField] string character = "default";
-    enum Screen { Tutorial, Gameplay, Night, NightStats, Gameover };
+    enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -567,6 +567,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("You can do the following:");
         AddSpace();
         Terminal.WriteLine("hobby");
+        Terminal.WriteLine("move");
         if (onlineToday == false)
         {
             Terminal.WriteLine("online");
@@ -641,6 +642,10 @@ public class Gameplay : MonoBehaviour {
 
     void InputManager(string input)
     {
+        if (input == "move")
+        {
+            MoveWhere();
+        }
         if (input == "hobby")
         {
             Hobby();
@@ -681,6 +686,15 @@ public class Gameplay : MonoBehaviour {
             Work();
             spoons--;
         }
+        Tooltips(input);
+    }
+
+    void Tooltips(string input)
+    {
+        if (input == "!move")
+        {
+            Terminal.WriteLine("Find somewhere new to live");
+        }
         if (input == "!hobby")
         {
             Terminal.WriteLine("Do a hobby. Usually makes happiness, stress, and/or pride better.");
@@ -713,6 +727,123 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Go to work. Makes you proud, but it's probably stressful.");
         }
+    }
+
+    void MoveWhere()
+    {
+        currentScreen = Screen.Moving;
+        RefreshScreen();
+        if (currentHouse == House.None)
+        {
+            Terminal.WriteLine("You are homeless");
+            AddSpace();
+            if (parentsAttitude > 0 && school == true)
+            {
+                Terminal.WriteLine("You could move in with your parents         (type 'parents')");
+            }
+            else
+            {
+                Terminal.WriteLine("Your parents won't let you move back");
+            }
+            if (friendAttitude > 0)
+            {
+                Terminal.WriteLine("You could move in with your friend          (type 'friend')");
+            }
+            else
+            {
+                Terminal.WriteLine("Your friend doesn't want you staying there");
+            }
+            if (money > 10)
+            {
+                Terminal.WriteLine("For a $10 deposit you could rent your own place     (type 'rent')");
+                Terminal.WriteLine("It would cost $3 per day");
+            }
+            else
+            {
+                Terminal.WriteLine("You can't afford your own place");
+                Terminal.WriteLine("The deposit is $10");
+            }
+        }
+        if (currentHouse == House.Parents)
+        {
+            Terminal.WriteLine("You live with your parents.");
+            AddSpace();
+            if (friendAttitude > 0)
+            {
+                Terminal.WriteLine("You could move in with your friend          (type 'friend')");
+            }
+            else
+            {
+                Terminal.WriteLine("Your friend doesn't want you staying there");
+            }
+            if (money > 10)
+            {
+                Terminal.WriteLine("For a $10 deposit you could rent your own place     (type 'rent')");
+                Terminal.WriteLine("It would cost $3 per day");
+            }
+            else
+            {
+                Terminal.WriteLine("You can't afford your own place");
+                Terminal.WriteLine("The deposit is $10");
+            }
+            Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+        }
+        if (currentHouse == House.Friend)
+        {
+            Terminal.WriteLine("You live with your friend.");
+            AddSpace();
+            if (parentsAttitude > 0 && school == true)
+            {
+                Terminal.WriteLine("You could move in with your parents         (type 'parents')");
+            }
+            else
+            {
+                Terminal.WriteLine("Your parents won't let you move back");
+            }
+            if (money > 10)
+            {
+                Terminal.WriteLine("For a $10 deposit you could rent your own place     (type 'rent')");
+                Terminal.WriteLine("It would cost $3 per day");
+            }
+            else
+            {
+                Terminal.WriteLine("You can't afford your own place");
+                Terminal.WriteLine("The deposit is $10");
+            }
+            Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+        }
+        if (currentHouse == House.Rent)
+        {
+            Terminal.WriteLine("You rent your own place.");
+            AddSpace();
+            if (parentsAttitude > 0 && school == true)
+            {
+                Terminal.WriteLine("You could move in with your parents         (type 'parents')");
+            }
+            else
+            {
+                Terminal.WriteLine("Your parents won't let you move back");
+            }
+            if (friendAttitude > 0)
+            {
+                Terminal.WriteLine("You could move in with your friend          (type 'friend')");
+            }
+            else
+            {
+                Terminal.WriteLine("Your friend doesn't want you staying there");
+            }
+            Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+        }
+        Terminal.WriteLine("Where would you like to move?");
+    }
+
+    void Moved()
+    {
+        RefreshScreen();
+        currentScreen = Screen.Gameplay;
+        Terminal.WriteLine("You moved!");
+        Terminal.WriteLine("Enter 'home' to return to the menu.");
+        spoons--;
     }
 
     void Work() // Work your job. TODO: Double shifts at some maybe?
