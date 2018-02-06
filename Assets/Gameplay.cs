@@ -612,6 +612,38 @@ public class Gameplay : MonoBehaviour {
             Work();
             spoons--;
         }
+        if (input == "!hobby")
+        {
+            Terminal.WriteLine("Do a hobby. Usually increases happiness, focus, and/or pride.");
+        }
+        if (input == "!online" && onlineToday == false)
+        {
+            Terminal.WriteLine("Chat with friends online. Usually makes you happy and less lonely.");
+        }
+        if (input == "!friend" && friendToday == false)
+        {
+            Terminal.WriteLine("Talk to your friend. Usually makes you happy and less lonely.");
+        }
+        if (input == "!jobsearch")
+        {
+            Terminal.WriteLine("Look for a new job. Makes you proud but it's stressful.");
+        }
+        if (input == "!school" && school == true)
+        {
+            Terminal.WriteLine("Go to university for class. Makes you unhappy and stressed, but proud.");
+        }
+        if (input == "!flirt" && knownGirls > 0)
+        {
+            Terminal.WriteLine("Flirt with a girl you know. Results may vary.");
+        }
+        if (input == "!date" && ((girlfriend == true || knownGirls > 0) && money > 0))
+        {
+            Terminal.WriteLine("Go on a date with a girl you know- if she's up for it.");
+        }
+        if (input == "!work" && employed == true && workedToday == false)
+        {
+            Terminal.WriteLine("Go to work. Makes you proud, but it's probably stressful.");
+        }
     }
 
     void Work() // Work your job. TODO: Double shifts at some maybe?
