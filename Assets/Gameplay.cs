@@ -20,6 +20,7 @@ public class Gameplay : MonoBehaviour {
     int dailyExpenses = 1;
     int housingExpenses;
     int totalExpenses;
+    int earnings = 0;
 
     // Special value, daily random number, impacts many things
 
@@ -75,13 +76,16 @@ public class Gameplay : MonoBehaviour {
         dailyRand = UnityEngine.Random.Range(0, 101);
         currentJob = Job.None;
         currentScreen = Screen.Tutorial;
+        yesterdayStress = stress;
+        yesterdayPride = pride;
+        yesterdayHappiness = happiness;
     }
 
     void MainScreen()
     {
         currentScreen = Screen.Gameplay;
         RefreshScreen();
-        if (schoolDay == true && school == true)
+        if (schoolDay == true && school == true && schooledToday == false)
         {
             Terminal.WriteLine("Today is a school day. You should go to school");
         }
@@ -89,7 +93,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You went to university today.");
         }
-        if (workDay == true && employed == true)
+        if (workDay == true && employed == true && workedToday == false)
         {
             Terminal.WriteLine("Today is a work day. You should go to work today");
         }
@@ -137,6 +141,11 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         Terminal.WriteLine("Your expense for the day is -" + totalExpenses + "$");
         money = (money - totalExpenses);
+        if (employed == true && workDay == true && workedToday == true)
+        {
+            Terminal.WriteLine("You earned" +earnings + "$ today.");
+        }
+        money = (money + earnings);
         KickedOutCheck();
         AddSpace();
         HousingCheck();
@@ -152,9 +161,18 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.NightStats;
         RefreshScreen();
+        if (schoolDay == true && schooledToday == false && school == true)
+        {
+            Terminal.WriteLine("You skipped school today. Hopefully there aren't any consequences...");
+        }
+        if (workDay == true && workedToday == false && employed == true)
+        {
+            Terminal.WriteLine("You skipped work today. Better not do that too often...");
+        }
+        AddSpace();
         int picker = UnityEngine.Random.Range(0, 4);
         string[] happinessGreat = { "You feel ecstatic", "You fall asleep with a big grin", "You feel like partying!", "Today was an awesome day" };
-        string[] happinessGood = { "You feel happier", "This was a good day", "You fall asleep with a slight smile", "You're feeling good" };
+        string[] happinessGood = { "You feel happy", "This was a good day", "You fall asleep with a slight smile", "You're feeling good" };
         string[] happinessBad = { "Today wasn't a great day", "You're not feeling very well", "You feel sadder", "Things aren't going so well" };
         string[] happinessTerrible = { "Life doesn't feel worth living", "You're having dark thoughts", "You feel awful", "Why bother sleeping..." };
         string[] stressGreat = { "You feel like you can do anything!", "You're ready to tackle life", "You feel studious", "You're carefree!" };
@@ -191,7 +209,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("For instance, type '!home' to learn about the home command.");
         AddSpace();
         Terminal.WriteLine("Try to balance these stats and your money.");
-        Terminal.WriteLine("Type 'tutorial2' for the next page.");
+        Terminal.WriteLine("Type 'next' for the next page.");
     }
 
     void TutorialTwo()
@@ -520,8 +538,9 @@ public class Gameplay : MonoBehaviour {
         {
             Application.Quit();
         }
-        if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Tutorial))
+        if (input == "home" && currentScreen == Screen.Gameplay)
         {
+            RefreshScreen();
             MainScreen();
         }
         if (input == "hiddenstats") // Dev command to see all stats
@@ -534,7 +553,7 @@ public class Gameplay : MonoBehaviour {
         }
         else if (currentScreen == Screen.Tutorial) // Pass username/go to main screen
         {
-            if (input == "tutorial2")
+            if (input == "next")
             {
                 TutorialTwo();
             }
@@ -543,8 +562,9 @@ public class Gameplay : MonoBehaviour {
         {
             InputManager(input);
         }
-        else if (currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
+        else if (input != "home" && currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
         {
+            RefreshScreen();
             Terminal.WriteLine("You can't do that, you're all out of spoons!");
             Invoke("MainScreen", 3f);
         }
@@ -902,7 +922,7 @@ public class Gameplay : MonoBehaviour {
                 MeetGirl();
                 happiness = (happiness + 3);
                 pride = (pride + 1);
-                money = (money + 2);
+                earnings = 2;
             }
             else if (dailyRand < 20)
             {
@@ -910,7 +930,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 2);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
-                money = (money + 2);
+                earnings = 2;
             }
             else
             {
@@ -918,7 +938,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 1);
-                money = (money + 2);
+                earnings = 2;
             }
         }
         if (currentJob == Job.LumberYard)
@@ -928,7 +948,7 @@ public class Gameplay : MonoBehaviour {
                 MeetGirl();
                 happiness = (happiness + 3);
                 pride = (pride + 2);
-                money = (money + 4);
+                earnings = 4;
             }
             else if (dailyRand < 10)
             {
@@ -936,7 +956,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 2);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
-                money = (money + 4);
+                earnings = 4;
             }
             else if (dailyRand > 90)
             {
@@ -944,7 +964,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 1);
                 happiness = (happiness + 1);
                 pride = (pride + 4);
-                money = (money + 4);
+                earnings = 4;
             }
             else
             {
@@ -952,7 +972,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 3);
-                money = (money + 4);
+                earnings = 4;
             }
         }
         if (currentJob == Job.PaintStore)
@@ -962,7 +982,7 @@ public class Gameplay : MonoBehaviour {
                 MeetGirl();
                 happiness = (happiness + 3);
                 pride = (pride + 5);
-                money = (money + 3);
+                earnings = 3;
             }
             else if (dailyRand < 10)
             {
@@ -970,7 +990,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 2);
                 happiness = (happiness - 3);
                 pride = (pride - 1);
-                money = (money + 3);
+                earnings = 3;
             }
             else if (dailyRand > 80)
             {
@@ -978,13 +998,13 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 1);
                 happiness = (happiness + 1);
                 pride = (pride + 7);
-                money = (money + 3);
+                earnings = 3;
             }
             else
             {
                 Terminal.WriteLine("You finish work.");
                 stress = (stress - 1);
-                pride = (pride + 3);
+                earnings = 3;
             }
         }
         if (currentJob == Job.PizzaPlace)
@@ -995,14 +1015,14 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
-                money = (money + 1);
+                earnings = 1;
             }
             else if (dailyRand > 85)
             {
                 Terminal.WriteLine("You make good tips at work.");
                 happiness = (happiness + 1);
                 pride = (pride + 1);
-                money = (money + 3);
+                earnings = 3;
             }
             else
             {
@@ -1010,7 +1030,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 1);
-                money = (money + 1);
+                earnings = 3;
             }
         }
         if (currentJob == Job.TravelingSales)
@@ -1020,7 +1040,7 @@ public class Gameplay : MonoBehaviour {
                 MeetGirl();
                 happiness = (happiness + 3);
                 pride = (pride + 5);
-                money = (money + 6);
+                earnings = 6;
             }
             else if (dailyRand < 15)
             {
@@ -1028,7 +1048,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 5);
                 happiness = (happiness - 10);
                 pride = (pride - 5);
-                money = (money + 6);
+                earnings = 6;
             }
             else if (dailyRand > 95)
             {
@@ -1036,7 +1056,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 2);
                 happiness = (happiness + 3);
                 pride = (pride + 5);
-                money = (money + 7);
+                earnings = 6;
             }
             else
             {
@@ -1044,7 +1064,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 2);
                 happiness = (happiness - 3);
                 pride = (pride + 3);
-                money = (money + 6);
+                earnings = 6;
             }
         }
         if (currentJob == Job.GameCompany)
@@ -1063,7 +1083,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 1);
                 happiness = (happiness + 3);
                 pride = (pride + 3);
-                money = (money + 3);
+                earnings = 3;
                 spoons++;
                 Terminal.WriteLine("You don't even feel tired from working!");
             }
@@ -1072,7 +1092,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("You finish work.");
                 happiness = (happiness + 1);
                 pride = (pride + 2);
-                money = (money + 1);
+                earnings = 1;
                 spoons++;
                 Terminal.WriteLine("You don't even feel tired from working!");
             }
