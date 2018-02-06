@@ -73,6 +73,8 @@ public class Gameplay : MonoBehaviour {
         Tutorial();
         currentHouse = House.Parents;
         dailyRand = UnityEngine.Random.Range(0, 101);
+        currentJob = Job.None;
+        currentScreen = Screen.Tutorial;
     }
 
     void MainScreen()
@@ -83,7 +85,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Today is a school day. You should go to school");
         }
-        else if (schooledToday == true)
+        else if (schooledToday == true && schoolDay == true)
         {
             Terminal.WriteLine("You went to university today.");
         }
@@ -91,7 +93,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Today is a work day. You should go to work today");
         }
-        else if (workedToday == true)
+        else if (workedToday == true && workDay == true)
         {
             Terminal.WriteLine("You worked today.");
         }
@@ -224,7 +226,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (employed == false)
         {
-            Terminal.WriteLine("You don't have a job. You feel guilty for being unemployed");
+            Terminal.WriteLine("You don't have a job. You feel guilty for being unemployed.");
             pride = (pride - 4);
         }
         if (employed == true)
@@ -518,7 +520,7 @@ public class Gameplay : MonoBehaviour {
         {
             Application.Quit();
         }
-        if (input == "home" && currentScreen == Screen.Gameplay)
+        if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Tutorial))
         {
             MainScreen();
         }
@@ -537,9 +539,14 @@ public class Gameplay : MonoBehaviour {
                 TutorialTwo();
             }
         }
-        else if (currentScreen == Screen.Gameplay) // Pass info to input manager
+        else if (currentScreen == Screen.Gameplay && spoons > 0) // Pass info to input manager
         {
             InputManager(input);
+        }
+        else if (currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
+        {
+            Terminal.WriteLine("You can't do that, you're all out of spoons!");
+            Invoke("MainScreen", 3f);
         }
         else if (currentScreen == Screen.Night)
         {
@@ -553,6 +560,34 @@ public class Gameplay : MonoBehaviour {
             if (input == "next")
             {
                 Morning();
+            }
+        }
+        else if (currentScreen == Screen.Moving)
+        {
+            if (input == "parents" && parentsAttitude > 0 && school == true)
+            {
+                currentHouse = House.Parents;
+                Moved();
+            }
+            else if (input == "friend" && friendAttitude > 0)
+            {
+                currentHouse = House.Friend;
+                Moved();
+            }
+            else if (input == "rent" && money > 10)
+            {
+                currentHouse = House.Rent;
+                Moved();
+            }
+            else if (input == "homeless")
+            {
+                currentHouse = House.None;
+                Moved();
+            }
+            else if (input == "cancel")
+            {
+                currentScreen = Screen.Gameplay;
+                MainScreen();
             }
         }
         else
@@ -686,6 +721,10 @@ public class Gameplay : MonoBehaviour {
             Work();
             spoons--;
         }
+        if (input == "move")
+        {
+            MoveWhere();
+        }
         Tooltips(input);
     }
 
@@ -763,6 +802,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("You can't afford your own place");
                 Terminal.WriteLine("The deposit is $10");
             }
+            Terminal.WriteLine("Type 'cancel' to go back to the main screen instead");
         }
         if (currentHouse == House.Parents)
         {
@@ -787,6 +827,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("The deposit is $10");
             }
             Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+            Terminal.WriteLine("Type 'cancel' to go back to the main screen instead");
         }
         if (currentHouse == House.Friend)
         {
@@ -811,6 +852,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("The deposit is $10");
             }
             Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+            Terminal.WriteLine("Type 'cancel' to go back to the main screen instead");
         }
         if (currentHouse == House.Rent)
         {
@@ -833,7 +875,9 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("Your friend doesn't want you staying there");
             }
             Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+            Terminal.WriteLine("Type 'cancel' to go back to the main screen instead");
         }
+        AddSpace();
         Terminal.WriteLine("Where would you like to move?");
     }
 
