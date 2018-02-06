@@ -577,8 +577,8 @@ public class Gameplay : MonoBehaviour {
         else if (currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
         {
             RefreshScreen();
-            Terminal.WriteLine("You can't do that, you're all out of spoons!");
-            Invoke("MainScreen", 3f);
+            Terminal.WriteLine("Out of spoons.");
+            Invoke("MainScreen", 1f);
         }
         else if (currentScreen == Screen.Night)
         {
