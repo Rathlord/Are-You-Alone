@@ -32,7 +32,7 @@ public class Gameplay : MonoBehaviour {
     House currentHouse;
     enum Job { DepartmentStore, LumberYard, PaintStore, PizzaPlace, TravelingSales, GameCompany, None }
     Job currentJob;
-    [SerializeField] int focus = 50;
+    [SerializeField] int stress = 50;
     [SerializeField] int happiness = 50;
     [SerializeField] int pride = 50;
     [SerializeField] int determination = 0;
@@ -49,7 +49,7 @@ public class Gameplay : MonoBehaviour {
 
     // Previous day stats to get end-of-day screen info
 
-    int yesterdayFocus;
+    int yesterdayStress;
     int yesterdayHappiness;
     int yesterdayPride;
 
@@ -119,7 +119,7 @@ public class Gameplay : MonoBehaviour {
         Abscences();
         Attitudes();
         Invoke("MainScreen", 3f);
-        yesterdayFocus = focus;
+        yesterdayStress = stress;
         yesterdayHappiness = happiness;
         yesterdayPride = pride;
     }
@@ -142,16 +142,16 @@ public class Gameplay : MonoBehaviour {
         string[] happinessGood = { "You feel happier", "This was a good day", "You fall asleep with a slight smile", "You're feeling good" };
         string[] happinessBad = { "Today wasn't a great day", "You're not feeling very well", "You feel sadder", "Things aren't going so well" };
         string[] happinessTerrible = { "Life doesn't feel worth living", "You're having dark thoughts", "You feel awful", "Why bother sleeping..." };
-        string[] focusGreat = { "You feel like you can do anything!", "You're ready to tackle life", "You feel studious", "You have a great work ethic right now" };
-        string[] focusGood = { "You feel focused", "Your concentration feels good", "You feel like going out and doing something", "Your attention span feels good" };
-        string[] focusBad = { "You feel kind of scattered", "You're having trouble concentrating", "You think there's something you needed to do... but you forgot", "You don't feel like doing much" };
-        string[] focusTerrible = { "You're done with life's shit", "Why bother with anything...", "You don't wanna get out of bed", "You feel antisocial" };
+        string[] stressGreat = { "You feel like you can do anything!", "You're ready to tackle life", "You feel studious", "You're carefree!" };
+        string[] stressGood = { "You feel chill", "You feel relaxed", "You feel like going out and doing something", "You're not worried about life" };
+        string[] stressBad = { "You feel kind of stressed", "You're having trouble concentrating", "You're under a lot of pressure", "You don't feel like doing much" };
+        string[] stressTerrible = { "You're done with life's shit", "Why bother with anything...", "You don't wanna get out of bed", "You're buckling under the pressure" };
         string[] prideGreat = { "You're proud of yourself", "You think you have a lot to offer", "You know you're the best", "You're all you need" };
         string[] prideGood = { "You think you're doing a good job", "You're confident in yourself", "You think you're pretty cool", "You feel strong" };
         string[] prideBad = { "You know you're not doing your best", "You wish you felt more fulfilled", "What do you have to offer?", "You don't feel like you contribute to society" };
         string[] prideTerrible = { "You're useless", "You feel worthless", "You don't feel like you've accomplished anything at all", "You feel like a waste of breath" };
         HappinessCheck(picker, happinessGreat, happinessGood, happinessBad, happinessTerrible);
-        FocusCheck(picker, focusGreat, focusGood, focusBad, focusTerrible);
+        StressChecker(picker, stressGreat, stressGood, stressBad, stressTerrible);
         PrideCheck(picker, prideGreat, prideGood, prideBad, prideTerrible);
         AddSpace();
         ImprovementCheck();
@@ -184,11 +184,11 @@ public class Gameplay : MonoBehaviour {
         RefreshScreen();
         Terminal.WriteLine("The goal of the game is to balance your character and be happy.");
         Terminal.WriteLine("You may game over if you become too unhappy.");
-        Terminal.WriteLine("If your focus gets too low you won't be able to concentrate.");
+        Terminal.WriteLine("If your stress gets too low you won't be able to do things.");
         Terminal.WriteLine("If you aren't proud of yourself, you won't take care of yourself.");
         AddSpace();
         Terminal.WriteLine("Increase your happiness by doing things you enjoy.");
-        Terminal.WriteLine("Increase your focus by relaxing and doing things that aren't stressful.");
+        Terminal.WriteLine("Decrease your stress by relaxing and doing things that aren't stressful.");
         Terminal.WriteLine("Increase your pride by doing things you'd be proud of yourself for.");
         AddSpace();
         Terminal.WriteLine("You also need to manage your loneliness and relationships.");
@@ -221,7 +221,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You feel rich! You spend some of your money. It makes you feel good.");
             happiness = (happiness + 15);
-            focus = (focus - 5);
+            stress = (stress - 5);
             pride = (pride + 10);
             money = (money - 25);
         }
@@ -229,14 +229,14 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You feel financially stable.");
             happiness = (happiness + 5);
-            focus = (focus - 2);
+            stress = (stress - 2);
             pride = (pride + 3);
         }
         else if (money < 20)
         {
             Terminal.WriteLine("Money feels tight.");
             happiness = (happiness - 2);
-            focus = (focus - 2);
+            stress = (stress - 2);
             pride = (pride - 2);
         }
     }
@@ -265,7 +265,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You feel disconnected and lonely.");
             happiness = (happiness - 10);
-            focus = (focus + 1);
+            stress = (stress + 1);
             pride = (pride - 5);
         }
     }
@@ -276,14 +276,14 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You are homeless. You feel terrible.");
             happiness = (happiness - 20);
-            focus = (focus - 10);
+            stress = (stress - 10);
             pride = (pride - 20);
         }
         if (currentHouse == House.Friend)
         {
             Terminal.WriteLine("You're crashing with a friend. It's free, but makes him unhappy.");
             happiness = (happiness + 1);
-            focus = (focus - 2);
+            stress = (stress - 2);
             pride = (pride - 3);
             friendAttitude = (friendAttitude - 4);
         }
@@ -291,7 +291,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You're living with your parents. It's free, but makes you unhappy.");
             happiness = (happiness - 3);
-            focus = (focus - 3);
+            stress = (stress - 3);
             pride = (pride - 5);
             parentsAttitude = (parentsAttitude - 2);
         }
@@ -299,7 +299,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You rent your own place. It's not much, but at least you're independent");
             happiness = (happiness + 3);
-            focus = (focus - 1);
+            stress = (stress - 1);
             pride = (pride + 5);
         }
     }
@@ -340,17 +340,17 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You feel sadder than before");
         }
-        if (focus > yesterdayFocus)
+        if (stress > yesterdayStress)
         {
-            Terminal.WriteLine("You feel more focused than before");
+            Terminal.WriteLine("You feel less stressed than before");
         }
-        else if (focus == yesterdayFocus)
+        else if (stress == yesterdayStress)
         {
-            Terminal.WriteLine("You have about the same concentration as before");
+            Terminal.WriteLine("Your stress level feels constant");
         }
-        else if (focus < yesterdayFocus)
+        else if (stress < yesterdayStress)
         {
-            Terminal.WriteLine("You feel less motivated than before");
+            Terminal.WriteLine("You feel more stressed out");
         }
         if (pride > yesterdayPride)
         {
@@ -386,23 +386,23 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
-    void FocusCheck(int picker, string[] focusGreat, string[] focusGood, string[] focusBad, string[] focusTerrible)
+    void StressChecker(int picker, string[] stressGreat, string[] stressGood, string[] stressBad, string[] stressTerrible)
     {
-        if (focus > 60)
+        if (stress > 60)
         {
-            Terminal.WriteLine(focusGreat[picker]);
+            Terminal.WriteLine(stressGreat[picker]);
         }
-        else if (focus > 0)
+        else if (stress > 0)
         {
-            Terminal.WriteLine(focusGood[picker]);
+            Terminal.WriteLine(stressGood[picker]);
         }
-        else if (focus > -60)
+        else if (stress > -60)
         {
-            Terminal.WriteLine(focusBad[picker]);
+            Terminal.WriteLine(stressBad[picker]);
         }
         else
         {
-            Terminal.WriteLine(focusTerrible[picker]);
+            Terminal.WriteLine(stressTerrible[picker]);
         }
     }
 
@@ -506,7 +506,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (input == "hiddenstats") // Dev command to see all stats
         {
-            Terminal.WriteLine("focus" + focus + " happiness" + happiness + " pride" + pride);
+            Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
         }
         else if (input == "actions" && currentScreen == Screen.Gameplay) // List available actions
         {
@@ -614,7 +614,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (input == "!hobby")
         {
-            Terminal.WriteLine("Do a hobby. Usually increases happiness, focus, and/or pride.");
+            Terminal.WriteLine("Do a hobby. Usually makes happiness, stress, and/or pride better.");
         }
         if (input == "!online" && onlineToday == false)
         {
@@ -663,7 +663,7 @@ public class Gameplay : MonoBehaviour {
             else if (dailyRand < 20)
             {
                 Terminal.WriteLine("You have a terrible day at work.");
-                focus = (focus - 2);
+                stress = (stress - 2);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
                 money = (money + 2);
@@ -671,7 +671,7 @@ public class Gameplay : MonoBehaviour {
             else
             {
                 Terminal.WriteLine("You finish work.");
-                focus = (focus - 1);
+                stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 1);
                 money = (money + 2);
@@ -689,7 +689,7 @@ public class Gameplay : MonoBehaviour {
             else if (dailyRand < 10)
             {
                 Terminal.WriteLine("You have a terrible day at work.");
-                focus = (focus - 2);
+                stress = (stress - 2);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
                 money = (money + 4);
@@ -697,7 +697,7 @@ public class Gameplay : MonoBehaviour {
             else if (dailyRand > 90)
             {
                 Terminal.WriteLine("You have a good day at work.");
-                focus = (focus + 1);
+                stress = (stress + 1);
                 happiness = (happiness + 1);
                 pride = (pride + 4);
                 money = (money + 4);
@@ -705,7 +705,7 @@ public class Gameplay : MonoBehaviour {
             else
             {
                 Terminal.WriteLine("You finish work.");
-                focus = (focus - 1);
+                stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 3);
                 money = (money + 4);
@@ -723,7 +723,7 @@ public class Gameplay : MonoBehaviour {
             else if (dailyRand < 10)
             {
                 Terminal.WriteLine("You have a terrible day at work.");
-                focus = (focus - 2);
+                stress = (stress - 2);
                 happiness = (happiness - 3);
                 pride = (pride - 1);
                 money = (money + 3);
@@ -731,7 +731,7 @@ public class Gameplay : MonoBehaviour {
             else if (dailyRand > 80)
             {
                 Terminal.WriteLine("You have a good day at work.");
-                focus = (focus + 1);
+                stress = (stress + 1);
                 happiness = (happiness + 1);
                 pride = (pride + 7);
                 money = (money + 3);
@@ -739,7 +739,7 @@ public class Gameplay : MonoBehaviour {
             else
             {
                 Terminal.WriteLine("You finish work.");
-                focus = (focus - 1);
+                stress = (stress - 1);
                 pride = (pride + 3);
             }
         }
@@ -748,7 +748,7 @@ public class Gameplay : MonoBehaviour {
             if (dailyRand < 10)
             {
                 Terminal.WriteLine("You have a terrible day at work.");
-                focus = (focus - 1);
+                stress = (stress - 1);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
                 money = (money + 1);
@@ -763,7 +763,7 @@ public class Gameplay : MonoBehaviour {
             else
             {
                 Terminal.WriteLine("You finish work.");
-                focus = (focus - 1);
+                stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 1);
                 money = (money + 1);
@@ -781,7 +781,7 @@ public class Gameplay : MonoBehaviour {
             else if (dailyRand < 15)
             {
                 Terminal.WriteLine("You have a terrible day at work.");
-                focus = (focus - 5);
+                stress = (stress - 5);
                 happiness = (happiness - 10);
                 pride = (pride - 5);
                 money = (money + 6);
@@ -789,7 +789,7 @@ public class Gameplay : MonoBehaviour {
             else if (dailyRand > 95)
             {
                 Terminal.WriteLine("You have a good day at work.");
-                focus = (focus + 2);
+                stress = (stress + 2);
                 happiness = (happiness + 3);
                 pride = (pride + 5);
                 money = (money + 7);
@@ -797,7 +797,7 @@ public class Gameplay : MonoBehaviour {
             else
             {
                 Terminal.WriteLine("You finish work.");
-                focus = (focus - 2);
+                stress = (stress - 2);
                 happiness = (happiness - 3);
                 pride = (pride + 3);
                 money = (money + 6);
@@ -808,7 +808,7 @@ public class Gameplay : MonoBehaviour {
             if (dailyRand < 2)
             {
                 Terminal.WriteLine("You have a terrible day at work.");
-                focus = (focus - 1);
+                stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride - 1);
                 money = (money + 1);
@@ -816,7 +816,7 @@ public class Gameplay : MonoBehaviour {
             else if (dailyRand > 95)
             {
                 Terminal.WriteLine("You get a bonus at work.");
-                focus = (focus + 1);
+                stress = (stress + 1);
                 happiness = (happiness + 3);
                 pride = (pride + 3);
                 money = (money + 3);
@@ -857,41 +857,41 @@ public class Gameplay : MonoBehaviour {
         else if (dailyRand > 87)
         {
             Terminal.WriteLine("You ace a test. Nice! Didn't even study!");
-            focus--;
+            stress--;
             pride = (pride + 5);
             happiness = (happiness + 5);
         }
         else if (dailyRand > 70)
         {
             Terminal.WriteLine("You have an okay day at school.");
-            focus--;
+            stress--;
             pride = (pride + 3);
         }
         else if (dailyRand > 50)
         {
             Terminal.WriteLine("You're frustrated with the pace of school. Everything goes so slow...");
-            focus = (focus - 3);
+            stress = (stress - 3);
             pride = (pride + 1);
             happiness = (happiness - 2);
         }
         else if (dailyRand > 1)
         {
             Terminal.WriteLine("You hate everything to do with school. Why are you even here?");
-            focus = (focus - 5);
+            stress = (stress - 5);
             pride = (pride + 1);
             happiness = (happiness - 4);
         }
-        else if ((dailyRand == 1) && (focus < 0))
+        else if ((dailyRand == 1) && (stress < 0))
         {
             Terminal.WriteLine("Fuck school, you quit.");
-            focus = (focus + 10);
+            stress = (stress + 10);
             pride = (pride - 10);
             happiness = (happiness + 5);
         }
         else if (dailyRand == 1)
         {
             Terminal.WriteLine("You daydream about quitting all through class.");
-            focus = (focus + 2);
+            stress = (stress + 2);
             pride = (pride - 1);
             happiness = (happiness + 1);
         }
@@ -954,7 +954,7 @@ public class Gameplay : MonoBehaviour {
             AddSpace();
             Terminal.WriteLine("You don't have any luck, though...");
             happiness--;
-            focus--;
+            stress--;
             pride++;
         }
     } // TODO Ask if player wants to take new job
@@ -975,7 +975,7 @@ public class Gameplay : MonoBehaviour {
         else if (friendAttitude + dailyRand > 150)
         {
             Terminal.WriteLine("You have a lot of fun with your friend! You feel good.");
-            focus = (focus + 5);
+            stress = (stress + 5);
             happiness = (happiness + 15);
             pride = (pride + 7);
         }
@@ -1019,14 +1019,14 @@ public class Gameplay : MonoBehaviour {
         else if (onlineAttitude + dailyRand > 190)
         {
             Terminal.WriteLine("You play a game with your friends, and you win all night working together. Awesome! You feel like a hero!");
-                focus = (focus + 10);
+                stress = (stress + 10);
                 happiness = (happiness + 20);
                 pride = (pride + 10);
         }
         else if (onlineAttitude + dailyRand > 150)
         {
             Terminal.WriteLine("You talk in Discord voice chat for hours. It was a blast!");
-            focus = (focus + 3);
+            stress = (stress + 3);
             happiness = (happiness + 10);
             pride = (pride + 3);
         }
@@ -1061,70 +1061,70 @@ public class Gameplay : MonoBehaviour {
         if (dailyRand > 90)
         {
             Terminal.WriteLine("You read a book. You feel edified!");
-            focus = (focus + 2);
+            stress = (stress + 2);
             happiness = (happiness + 10);
             pride = (pride + 5);
         }
         else if (dailyRand > 80)
         {
             Terminal.WriteLine("You peruse Wikipedia and learn something new. You feel smarter!");
-            focus = (focus + 1);
+            stress = (stress + 1);
             happiness = (happiness + 7);
             pride = (pride + 1);
         }
         else if (dailyRand > 70)
         {
             Terminal.WriteLine("You cook a home cooked meal. It was delicious!");
-            focus = (focus + 1);
+            stress = (stress + 1);
             happiness = (happiness + 6);
             pride = (pride + 4);
         }
         else if (dailyRand > 60)
         {
             Terminal.WriteLine("You go for a bike ride. Feels good to stretch for once.");
-            focus = (focus + 2);
+            stress = (stress + 2);
             happiness = (happiness + 3);
             pride = (pride + 4);
         }
         else if(dailyRand > 50)
         {
             Terminal.WriteLine("You make some delightful tea. Yum!");
-            focus = (focus + 4);
+            stress = (stress + 4);
             happiness = (happiness + 2);
             pride = (pride + 0);
         }
         else if(dailyRand > 40)
         {
             Terminal.WriteLine("You play some games. It was fun.");
-            focus = (focus + 1);
+            stress = (stress + 1);
             happiness = (happiness + 2);
             pride = (pride + 0);
         }
         else if(dailyRand > 30)
         {
             Terminal.WriteLine("You zonk out and watch TV for a while.");
-            focus = (focus + 0);
+            stress = (stress + 0);
             happiness = (happiness + 2);
             pride = (pride + 0);
         }
         else if(dailyRand > 20)
         {
             Terminal.WriteLine("You have a few drinks at home to take the edge off.");
-            focus = (focus - 1);
+            stress = (stress - 1);
             happiness = (happiness + 4);
             pride = (pride - 1);
         }
         else if(dailyRand > 10)
         {
-            Terminal.WriteLine("You meditate. It clears your mind. You feel more focused.");
-            focus = (focus + 7);
+            Terminal.WriteLine("You meditate. It clears your mind. You feel less stressed.");
+            stress = (stress + 7);
             happiness = (happiness + 0);
             pride = (pride + 1);
         }
         else if(dailyRand > 0)
         {
             Terminal.WriteLine("You can't think of anything to do. You're bored.");
-            focus = (focus + 0);
+            stress = (stress + 0);
             happiness = (happiness + 0);
             pride = (pride + 0);
         }
