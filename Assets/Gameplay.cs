@@ -170,7 +170,7 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.NightStats;
         RefreshScreen();
-        if (schoolDay == true && schooledToday == false && school == true && enrolledInSchoolYesterday == true)
+        if (schoolDay == true && schooledToday == false && school == true)
         {
             Terminal.WriteLine("You skipped school today. Hopefully there aren't any consequences...");
         }
@@ -502,7 +502,7 @@ public class Gameplay : MonoBehaviour {
         {
             workAbscence++;
         }
-        if (schooledToday == false && schoolDay == false &&)
+        if (schooledToday == false && schoolDay == false)
         {
             schoolAbscence++;
         }
