@@ -388,7 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectedToTerminal: {fileID: 114578242904794280}
-  charactersWide: 80
+  charactersWide: 90
   charactersHigh: 12
 --- !u!114 &114511547698080430
 MonoBehaviour:
@@ -514,10 +514,12 @@ MonoBehaviour:
   happiness: 50
   pride: 50
   determination: 0
+  loneliness: 0
   workAbscence: 0
   schoolAbscence: 0
   friendAttitude: 50
   onlineAttitude: 50
+  parentsAttitude: 30
 --- !u!114 &114800869134824038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -547,7 +549,7 @@ MonoBehaviour:
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 0
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: Hit Play or Ctrl+P to turn me on.
