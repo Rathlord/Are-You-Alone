@@ -9,7 +9,7 @@ public class Gameplay : MonoBehaviour {
 
     [SerializeField] int spoons = 3;
     [SerializeField] string character = "default";
-    enum Screen { Name, Gameplay, Night, Gameover };
+    enum Screen { Tutorial, Gameplay, Night, Gameover };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -67,7 +67,7 @@ public class Gameplay : MonoBehaviour {
     {
         Terminal.WriteLine("Are You Alone?");
         AddSpace();
-        DisplayIntro();
+        Tutorial();
         currentHouse = House.Parents;
         dailyRand = UnityEngine.Random.Range(0, 101);
     }
@@ -158,6 +158,45 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Write 'next' to continue to a new day.");
     }
 
+    void Tutorial()
+    {
+        currentScreen = Screen.Tutorial;
+        RefreshScreen();
+        Terminal.WriteLine("Play the game by entering commands on the keyboard.");
+        Terminal.WriteLine("You can type 'home' from almost any screen to return to the main screen.");
+        AddSpace();
+        Terminal.WriteLine("You can perform up to three actions per day. These are called spoons.");
+        Terminal.WriteLine("Spoons are tracked at the top right of your screen.");
+        AddSpace();
+        Terminal.WriteLine("On the main screen you can type 'actions' to list what you can do.");
+        Terminal.WriteLine("Most actions can only be performed once per day.");
+        AddSpace();
+        Terminal.WriteLine("You can learn about most actions by typing them with an exclamation mark.");
+        Terminal.WriteLine("For instance, type '!home' to learn about the home command.");
+        AddSpace();
+        Terminal.WriteLine("Try to balance these stats and your money.");
+        Terminal.WriteLine("Type 'tutorial2' for the next page.");
+    }
+
+    void TutorialTwo()
+    {
+        currentScreen = Screen.Gameplay;
+        RefreshScreen();
+        Terminal.WriteLine("The goal of the game is to balance your character and be happy.");
+        Terminal.WriteLine("You may game over if you become too unhappy.");
+        Terminal.WriteLine("If your focus gets too low you won't be able to concentrate.");
+        Terminal.WriteLine("If you aren't proud of yourself, you won't take care of yourself.");
+        AddSpace();
+        Terminal.WriteLine("Increase your happiness by doing things you enjoy.");
+        Terminal.WriteLine("Increase your focus by relaxing and doing things that aren't stressful.");
+        Terminal.WriteLine("Increase your pride by doing things you'd be proud of yourself for.");
+        AddSpace();
+        Terminal.WriteLine("You also need to manage your loneliness and relationships.");
+        Terminal.WriteLine("Make sure not to neglect people in your life or there will be consequences.");
+        AddSpace();
+        Terminal.WriteLine("Enter 'home' to begin the game.");
+    }
+
     void FulfillmentCheck() // Job Employment School Money
     {
         if (school == false)
@@ -167,7 +206,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (school == true)
         {
-            Terminal.WriteLine("You're still going to university. You don't like it much, but you're glad you're doing it.");
+            Terminal.WriteLine("You're still going to university. You don't like it much, but you're proud of it.");
         }
         if (employed == false)
         {
@@ -180,7 +219,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (money > 100)
         {
-            Terminal.WriteLine("You feel rich! You spend some of your money on something for yourself. It makes you feel good.");
+            Terminal.WriteLine("You feel rich! You spend some of your money. It makes you feel good.");
             happiness = (happiness + 15);
             focus = (focus - 5);
             pride = (pride + 10);
@@ -242,7 +281,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentHouse == House.Friend)
         {
-            Terminal.WriteLine("You're crashing with a friend. It's free, but he probably won't like it long term.");
+            Terminal.WriteLine("You're crashing with a friend. It's free, but makes him unhappy.");
             happiness = (happiness + 1);
             focus = (focus - 2);
             pride = (pride - 3);
@@ -250,7 +289,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentHouse == House.Parents)
         {
-            Terminal.WriteLine("You're living with your parents.It's free, but no one is real happy with the arrangement.");
+            Terminal.WriteLine("You're living with your parents. It's free, but makes you unhappy.");
             happiness = (happiness - 3);
             focus = (focus - 3);
             pride = (pride - 5);
@@ -473,14 +512,12 @@ public class Gameplay : MonoBehaviour {
         {
             ActionList();
         }
-        else if (currentScreen == Screen.Name) // Pass username/go to main screen
+        else if (currentScreen == Screen.Tutorial) // Pass username/go to main screen
         {
-            if (input == "yes")
+            if (input == "tutorial2")
             {
-                MainScreen();
+                TutorialTwo();
             }
-            else
-            EnterName(input);
         }
         else if (currentScreen == Screen.Gameplay) // Pass info to input manager
         {
