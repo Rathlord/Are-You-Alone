@@ -8,7 +8,7 @@ public class Gameplay : MonoBehaviour {
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover };
+    enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover, Flirt, Date, AskOut };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -61,6 +61,62 @@ public class Gameplay : MonoBehaviour {
     int yesterdayHappiness;
     int yesterdayPride;
     bool employedYesterday;
+
+
+    // Lina variables
+
+    int linaDifficulty = 80;
+    int linaAttitude = 10;
+    bool linaLove = false;
+    int linaJokeMod = 5;
+    int linaGiftMod = 2;
+    int linaSweetMod = 4;
+
+
+    // Jenna vars
+
+    int jennaDifficulty = 100;
+    int jennaAttitude = 20;
+    bool jennaLove = false;
+    int jennaJokeMod = 5;
+    int jennaGiftMod = 3;
+    int jennaSweetMod = 1;
+
+    // Alex vars
+
+    int alexDifficulty = 200;
+    int alexAttitude = 5;
+    bool alexLove = false;
+    int alexJokeMod = 2;
+    int alexGiftMod = -1;
+    int alexSweetMod = 1;
+
+    // Pina vars
+
+    int pinaDifficulty = 120;
+    int pinaAttitude = -10;
+    bool pinaLove = false;
+    int pinaJokeMod = 1;
+    int pinaGiftMod = 5;
+    int pinaSweetMod = 5;
+
+    // Sammy vars
+
+    int sammyDifficulty = 140;
+    int sammyAttitude = -20;
+    bool sammyLove = false;
+    int sammyJokeMod = 3;
+    int sammyGiftMod = 8;
+    int sammySweetMod = 0;
+
+    // Winry vars
+
+    int winryDifficulty = 150;
+    int winryAttitude = 0;
+    bool winryLove = false;
+    int winryJokeMod = 3;
+    int winryGiftMod = 1;
+    int winrySweetMod = 3;
 
     // Use this for initialization
     void Start()
@@ -242,7 +298,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Enter 'home' to begin the game.");
     }
 
-    void FulfillmentCheck() // Job Employment School Money
+    void FulfillmentCheck()
     {
         if (school == false)
         {
@@ -475,7 +531,7 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
-    void Attitudes() // Does daily attitude adjustments and then resets daily encounters
+    void Attitudes() // Does daily attitude adjustments and then resets daily encounters        TODO parents attiude & women attitude checks
     {
         if (friendToday == true)
         {
@@ -759,10 +815,43 @@ public class Gameplay : MonoBehaviour {
             MoveWhere();
         }
         Tooltips(input);
+        WomanInfo(input);
+    }
+
+    void WomanInfo(string input) // TODO tell about women
+    {
+        if (input == "!Lina" && knownWomen.Contains("Lina"))
+            {
+            Terminal.WriteLine("You know Lina");
+            }
+        if (input == "!Jenna" && knownWomen.Contains("Jenna"))
+        {
+            Terminal.WriteLine("You know Alex");
+        }
+        if (input == "!Alex" && knownWomen.Contains("Alex"))
+        {
+            Terminal.WriteLine("You know Lina");
+        }
+        if (input == "!Pina" && knownWomen.Contains("Pina"))
+        {
+            Terminal.WriteLine("You know Pina");
+        }
+        if (input == "!Sammy" && knownWomen.Contains("Sammy"))
+        {
+            Terminal.WriteLine("You know Sammy");
+        }
+        if (input == "!Winry" && knownWomen.Contains("Winry"))
+        {
+            Terminal.WriteLine("You know Winry");
+        }
     }
 
     void Tooltips(string input)
     {
+        if (input == "!home")
+        {
+            Terminal.WriteLine("Return to the main menu");
+        }
         if (input == "!move")
         {
             Terminal.WriteLine("Find somewhere new to live");
@@ -1121,19 +1210,16 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
 
-    void Flirt() //TODO IMPLEMENT ME
+    void Flirt() //TODO pass input from input manager
     {
-        throw new NotImplementedException();
-        AddSpace();
-        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
+        currentScreen = Screen.Flirt;
+        RefreshScreen();
+        Terminal.WriteLine("Who would you like to flirt with?");
+        if (knownWomen.Contains("Lina") == true)
+        {
+            Terminal.WriteLine("Lina");
+        }
     }
-
-    /// 
-    /// WIP Relationship Code
-    /// 
-    /// 
-
-    
 
     void MeetGirl ()
     {
@@ -1149,12 +1235,6 @@ public class Gameplay : MonoBehaviour {
         else
             return;
     }
-
-
-    ///
-    /// WIP Relationship Code
-    ///
-
 
     void School()
     {
@@ -1374,7 +1454,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
 
-    void Hobby()  // Define hobbies
+    void Hobby()  
     {
         dailyRand = UnityEngine.Random.Range(0, 101);
         RefreshScreen();
