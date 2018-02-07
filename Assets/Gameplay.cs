@@ -30,6 +30,7 @@ public class Gameplay : MonoBehaviour {
     List<string> unknownWomen = new List<string>();
     List<string> knownWomen = new List<string>();
     int womenRand;
+    string girlfriendName;
 
     // Many character variables will be stored here
 
@@ -627,6 +628,10 @@ public class Gameplay : MonoBehaviour {
                 TutorialTwo();
             }
         }
+        else if (currentScreen == Screen.Flirt)
+        {
+            FlirtInput(input);
+        }
         else if (currentScreen == Screen.Gameplay && spoons > 0) // Pass info to input manager
         {
             InputManager(input);
@@ -1218,6 +1223,252 @@ public class Gameplay : MonoBehaviour {
         if (knownWomen.Contains("Lina") == true)
         {
             Terminal.WriteLine("Lina");
+        }
+        if (knownWomen.Contains("Jenna") == true)
+        {
+            Terminal.WriteLine("Jenna");
+        }
+        if (knownWomen.Contains("Alex") == true)
+        {
+            Terminal.WriteLine("Alex");
+        }
+        if (knownWomen.Contains("Pina") == true)
+        {
+            Terminal.WriteLine("Pina");
+        }
+        if (knownWomen.Contains("Sammy") == true)
+        {
+            Terminal.WriteLine("Sammy");
+        }
+        if (knownWomen.Contains("Winry") == true)
+        {
+            Terminal.WriteLine("Winry");
+        }
+    }
+
+    private void FlirtInput(string input)
+    {
+        if (knownWomen.Contains("Lina") == true && input == "Lina")
+        {
+            RefreshScreen();
+            Terminal.WriteLine("How would you like to flirt with Lina?");
+            Terminal.WriteLine("You can:    gift   joke     sweet    askout");
+            if (input == "gift")
+            {
+                Terminal.WriteLine("Gift Line");
+                linaAttitude = (linaAttitude + linaGiftMod);
+            }
+            if (input == "joke")
+            {
+                Terminal.WriteLine("Joke Line");
+                linaAttitude = (linaAttitude + linaJokeMod);
+            }
+            if (input == "sweet")
+            {
+                Terminal.WriteLine("Sweet Line");
+                linaAttitude = (linaAttitude + linaSweetMod);
+            }
+            if (input == "askout")
+            {
+                Terminal.WriteLine("You ask her out!");
+                if (dailyRand + linaAttitude >= linaDifficulty)
+                {
+                    Terminal.WriteLine("Yes line");
+                    girlfriend = true;
+                    girlfriendName = "Lina";
+                    Invoke("MainScreen", 3f);
+                }
+                else
+                {
+                    Terminal.WriteLine("No line");
+                    Invoke("MainScreen", 3f);
+                }
+            }
+        }
+        if (knownWomen.Contains("Jenna") == true && input == "Jenna")
+        {
+            RefreshScreen();
+            Terminal.WriteLine("How would you like to flirt with Jenna?");
+            Terminal.WriteLine("You can:    gift   joke     sweet    askout");
+            if (input == "gift")
+            {
+                Terminal.WriteLine("Gift Line");
+                jennaAttitude = (jennaAttitude + jennaGiftMod);
+            }
+            if (input == "joke")
+            {
+                Terminal.WriteLine("Joke Line");
+                jennaAttitude = (jennaAttitude + jennaJokeMod);
+            }
+            if (input == "sweet")
+            {
+                Terminal.WriteLine("Sweet Line");
+                jennaAttitude = (jennaAttitude + jennaSweetMod);
+            }
+            if (input == "askout")
+            {
+                Terminal.WriteLine("You ask her out!");
+                if (dailyRand + jennaAttitude >= jennaDifficulty)
+                {
+                    Terminal.WriteLine("Yes line");
+                    girlfriend = true;
+                    girlfriendName = "Jenna";
+                    Invoke("MainScreen", 3f);
+                }
+                else
+                {
+                    Terminal.WriteLine("No line");
+                    Invoke("MainScreen", 3f);
+                }
+            }
+        }
+        if (knownWomen.Contains("Alex") == true && input == "Alex")
+        {
+            RefreshScreen();
+            Terminal.WriteLine("How would you like to flirt with Alex?");
+            Terminal.WriteLine("You can:    gift   joke     sweet    askout");
+            if (input == "gift")
+            {
+                Terminal.WriteLine("Gift Line");
+                alexAttitude = (alexAttitude + alexGiftMod);
+            }
+            if (input == "joke")
+            {
+                Terminal.WriteLine("Joke Line");
+                alexAttitude = (alexAttitude + alexJokeMod);
+            }
+            if (input == "sweet")
+            {
+                Terminal.WriteLine("Sweet Line");
+                alexAttitude = (alexAttitude + alexSweetMod);
+            }
+            if (input == "askout")
+            {
+                Terminal.WriteLine("You ask her out!");
+                if (dailyRand + alexAttitude >= alexDifficulty)
+                {
+                    Terminal.WriteLine("Yes line");
+                    girlfriend = true;
+                    girlfriendName = "Alex";
+                    Invoke("MainScreen", 3f);
+                }
+                else
+                {
+                    Terminal.WriteLine("No line");
+                    Invoke("MainScreen", 3f);
+                }
+            }
+        }
+        if (knownWomen.Contains("Pina") == true && input == "Pina")
+        {
+            RefreshScreen();
+            Terminal.WriteLine("How would you like to flirt with Pina?");
+            Terminal.WriteLine("You can:    gift   joke     sweet    askout");
+            if (input == "gift")
+            {
+                Terminal.WriteLine("Gift Line");
+                pinaAttitude = (pinaAttitude + pinaGiftMod);
+            }
+            if (input == "joke")
+            {
+                Terminal.WriteLine("Joke Line");
+                pinaAttitude = (pinaAttitude + pinaJokeMod);
+            }
+            if (input == "sweet")
+            {
+                Terminal.WriteLine("Sweet Line");
+                pinaAttitude = (pinaAttitude + pinaSweetMod);
+            }
+            if (input == "askout")
+            {
+                Terminal.WriteLine("You ask her out!");
+                if (dailyRand + pinaAttitude >= pinaDifficulty)
+                {
+                    Terminal.WriteLine("Yes line");
+                    girlfriend = true;
+                    girlfriendName = "Pina";
+                    Invoke("MainScreen", 3f);
+                }
+                else
+                {
+                    Terminal.WriteLine("No line");
+                    Invoke("MainScreen", 3f);
+                }
+            }
+        }
+        if (knownWomen.Contains("Sammy") == true && input == "Sammy")
+        {
+            RefreshScreen();
+            Terminal.WriteLine("How would you like to flirt with Sammy?");
+            Terminal.WriteLine("You can:    gift   joke     sweet    askout");
+            if (input == "gift")
+            {
+                Terminal.WriteLine("Gift Line");
+                sammyAttitude = (sammyAttitude + sammyGiftMod);
+            }
+            if (input == "joke")
+            {
+                Terminal.WriteLine("Joke Line");
+                sammyAttitude = (sammyAttitude + sammyJokeMod);
+            }
+            if (input == "sweet")
+            {
+                Terminal.WriteLine("Sweet Line");
+                sammyAttitude = (sammyAttitude + sammySweetMod);
+            }
+            if (input == "askout")
+            {
+                Terminal.WriteLine("You ask her out!");
+                if (dailyRand + sammyAttitude >= sammyDifficulty)
+                {
+                    Terminal.WriteLine("Yes line");
+                    girlfriend = true;
+                    girlfriendName = "Sammy";
+                    Invoke("MainScreen", 3f);
+                }
+                else
+                {
+                    Terminal.WriteLine("No line");
+                    Invoke("MainScreen", 3f);
+                }
+            }
+        }
+        if (knownWomen.Contains("Winry") == true && input == "Winry")
+        {
+            RefreshScreen();
+            Terminal.WriteLine("How would you like to flirt with Winry?");
+            Terminal.WriteLine("You can:    gift   joke     sweet    askout");
+            if (input == "gift")
+            {
+                Terminal.WriteLine("Gift Line");
+                winryAttitude = (winryAttitude + winryGiftMod);
+            }
+            if (input == "joke")
+            {
+                Terminal.WriteLine("Joke Line");
+                winryAttitude = (winryAttitude + winryJokeMod);
+            }
+            if (input == "sweet")
+            {
+                Terminal.WriteLine("Sweet Line");
+                winryAttitude = (winryAttitude + winrySweetMod);
+            }
+            if (input == "askout")
+            {
+                Terminal.WriteLine("You ask her out!");
+                if (dailyRand + winryAttitude >= winryDifficulty)
+                {
+                    Terminal.WriteLine("Yes line");
+                    girlfriend = true;
+                    girlfriendName = "Winry";
+                    Invoke("MainScreen", 3f);
+                }
+                else
+                {
+                    Terminal.WriteLine("No line");
+                    Invoke("MainScreen", 3f);
+                }
+            }
         }
     }
 
