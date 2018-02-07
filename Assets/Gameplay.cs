@@ -8,7 +8,7 @@ public class Gameplay : MonoBehaviour {
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover, Flirt, Date, AskOut };
+    enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -20,6 +20,8 @@ public class Gameplay : MonoBehaviour {
     int housingExpenses;
     int totalExpenses;
     int earnings = 0;
+    int giftVar = 0;
+    int askOutVar = 0;
 
     // Special value, daily random number, impacts many things
 
@@ -31,6 +33,7 @@ public class Gameplay : MonoBehaviour {
     List<string> knownWomen = new List<string>();
     int womenRand;
     string girlfriendName;
+    int dateAttitude;
 
     // Many character variables will be stored here
 
@@ -145,6 +148,7 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.Gameplay;
         RefreshScreen();
+        MeetGirl(); // FOR DEBUG, REMOVE ME
         if (schoolDay == true && school == true && schooledToday == false)
         {
             Terminal.WriteLine("Today is a school day. You should go to school");
@@ -161,8 +165,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You worked today.");
         }
-        AddSpace();
-        MeetGirl();                                                                                   //TODO add list of known women
+        AddSpace();                                                                                  //TODO add list of known women
         Terminal.WriteLine("These are the people you know:");                                                                                                    
         AddSpace();
         Terminal.WriteLine("Enter an action!");
@@ -356,12 +359,12 @@ public class Gameplay : MonoBehaviour {
         if (friendToday == false && onlineToday == false)
         {
             Terminal.WriteLine("You didn't talk to any friends today. You miss them.");
-            loneliness = (loneliness - 10);
+            loneliness = (loneliness - 4);
         }
         if (flirtToday == false && dateToday == false)
         {
             Terminal.WriteLine("You miss talking to someone special.");
-            loneliness = (loneliness - 10);
+            loneliness = (loneliness - 7);
         }
         if (loneliness < 0)
         {
@@ -608,7 +611,7 @@ public class Gameplay : MonoBehaviour {
         {
             Application.Quit();
         }
-        if (input == "home" && currentScreen == Screen.Gameplay)
+        if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Flirt))
         {
             RefreshScreen();
             MainScreen();
@@ -631,6 +634,34 @@ public class Gameplay : MonoBehaviour {
         else if (currentScreen == Screen.Flirt)
         {
             FlirtInput(input);
+        }
+        else if (currentScreen == Screen.Date)
+        {
+            DateInput(input);
+        }
+        else if (currentScreen == Screen.FlirtLina)
+        {
+            LinaFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtJenna)
+        {
+            JennaFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtAlex)
+        {
+            AlexFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtPina)
+        {
+            PinaFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtSammy)
+        {
+            SammyFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtWinry)
+        {
+            WinryFlirt(input);
         }
         else if (currentScreen == Screen.Gameplay && spoons > 0) // Pass info to input manager
         {
@@ -1021,10 +1052,11 @@ public class Gameplay : MonoBehaviour {
     {
         RefreshScreen();
         Terminal.WriteLine("You go to work...");
+        loneliness  = (loneliness + 1);
         workedToday = true;
         if (currentJob == Job.DepartmentStore)
         {
-            if (dailyRand == 100)
+            if (dailyRand == 1)
             {
                 MeetGirl();
                 happiness = (happiness + 3);
@@ -1050,7 +1082,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentJob == Job.LumberYard)
         {
-            if (dailyRand == 100)
+            if (dailyRand == 1)
             {
                 MeetGirl();
                 happiness = (happiness + 3);
@@ -1084,7 +1116,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentJob == Job.PaintStore)
         {
-            if (dailyRand == 100)
+            if (dailyRand == 1)
             {
                 MeetGirl();
                 happiness = (happiness + 3);
@@ -1142,7 +1174,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentJob == Job.TravelingSales)
         {
-            if (dailyRand == 100)
+            if (dailyRand == 1)
             {
                 MeetGirl();
                 happiness = (happiness + 3);
@@ -1210,12 +1242,146 @@ public class Gameplay : MonoBehaviour {
 
     void Date() //TODO IMPLEMENT ME
     {
-        throw new NotImplementedException();
+        currentScreen = Screen.Date;
+        RefreshScreen();
+        Terminal.WriteLine("Who would you to ask on a date?");
+        if (knownWomen.Contains("Lina") == true)
+        {
+            Terminal.WriteLine("Lina");
+        }
+        if (knownWomen.Contains("Jenna") == true)
+        {
+            Terminal.WriteLine("Jenna");
+        }
+        if (knownWomen.Contains("Alex") == true)
+        {
+            Terminal.WriteLine("Alex");
+        }
+        if (knownWomen.Contains("Pina") == true)
+        {
+            Terminal.WriteLine("Pina");
+        }
+        if (knownWomen.Contains("Sammy") == true)
+        {
+            Terminal.WriteLine("Sammy");
+        }
+        if (knownWomen.Contains("Winry") == true)
+        {
+            Terminal.WriteLine("Winry");
+        }
         AddSpace();
-        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
+        Terminal.WriteLine("Chose someone or enter 'home' to go back.");
     }
 
-    void Flirt() //TODO pass input from input manager
+    public string DateDecline()
+    {
+        string dateDecline;
+        if (dateAttitude > 75)
+            {
+                dateDecline = "She says she's sorry, but she's busy tonight. Maybe another night soon?";
+            }
+        if (dateAttitude > 50)
+            {
+                dateDecline = "She says she doesn't feel up for it tonight.";
+            }
+        if (dateAttitude > 25)
+            {
+                dateDecline = "She doesn't feel like she knows you well enough";
+            }
+        if (dateAttitude > 0)
+            {
+                dateDecline = "She says no.";
+            }
+        else
+            {
+            dateDecline = "She says no way!";
+            }
+        return dateDecline;
+    }
+
+    void DateInput(string input)
+    {
+        if (knownWomen.Contains("Lina") == true && input == "Lina")
+        {
+            RefreshScreen();
+            dateAttitude = linaAttitude;
+            if (dailyRand + (linaAttitude/2) >= linaDifficulty)
+            {
+
+            }
+            else
+            {
+                Terminal.WriteLine(DateDecline());
+            }
+        }
+        if (knownWomen.Contains("Jenna") == true && input == "Jenna")
+        {
+            RefreshScreen();
+            dateAttitude = jennaAttitude;
+            if (dailyRand + (jennaAttitude / 2) >= jennaDifficulty)
+            {
+
+            }
+            else
+            {
+                Terminal.WriteLine(DateDecline());
+            }
+        }
+        if (knownWomen.Contains("Alex") == true && input == "Alex")
+        {
+            RefreshScreen();
+            dateAttitude = alexAttitude;
+            if (dailyRand + (alexAttitude / 2) >= alexDifficulty)
+            {
+
+            }
+            else
+            {
+                Terminal.WriteLine(DateDecline());
+            }
+        }
+        if (knownWomen.Contains("Pina") == true && input == "Pina")
+        {
+            RefreshScreen();
+            dateAttitude = pinaAttitude;
+            if (dailyRand + (pinaAttitude / 2) >= pinaDifficulty)
+            {
+
+            }
+            else
+            {
+                Terminal.WriteLine(DateDecline());
+            }
+        }
+        if (knownWomen.Contains("Sammy") == true && input == "Sammy")
+        {
+            RefreshScreen();
+            dateAttitude = sammyAttitude;
+            if (dailyRand + (sammyAttitude / 2) >= sammyDifficulty)
+            {
+
+            }
+            else
+            {
+                Terminal.WriteLine(DateDecline());
+            }
+        }
+        if (knownWomen.Contains("Winry") == true && input == "Winry")
+        {
+            RefreshScreen();
+            dateAttitude = winryAttitude;
+            if (dailyRand + (winryAttitude / 2) >= winryDifficulty)
+            {
+
+            }
+            else
+            {
+                Terminal.WriteLine(DateDecline());
+            }
+        }
+    }
+
+    void Flirt()
     {
         currentScreen = Screen.Flirt;
         RefreshScreen();
@@ -1244,230 +1410,382 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Winry");
         }
+        AddSpace();
+        Terminal.WriteLine("Chose someone or enter 'home' to go back.");
     }
 
-    private void FlirtInput(string input)
+    void FlirtInput(string input)
     {
         if (knownWomen.Contains("Lina") == true && input == "Lina")
         {
             RefreshScreen();
             Terminal.WriteLine("How would you like to flirt with Lina?");
             Terminal.WriteLine("You can:    gift   joke     sweet    askout");
-            if (input == "gift")
-            {
-                Terminal.WriteLine("Gift Line");
-                linaAttitude = (linaAttitude + linaGiftMod);
-            }
-            if (input == "joke")
-            {
-                Terminal.WriteLine("Joke Line");
-                linaAttitude = (linaAttitude + linaJokeMod);
-            }
-            if (input == "sweet")
-            {
-                Terminal.WriteLine("Sweet Line");
-                linaAttitude = (linaAttitude + linaSweetMod);
-            }
-            if (input == "askout")
-            {
-                Terminal.WriteLine("You ask her out!");
-                if (dailyRand + linaAttitude >= linaDifficulty)
-                {
-                    Terminal.WriteLine("Yes line");
-                    girlfriend = true;
-                    girlfriendName = "Lina";
-                    Invoke("MainScreen", 3f);
-                }
-                else
-                {
-                    Terminal.WriteLine("No line");
-                    Invoke("MainScreen", 3f);
-                }
-            }
+            LinaFlirt(input);
+            happiness = (happiness + 5);
+            stress = (stress + 1);
+            pride = (pride + 1);
+            loneliness = (loneliness + 4);
         }
         if (knownWomen.Contains("Jenna") == true && input == "Jenna")
         {
             RefreshScreen();
             Terminal.WriteLine("How would you like to flirt with Jenna?");
             Terminal.WriteLine("You can:    gift   joke     sweet    askout");
-            if (input == "gift")
-            {
-                Terminal.WriteLine("Gift Line");
-                jennaAttitude = (jennaAttitude + jennaGiftMod);
-            }
-            if (input == "joke")
-            {
-                Terminal.WriteLine("Joke Line");
-                jennaAttitude = (jennaAttitude + jennaJokeMod);
-            }
-            if (input == "sweet")
-            {
-                Terminal.WriteLine("Sweet Line");
-                jennaAttitude = (jennaAttitude + jennaSweetMod);
-            }
-            if (input == "askout")
-            {
-                Terminal.WriteLine("You ask her out!");
-                if (dailyRand + jennaAttitude >= jennaDifficulty)
-                {
-                    Terminal.WriteLine("Yes line");
-                    girlfriend = true;
-                    girlfriendName = "Jenna";
-                    Invoke("MainScreen", 3f);
-                }
-                else
-                {
-                    Terminal.WriteLine("No line");
-                    Invoke("MainScreen", 3f);
-                }
-            }
+            JennaFlirt(input);
+            happiness = (happiness + 5);
+            stress = (stress + 1);
+            loneliness = (loneliness + 6);
         }
         if (knownWomen.Contains("Alex") == true && input == "Alex")
         {
             RefreshScreen();
             Terminal.WriteLine("How would you like to flirt with Alex?");
             Terminal.WriteLine("You can:    gift   joke     sweet    askout");
-            if (input == "gift")
-            {
-                Terminal.WriteLine("Gift Line");
-                alexAttitude = (alexAttitude + alexGiftMod);
-            }
-            if (input == "joke")
-            {
-                Terminal.WriteLine("Joke Line");
-                alexAttitude = (alexAttitude + alexJokeMod);
-            }
-            if (input == "sweet")
-            {
-                Terminal.WriteLine("Sweet Line");
-                alexAttitude = (alexAttitude + alexSweetMod);
-            }
-            if (input == "askout")
-            {
-                Terminal.WriteLine("You ask her out!");
-                if (dailyRand + alexAttitude >= alexDifficulty)
-                {
-                    Terminal.WriteLine("Yes line");
-                    girlfriend = true;
-                    girlfriendName = "Alex";
-                    Invoke("MainScreen", 3f);
-                }
-                else
-                {
-                    Terminal.WriteLine("No line");
-                    Invoke("MainScreen", 3f);
-                }
-            }
+            AlexFlirt(input);
+            happiness = (happiness + 7);
+            stress = (stress - 2);
+            pride = (pride - 3);
+            loneliness = (loneliness + 6);
         }
         if (knownWomen.Contains("Pina") == true && input == "Pina")
         {
             RefreshScreen();
             Terminal.WriteLine("How would you like to flirt with Pina?");
             Terminal.WriteLine("You can:    gift   joke     sweet    askout");
-            if (input == "gift")
-            {
-                Terminal.WriteLine("Gift Line");
-                pinaAttitude = (pinaAttitude + pinaGiftMod);
-            }
-            if (input == "joke")
-            {
-                Terminal.WriteLine("Joke Line");
-                pinaAttitude = (pinaAttitude + pinaJokeMod);
-            }
-            if (input == "sweet")
-            {
-                Terminal.WriteLine("Sweet Line");
-                pinaAttitude = (pinaAttitude + pinaSweetMod);
-            }
-            if (input == "askout")
-            {
-                Terminal.WriteLine("You ask her out!");
-                if (dailyRand + pinaAttitude >= pinaDifficulty)
-                {
-                    Terminal.WriteLine("Yes line");
-                    girlfriend = true;
-                    girlfriendName = "Pina";
-                    Invoke("MainScreen", 3f);
-                }
-                else
-                {
-                    Terminal.WriteLine("No line");
-                    Invoke("MainScreen", 3f);
-                }
-            }
+            PinaFlirt(input);
+            happiness = (happiness + 5);
+            stress = (stress + 4);
+            pride = (pride + 4);
+            loneliness = (loneliness + 6);
         }
         if (knownWomen.Contains("Sammy") == true && input == "Sammy")
         {
             RefreshScreen();
             Terminal.WriteLine("How would you like to flirt with Sammy?");
             Terminal.WriteLine("You can:    gift   joke     sweet    askout");
-            if (input == "gift")
-            {
-                Terminal.WriteLine("Gift Line");
-                sammyAttitude = (sammyAttitude + sammyGiftMod);
-            }
-            if (input == "joke")
-            {
-                Terminal.WriteLine("Joke Line");
-                sammyAttitude = (sammyAttitude + sammyJokeMod);
-            }
-            if (input == "sweet")
-            {
-                Terminal.WriteLine("Sweet Line");
-                sammyAttitude = (sammyAttitude + sammySweetMod);
-            }
-            if (input == "askout")
-            {
-                Terminal.WriteLine("You ask her out!");
-                if (dailyRand + sammyAttitude >= sammyDifficulty)
-                {
-                    Terminal.WriteLine("Yes line");
-                    girlfriend = true;
-                    girlfriendName = "Sammy";
-                    Invoke("MainScreen", 3f);
-                }
-                else
-                {
-                    Terminal.WriteLine("No line");
-                    Invoke("MainScreen", 3f);
-                }
-            }
+            SammyFlirt(input);
+            happiness = (happiness + 1);
+            stress = (stress - 1);
+            pride = (pride - 1);
+            loneliness = (loneliness + 2);
         }
         if (knownWomen.Contains("Winry") == true && input == "Winry")
         {
             RefreshScreen();
             Terminal.WriteLine("How would you like to flirt with Winry?");
             Terminal.WriteLine("You can:    gift   joke     sweet    askout");
-            if (input == "gift")
+            WinryFlirt(input);
+            happiness = (happiness + 5);
+            stress = (stress + 5);
+            pride = (pride + 5);
+            loneliness = (loneliness + 8);
+        }
+    }
+
+    public string RandomGift()
+    {
+        string randomLine;
+        if (dailyRand > 75)
+        {
+            randomLine = "You write her a poem. It's kinda mushy, but well written. She likes it a lot!";
+            giftVar = 4;
+        }
+        if (dailyRand > 50)
+        {
+            randomLine = "You surprise her with a boquet of her favorite flowers. She loves them!";
+            giftVar = 3;
+        }
+        if (dailyRand > 25)
+        {
+            randomLine = "You get her some jewelry you think she'd like. She thanks you profusely.";
+            giftVar = 2;
+        }
+        else
+        {
+            randomLine = "You get her a box of her favorite candy. She smiles and shares it with you.";
+        }
+        return randomLine;
+    }
+
+    public string RandomSweet()
+    {
+        string randomLine;
+        if (dailyRand > 75)
+        {
+            randomLine = "You tell her you love spending time with her. She beams.";
+        }
+        if (dailyRand > 50)
+        {
+            randomLine = "You tell her you think she's beautiful. She blushes.";
+        }
+        if (dailyRand > 25)
+        {
+            randomLine = "You tell she's hilarious. She makes a joke! It's funny!";
+        }
+        else
+        {
+            randomLine = "You compliment your favorite part of her personality. You can tell it means a lot to her.";
+        }
+        return randomLine;
+    }
+
+    public string RandomJoke()
+    {
+        string randomLine;
+        if (dailyRand > 75)
+        {
+            randomLine = "You trade jokes that are so funny you're both crying laughing.";
+        }
+        if (dailyRand > 50)
+        {
+            randomLine = "You tell a joke off a popsicle stick. It's stupid but funny.";
+        }
+        if (dailyRand > 25)
+        {
+            randomLine = "You make a joke about the situation you're in. She laughs.";
+        }
+        else
+        {
+            randomLine = "You make a terrible pun. She still laughs, though.";
+        }
+        return randomLine;
+    }
+
+    public string RandomAskOut()
+    {
+        string randomLine;
+        if (dailyRand > 75)
+        {
+            randomLine = "You cook her a delicious dinner and ask her out afterwords.";
+        }
+        if (dailyRand > 50)
+        {
+            randomLine = "You bring her a boquet of her favorite flowers and ask her out.";
+        }
+        if (dailyRand > 25)
+        {
+            randomLine = "You're hanging out having a good time, so you just ask her out on the spot.";
+        }
+        else
+        {
+            randomLine = "You swing by her place and ask her out.";
+        }
+        return randomLine;
+    }
+
+    void WinryFlirt(string input)
+    {
+        currentScreen = Screen.FlirtWinry;
+        if (input == "gift")
+        {
+            Terminal.WriteLine(RandomGift());
+            winryAttitude = (winryAttitude + winryGiftMod + giftVar);
+        }
+        else if (input == "joke")
+        {
+            Terminal.WriteLine(RandomJoke());
+            winryAttitude = (winryAttitude + winryJokeMod);
+        }
+        else if (input == "sweet")
+        {
+            Terminal.WriteLine(RandomSweet());
+            winryAttitude = (winryAttitude + winrySweetMod);
+        }
+        else if (input == "askout")
+        {
+            Terminal.WriteLine(RandomAskOut());
+            if (dailyRand + winryAttitude >= winryDifficulty)
             {
-                Terminal.WriteLine("Gift Line");
-                winryAttitude = (winryAttitude + winryGiftMod);
+                Terminal.WriteLine("She says she would love to be your girlfriend and wraps you in a huge hug.");
+                girlfriend = true;
+                girlfriendName = "Winry";
+                Invoke("MainScreen", 3f);
             }
-            if (input == "joke")
+            else
             {
-                Terminal.WriteLine("Joke Line");
-                winryAttitude = (winryAttitude + winryJokeMod);
+                Terminal.WriteLine("She says you're sweet, but she doesn't think she knows you well enough quite yet.");
+                Invoke("MainScreen", 3f);
             }
-            if (input == "sweet")
+        }
+    }
+
+    void SammyFlirt(string input)
+    {
+        currentScreen = Screen.FlirtSammy;
+        if (input == "gift")
+        {
+            Terminal.WriteLine(RandomGift());
+            sammyAttitude = (sammyAttitude + sammyGiftMod + giftVar);
+        }
+        else if (input == "joke")
+        {
+            Terminal.WriteLine(RandomJoke());
+            sammyAttitude = (sammyAttitude + sammyJokeMod);
+        }
+        else if (input == "sweet")
+        {
+            Terminal.WriteLine(RandomSweet());
+            sammyAttitude = (sammyAttitude + sammySweetMod);
+        }
+        else if (input == "askout")
+        {
+            Terminal.WriteLine(RandomAskOut());
+            if (dailyRand + sammyAttitude >= sammyDifficulty)
             {
-                Terminal.WriteLine("Sweet Line");
-                winryAttitude = (winryAttitude + winrySweetMod);
+                Terminal.WriteLine("She shrugs and agrees to be your girlfriend. She kisses you, and seems a lot more interested in that.");
+                girlfriend = true;
+                girlfriendName = "Sammy";
+                Invoke("MainScreen", 3f);
             }
-            if (input == "askout")
+            else
             {
-                Terminal.WriteLine("You ask her out!");
-                if (dailyRand + winryAttitude >= winryDifficulty)
-                {
-                    Terminal.WriteLine("Yes line");
-                    girlfriend = true;
-                    girlfriendName = "Winry";
-                    Invoke("MainScreen", 3f);
-                }
-                else
-                {
-                    Terminal.WriteLine("No line");
-                    Invoke("MainScreen", 3f);
-                }
+                Terminal.WriteLine("She shrugs and tells you she's fine with your current relationship.");
+                Invoke("MainScreen", 3f);
+            }
+        }
+    }
+
+    void PinaFlirt(string input)
+    {
+        currentScreen = Screen.FlirtPina;
+        if (input == "gift")
+        {
+            Terminal.WriteLine(RandomGift());
+            pinaAttitude = (pinaAttitude + pinaGiftMod + giftVar);
+        }
+        else if (input == "joke")
+        {
+            Terminal.WriteLine(RandomJoke());
+            pinaAttitude = (pinaAttitude + pinaJokeMod);
+        }
+        else if (input == "sweet")
+        {
+            Terminal.WriteLine(RandomSweet());
+            pinaAttitude = (pinaAttitude + pinaSweetMod);
+        }
+        else if (input == "askout")
+        {
+            Terminal.WriteLine(RandomAskOut());
+            if (dailyRand + pinaAttitude >= pinaDifficulty)
+            {
+                Terminal.WriteLine("She says she doesn't like you... but smiles and stays the night at your place.");
+                girlfriend = true;
+                girlfriendName = "Pina";
+                Invoke("MainScreen", 3f);
+            }
+            else
+            {
+                Terminal.WriteLine("She asks who would like you, and doesn't talk to you anymore that day.");
+                Invoke("MainScreen", 3f);
+            }
+        }
+    }
+
+    void AlexFlirt(string input)
+    {
+        currentScreen = Screen.FlirtAlex;
+        if (input == "gift")
+        {
+            Terminal.WriteLine(RandomGift());
+            alexAttitude = (alexAttitude + alexGiftMod + giftVar);
+        }
+        else if (input == "joke")
+        {
+            Terminal.WriteLine(RandomJoke());
+            alexAttitude = (alexAttitude + alexJokeMod);
+        }
+        else if (input == "sweet")
+        {
+            Terminal.WriteLine(RandomSweet());
+            alexAttitude = (alexAttitude + alexSweetMod);
+        }
+        else if (input == "askout")
+        {
+            Terminal.WriteLine(RandomAskOut());
+            if (dailyRand + alexAttitude >= alexDifficulty)
+            {
+                Terminal.WriteLine("She ignores your question, but pulls you to her bedroom and closes the door.");
+                girlfriend = true;
+                girlfriendName = "Alex";
+                Invoke("MainScreen", 3f);
+            }
+            else
+            {
+                Terminal.WriteLine("She say she doesn't really know what she's looking for right now, but that she's flattered.");
+                Invoke("MainScreen", 3f);
+            }
+        }
+    }
+
+    void JennaFlirt(string input)
+    {
+        currentScreen = Screen.FlirtJenna;
+        if (input == "gift")
+        {
+            Terminal.WriteLine(RandomGift());
+            jennaAttitude = (jennaAttitude + jennaGiftMod + giftVar);
+        }
+        else if (input == "joke")
+        {
+            Terminal.WriteLine(RandomJoke());
+            jennaAttitude = (jennaAttitude + jennaJokeMod);
+        }
+        else if (input == "sweet")
+        {
+            Terminal.WriteLine(RandomSweet());
+            jennaAttitude = (jennaAttitude + jennaSweetMod);
+        }
+        else if (input == "askout")
+        {
+            Terminal.WriteLine(RandomAskOut());
+            if (dailyRand + jennaAttitude >= jennaDifficulty)
+            {
+                Terminal.WriteLine("She gives you a big smile, and you spend all night cuddling and talking together.");
+                girlfriend = true;
+                girlfriendName = "Jenna";
+                Invoke("MainScreen", 3f);
+            }
+            else
+            {
+                Terminal.WriteLine("She says she's not quite ready for that yet.");
+                Invoke("MainScreen", 3f);
+            }
+        }
+    }
+
+    void LinaFlirt(string input)
+    {
+        currentScreen = Screen.FlirtLina;
+        if (input == "gift")
+        {
+            Terminal.WriteLine(RandomGift());
+            linaAttitude = (linaAttitude + linaGiftMod + giftVar);
+        }
+        else if (input == "joke")
+        {
+            Terminal.WriteLine(RandomJoke());
+            linaAttitude = (linaAttitude + linaJokeMod);
+        }
+        else if (input == "sweet")
+        {
+            Terminal.WriteLine(RandomSweet());
+            linaAttitude = (linaAttitude + linaSweetMod);
+        }
+        else if (input == "askout")
+        {
+            Terminal.WriteLine(RandomAskOut());
+            if (dailyRand + linaAttitude >= linaDifficulty)
+            {
+                Terminal.WriteLine("She says yes, and you spend the day gaming together. What a blast!");
+                girlfriend = true;
+                girlfriendName = "Lina";
+                Invoke("MainScreen", 3f);
+            }
+            else
+            {
+                Terminal.WriteLine("She says she's just not happy enough right now for that.");
+                Invoke("MainScreen", 3f);
             }
         }
     }
@@ -1492,6 +1810,7 @@ public class Gameplay : MonoBehaviour {
         RefreshScreen();
         Terminal.WriteLine("You go to university...");
         schooledToday = true;
+        loneliness = (loneliness + 1);
         if (dailyRand > 95)
         {
             MeetGirl();
@@ -1625,22 +1944,26 @@ public class Gameplay : MonoBehaviour {
             stress = (stress + 5);
             happiness = (happiness + 15);
             pride = (pride + 7);
+            loneliness = (loneliness + 2);
         }
         else if (friendAttitude + dailyRand > 100)
         {
             Terminal.WriteLine("You have a great conversation with your friend. That was nice.");
             happiness = (happiness + 10);
             pride = (pride + 5);
+            loneliness = (loneliness + 2);
         }
         else if (friendAttitude + dailyRand > 75)
         {
             Terminal.WriteLine("You share silly texts with your friend. Fun.");
             happiness = (happiness + 6);
+            loneliness = (loneliness + 2);
         }
         else if (friendAttitude + dailyRand > 50)
         {
             Terminal.WriteLine("You talk on the phone with your friend for a while");
             happiness = (happiness + 3);
+            loneliness = (loneliness + 2);
         }
         else
         {
@@ -1671,6 +1994,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 10);
                 happiness = (happiness + 20);
                 pride = (pride + 10);
+            loneliness = (loneliness + 1);
         }
         else if (onlineAttitude + dailyRand > 150)
         {
@@ -1678,28 +2002,33 @@ public class Gameplay : MonoBehaviour {
             stress = (stress + 3);
             happiness = (happiness + 10);
             pride = (pride + 3);
+            loneliness = (loneliness + 1);
         }
         else if (onlineAttitude + dailyRand > 100)
         {
             Terminal.WriteLine("You live stream gaming with some of your friends. Cool.");
             happiness = (happiness + 6);
             pride = (pride + 1);
+            loneliness = (loneliness + 1);
         }
         else if (onlineAttitude + dailyRand > 75)
         {
             Terminal.WriteLine("You share some memes with your clan. Haha.");
             happiness = (happiness + 3);
+            loneliness = (loneliness + 1);
         }
         else if (onlineAttitude + dailyRand > 50)
         {
             Terminal.WriteLine("You chat in Discord for a while.");
             happiness = (happiness + 2);
+            loneliness = (loneliness + 1);
         }
         else
         {
             Terminal.WriteLine("You argue with your friends. Damn.");
             happiness = (happiness - 1);
             onlineAttitude = (onlineAttitude - 3);
+            loneliness = (loneliness - 1);
         }
         AddSpace();
         Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
@@ -1709,6 +2038,7 @@ public class Gameplay : MonoBehaviour {
     {
         dailyRand = UnityEngine.Random.Range(0, 101);
         RefreshScreen();
+        loneliness = (loneliness - 1);
         if (dailyRand > 90)
         {
             Terminal.WriteLine("You read a book. You feel edified!");
