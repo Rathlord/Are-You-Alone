@@ -32,8 +32,15 @@ public class Gameplay : MonoBehaviour {
     List<string> unknownWomen = new List<string>();
     List<string> knownWomen = new List<string>();
     int womenRand;
-    string girlfriendName;
+    string girlfriendName = "none";
     int dateAttitude;
+    bool flirted = false;
+    bool flirtLina = false;
+    bool flirtJenna = false;
+    bool flirtAlex = false;
+    bool flirtPina = false;
+    bool flirtSammy = false;
+    bool flirtWinry = false;
 
     // Many character variables will be stored here
 
@@ -193,6 +200,13 @@ public class Gameplay : MonoBehaviour {
         yesterdayStress = stress;
         yesterdayHappiness = happiness;
         yesterdayPride = pride;
+        flirted = false;
+        flirtLina = false;
+        flirtJenna = false;
+        flirtAlex = false;
+        flirtPina = false;
+        flirtSammy = false;
+        flirtWinry = false;
         if (employed == true)
         {
             employedYesterday = true;
@@ -312,6 +326,7 @@ public class Gameplay : MonoBehaviour {
         if (school == true)
         {
             Terminal.WriteLine("You're still going to university. You don't like it much, but you're proud of it.");
+            pride = (pride + 2);
         }
         if (employed == false)
         {
@@ -321,6 +336,7 @@ public class Gameplay : MonoBehaviour {
         if (employed == true)
         {
             Terminal.WriteLine("You're holding down a steady job. Go you!");
+            pride = (pride + 2);
         }
         if (money > 100)
         {
@@ -555,6 +571,43 @@ public class Gameplay : MonoBehaviour {
         }
         friendToday = false;
         onlineToday = false;
+    }
+
+    void NightRelationships()
+    {
+        RefreshScreen();
+        if (girlfriend == false)
+        {
+            Terminal.WriteLine("You don't have a girlfriend. You miss having someone who cares about you.");
+            happiness = (happiness - 5);
+            pride = (pride - 2);
+            stress = (stress + 1);
+            loneliness = (loneliness - 5);
+        }
+        else
+        {
+            Terminal.WriteLine("You are in a relationship with " + girlfriendName + ". That makes you happy!");
+            happiness = (happiness + 3);
+            pride = (pride + 3);
+            stress = (stress - 1);
+            loneliness = (loneliness + 8);
+        }
+        AddSpace();
+        RelationshipAttitudes();
+    }
+
+    void RelationshipAttitudes()
+    {
+        if (knownWomen.Contains("Lina") == true && flirtLina == false)
+        {
+            Terminal.WriteLine("You didn't spend time with Lina today. She misses you some.");
+            linaAttitude = (linaAttitude - 1);
+        }
+        else if (knownWomen.Contains("Lina") == true && flirted == true)
+        {
+            Terminal.WriteLine("Lina is jealous you spent time with someone else today.");
+            linaAttitude = (linaAttitude - 4);
+        } // TODO EVERYONE ELSE MISSING + JEALOUSY FOR SOME
     }
 
     void Abscences() // Checks if the player showed up to work/school and fires them if they've missed too much
@@ -1364,6 +1417,8 @@ public class Gameplay : MonoBehaviour {
             if (dailyRand + linaAttitude >= (linaDifficulty / 2))
             {
                 Terminal.WriteLine(DateRandom());
+                flirted = true;
+                flirtLina = true;
                 if (dailyRand < 76)
                 {
                     linaAttitude = (linaAttitude + 10);
@@ -1397,6 +1452,8 @@ public class Gameplay : MonoBehaviour {
             if (dailyRand + jennaAttitude >= (jennaDifficulty / 2))
             {
                 Terminal.WriteLine(DateRandom());
+                flirted = true;
+                flirtJenna = true;
                 if (dailyRand < 76)
                 {
                     jennaAttitude = (jennaAttitude + 10);
@@ -1430,6 +1487,8 @@ public class Gameplay : MonoBehaviour {
             if (dailyRand + alexAttitude >= (alexDifficulty / 2))
             {
                 Terminal.WriteLine(DateRandom());
+                flirted = true;
+                flirtAlex = true;
                 if (dailyRand < 76)
                 {
                     alexAttitude = (alexAttitude + 10);
@@ -1462,6 +1521,8 @@ public class Gameplay : MonoBehaviour {
             if (dailyRand + pinaAttitude >= (pinaDifficulty / 2))
             {
                 Terminal.WriteLine(DateRandom());
+                flirted = true;
+                flirtPina = true;
                 if (dailyRand < 76)
                 {
                     pinaAttitude = (pinaAttitude + 10);
@@ -1495,6 +1556,8 @@ public class Gameplay : MonoBehaviour {
             if (dailyRand + sammyAttitude >= (sammyDifficulty / 2))
             {
                 Terminal.WriteLine(DateRandom());
+                flirted = true;
+                flirtSammy = true;
                 if (dailyRand < 76)
                 {
                     sammyAttitude = (sammyAttitude + 10);
@@ -1526,6 +1589,8 @@ public class Gameplay : MonoBehaviour {
             if (dailyRand + winryAttitude >= (winryDifficulty / 2))
             {
                 Terminal.WriteLine(DateRandom());
+                flirted = true;
+                flirtWinry = true;
                 if (dailyRand < 76)
                 {
                     winryAttitude = (winryAttitude + 10);
@@ -1596,6 +1661,8 @@ public class Gameplay : MonoBehaviour {
             stress = (stress + 1);
             pride = (pride + 1);
             loneliness = (loneliness + 4);
+            flirtLina = true;
+            flirted = true;
         }
         if (knownWomen.Contains("Jenna") == true && input == "Jenna")
         {
@@ -1606,6 +1673,8 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness + 5);
             stress = (stress + 1);
             loneliness = (loneliness + 6);
+            flirtJenna = true;
+            flirted = true;
         }
         if (knownWomen.Contains("Alex") == true && input == "Alex")
         {
@@ -1617,6 +1686,8 @@ public class Gameplay : MonoBehaviour {
             stress = (stress - 2);
             pride = (pride - 3);
             loneliness = (loneliness + 6);
+            flirtAlex = true;
+            flirted = true;
         }
         if (knownWomen.Contains("Pina") == true && input == "Pina")
         {
@@ -1628,6 +1699,8 @@ public class Gameplay : MonoBehaviour {
             stress = (stress + 4);
             pride = (pride + 4);
             loneliness = (loneliness + 6);
+            flirtPina = true;
+            flirted = true;
         }
         if (knownWomen.Contains("Sammy") == true && input == "Sammy")
         {
@@ -1639,6 +1712,8 @@ public class Gameplay : MonoBehaviour {
             stress = (stress - 1);
             pride = (pride - 1);
             loneliness = (loneliness + 2);
+            flirtSammy = true;
+            flirted = true;
         }
         if (knownWomen.Contains("Winry") == true && input == "Winry")
         {
@@ -1650,6 +1725,8 @@ public class Gameplay : MonoBehaviour {
             stress = (stress + 5);
             pride = (pride + 5);
             loneliness = (loneliness + 8);
+            flirtWinry = true;
+            flirted = true;
         }
     }
 
