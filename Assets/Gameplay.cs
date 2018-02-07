@@ -1514,7 +1514,7 @@ public class Gameplay : MonoBehaviour {
             {
                 Terminal.WriteLine(DateDecline());
                 loneliness = (loneliness - 2);
-                happiness = (happiness - 2;
+                happiness = (happiness - 2);
                 stress = (stress - 2);
                 pride = (pride - 2);
             }
@@ -1976,7 +1976,7 @@ public class Gameplay : MonoBehaviour {
                 girlfriend = true;
                 girlfriendName = "Lina";
                 Invoke("MainScreen", 3f);
-                attitude = (attitudes + 10);
+                linaAttitude = (linaAttitude + 10);
             }
             else
             {
