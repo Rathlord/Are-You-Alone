@@ -8,7 +8,6 @@ public class Gameplay : MonoBehaviour {
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    [SerializeField] string character = "default";
     enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover };
     Screen currentScreen;
     [SerializeField] int turn = 0;
@@ -26,12 +25,17 @@ public class Gameplay : MonoBehaviour {
 
     [SerializeField] int dailyRand;
 
+    // Relationship variables go here
+
+    List<string> unknownWomen = new List<string>();
+    List<string> knownWomen = new List<string>();
+    int womenRand;
+
     // Many character variables will be stored here
 
     bool school = true;
     bool girlfriend = false;
     bool employed = false;
-    int knownGirls = 1;
     enum House { Parents, Friend, Rent, None };
     House currentHouse;
     enum Job { DepartmentStore, LumberYard, PaintStore, PizzaPlace, TravelingSales, GameCompany, None }
@@ -58,15 +62,6 @@ public class Gameplay : MonoBehaviour {
     int yesterdayPride;
     bool employedYesterday;
 
-    // List of girls to know
-
-    bool Lina = true;
-    bool Jenna = false;
-    bool Alex = false;
-    bool Pina = false;
-    bool Sammy = false;
-    bool Winry = false;
-
     // Use this for initialization
     void Start()
     {
@@ -81,6 +76,12 @@ public class Gameplay : MonoBehaviour {
         yesterdayPride = pride;
         yesterdayHappiness = happiness;
         employedYesterday = false;
+        unknownWomen.Add("Lina");
+        unknownWomen.Add("Jenna");
+        unknownWomen.Add("Alex");
+        unknownWomen.Add("Pina");
+        unknownWomen.Add("Sammy");
+        unknownWomen.Add("Winry");
     }
 
     void MainScreen()
@@ -104,8 +105,8 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You worked today.");
         }
         AddSpace();
-        Terminal.WriteLine("These are the people you know:");
-        GirlList();
+        MeetGirl();                                                                                   //TODO add list of known women
+        Terminal.WriteLine("These are the people you know:");                                                                                                    
         AddSpace();
         Terminal.WriteLine("Enter an action!");
         Terminal.WriteLine("(You can enter 'actions' to see a list)");
@@ -559,7 +560,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
         }
-        else if (input == "actions" && currentScreen == Screen.Gameplay) // List available actions
+        else if ((input == "actions" || input == "action") && currentScreen == Screen.Gameplay) // List available actions
         {
             ActionList();
         }
@@ -668,7 +669,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*No school today*");
         }
-        if (knownGirls > 0)
+        if (knownWomen.Count > 0)
         {
             Terminal.WriteLine("flirt");
         }
@@ -676,7 +677,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*You don't know anyone to flirt with*");
         }
-        if ((girlfriend == true || knownGirls > 0) && money > 3)
+        if ((girlfriend == true || knownWomen.Count > 0) && money > 3)
         {
             Terminal.WriteLine("date");
         }
@@ -738,12 +739,12 @@ public class Gameplay : MonoBehaviour {
             School();
             spoons--;
         }
-        if (input == "flirt" && knownGirls > 0)
+        if (input == "flirt" && knownWomen.Count > 0)
         {
             Flirt();
             spoons--;
         }
-        if (input == "date" && ((girlfriend == true || knownGirls > 0) && money > 0))
+        if (input == "date" && ((girlfriend == true || knownWomen.Count > 0) && money > 0))
         {
             Date();
             spoons--;
@@ -786,11 +787,11 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Go to university for class. Makes you unhappy and stressed, but proud.");
         }
-        if (input == "!flirt" && knownGirls > 0)
+        if (input == "!flirt" && knownWomen.Count > 0)
         {
             Terminal.WriteLine("Flirt with a girl you know. Results may vary.");
         }
-        if (input == "!date" && ((girlfriend == true || knownGirls > 0) && money > 0))
+        if (input == "!date" && ((girlfriend == true || knownWomen.Count > 0) && money > 0))
         {
             Terminal.WriteLine("Go on a date with a girl you know- if she's up for it.");
         }
@@ -1109,17 +1110,51 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("You don't even feel tired from working!");
             }
         }
+        AddSpace();
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
 
     void Date() //TODO IMPLEMENT ME
     {
         throw new NotImplementedException();
+        AddSpace();
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
 
     void Flirt() //TODO IMPLEMENT ME
     {
         throw new NotImplementedException();
+        AddSpace();
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
+
+    /// 
+    /// WIP Relationship Code
+    /// 
+    /// 
+
+    
+
+    void MeetGirl ()
+    {
+        if (unknownWomen.Count > 0)
+        {
+            womenRand = UnityEngine.Random.Range(0, unknownWomen.Count);
+            Terminal.WriteLine("You meet " + (string)unknownWomen[womenRand]);
+            AddSpace();
+            Terminal.WriteLine("To learn more about her any time enter !" + (string)unknownWomen[womenRand]);
+            knownWomen.Add((string)unknownWomen[womenRand]);
+            unknownWomen.Remove((string)unknownWomen[womenRand]);
+        }
+        else
+            return;
+    }
+
+
+    ///
+    /// WIP Relationship Code
+    ///
+
 
     void School()
     {
@@ -1171,6 +1206,8 @@ public class Gameplay : MonoBehaviour {
             pride = (pride - 1);
             happiness = (happiness + 1);
         }
+        AddSpace();
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
 
     void JobSearch()
@@ -1234,6 +1271,8 @@ public class Gameplay : MonoBehaviour {
             stress--;
             pride++;
         }
+        AddSpace();
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     } // TODO Ask if player wants to take new job
 
     void Friends()
@@ -1278,6 +1317,8 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness - 1);
             friendAttitude = (friendAttitude - 3);
         }
+        AddSpace();
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
 
     void Online()
@@ -1329,6 +1370,8 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness - 1);
             onlineAttitude = (onlineAttitude - 3);
         }
+        AddSpace();
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
 
     void Hobby()  // Define hobbies
@@ -1405,42 +1448,8 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness + 0);
             pride = (pride + 0);
         }
-    }
-
-
-    void GirlList()
-    {
-        Terminal.WriteLine("You have a friend.");
-        if (Lina == true)
-        {
-            Terminal.WriteLine("You know Lina");
-        }
-        if (Jenna == true)
-        {
-            Terminal.WriteLine("You know Jenna");
-        }
-        if (Alex == true)
-        {
-            Terminal.WriteLine("You know Alex");
-        }
-        if (Pina == true)
-        {
-            Terminal.WriteLine("You know Pina");
-        }
-        if (Sammy == true)
-        {
-            Terminal.WriteLine("You know Sammy");
-        }
-        if (Winry == true)
-        {
-            Terminal.WriteLine("You know Winry");
-        }
         AddSpace();
-    }
-
-    void MeetGirl()
-    {
-        throw new NotImplementedException();
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
     }
 
     void RefreshScreen() 
