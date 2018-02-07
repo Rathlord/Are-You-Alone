@@ -610,6 +610,8 @@ public class Gameplay : MonoBehaviour {
         } // TODO EVERYONE ELSE MISSING + JEALOUSY FOR SOME
     }
 
+    // TODO GIRLFRIEND INTRODUCTION SCREEN
+
     void Abscences() // Checks if the player showed up to work/school and fires them if they've missed too much
     {
         if (workedToday == false && workDay == true && employedYesterday == true)
@@ -941,7 +943,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("Pina is brilliant, adorable, and friendly.");
             Terminal.WriteLine("She is sometimes reserved, but very cool");
             Terminal.WriteLine("She has short very dark hair and is very short.");
-            Terminal.WriteLine("She is curvy and very cute with an enchanting voice");
+            Terminal.WriteLine("She is curvy and very pretty with an enchanting voice");
             Terminal.WriteLine("She knows many languages and has traveled the world");
             Terminal.WriteLine("She enjoys great food, deep conversations, and cuddling.");
         }
