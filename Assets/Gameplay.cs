@@ -165,11 +165,19 @@ public class Gameplay : MonoBehaviour {
 	// TODO SCORE DISPLAY
 	// TODO WINS/LOSSES
 	// TODO LIST KNOWN WOMEN ON MAIN
-	// TODO PARENTS ATTITUDE CHECKS
+	// TODO PARENTS ATTITUDE CHECKS  (parents now lose all attitude if you quit school while living with them)
 	// TODO SHOW ACTIONS ON MAIN?
 	// TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
 	// TODO DID I IMPLEMENT PARENTS ATTITUDE AFTER DROPPING OUT?
 	// TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
+
+    void WomenList()
+    {
+        foreach (string women in knownWomen)
+        {
+            Terminal.WriteLine(women);
+        }
+    }
 
     void MainScreen()
     {
@@ -178,6 +186,8 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Enter an action!                (You can enter 'actions' to see a list)");
         AddSpace();
         Terminal.WriteLine("These are the people you know:");      //TODO add list of known women
+        AddSpace();
+        WomenList();
         AddSpace();
         if (schoolDay == true && school == true && schooledToday == false)
         {
@@ -267,7 +277,6 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         GirlfriendAttitude();
         AddSpace();
-        RelationshipAttitudes();
         Terminal.WriteLine("Write 'next' to proceed");
     }
 
@@ -314,7 +323,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Play the game by entering commands on the keyboard.");
         Terminal.WriteLine("You can type 'home' from almost any screen to return to the main screen.");
         AddSpace();
-        Terminal.WriteLine("You can perform up to three actions per day. These are called spoons.");
+        Terminal.WriteLine("You can perform three actions per day. These are called spoons.");
         Terminal.WriteLine("Spoons are tracked at the top right of your screen.");
         AddSpace();
         Terminal.WriteLine("On the main screen you can type 'actions' to list what you can do.");
@@ -323,7 +332,6 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("You can learn about most actions by typing them with an exclamation mark.");
         Terminal.WriteLine("For instance, type '!home' to learn about the home command.");
         AddSpace();
-        Terminal.WriteLine("Try to balance these stats and your money.");
         Terminal.WriteLine("Type 'next' for the next page.");
     }
 
@@ -331,17 +339,16 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.Gameplay;
         RefreshScreen();
-        Terminal.WriteLine("The goal of the game is to balance your character and be happy.");
-        Terminal.WriteLine("You may game over if you become too unhappy.");
-        Terminal.WriteLine("If your stress gets too high you won't be able to do things.");
-        Terminal.WriteLine("If you aren't proud of yourself, you won't take care of yourself.");
+        Terminal.WriteLine("You can 'Win' the game by becoming happy or giving yourself a good future.");
+        Terminal.WriteLine("You will lose the game if you become too sad or otherwise can't continue.");
+        Terminal.WriteLine("If your stress, pride, or happiness get too low you won't be able to do things.");
         AddSpace();
         Terminal.WriteLine("Increase your happiness by doing things you enjoy.");
-        Terminal.WriteLine("Decrease your stress by relaxing and doing things that aren't stressful.");
+        Terminal.WriteLine("Decrease your stress by relaxing and doing things that aren't strenuous.");
         Terminal.WriteLine("Increase your pride by doing things you'd be proud of yourself for.");
         AddSpace();
         Terminal.WriteLine("You also need to manage your loneliness and relationships.");
-        Terminal.WriteLine("Make sure not to neglect people in your life or there will be consequences.");
+        Terminal.WriteLine("Make sure not to neglect people in your life or there may be consequences.");
         AddSpace();
         Terminal.WriteLine("Enter 'home' to begin the game.");
     }
@@ -466,6 +473,10 @@ public class Gameplay : MonoBehaviour {
             currentHouse = House.None;
             Terminal.WriteLine("Your parents aren't okay with you dropping out of school.");
             Terminal.WriteLine("They've kicked you out! You're homeless!");
+            if (parentsAttitude > 0)
+            {
+                parentsAttitude = 0;
+            }
         }
         if (currentHouse == House.Friend && friendAttitude < 1)
         {
