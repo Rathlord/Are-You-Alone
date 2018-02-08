@@ -51,8 +51,8 @@ public class Gameplay : MonoBehaviour {
     House currentHouse;
     enum Job { DepartmentStore, LumberYard, PaintStore, PizzaPlace, TravelingSales, GameCompany, None }
     Job currentJob;
-    [SerializeField] int stress = 50;
     [SerializeField] int happiness = 50;
+    [SerializeField] int stress = 50;
     [SerializeField] int pride = 50;
     [SerializeField] int determination = 0;
     [SerializeField] int loneliness = 0;
@@ -154,6 +154,13 @@ public class Gameplay : MonoBehaviour {
     // TODO HANDLE ASKING OUT WHEN YOU ALREADY HAVE A GIRLFRIEND
     // TODO LIMIT MORE ACTIONS WITH STATS
     // TODO IMPLEMENT "IN LOVE"
+    // TODO IMPLEMENT RANDOM MESSAGES FOR POST-DAY SCREEN
+    // TODO IMPLEMENT RANDOM DAILY EVENTS
+    // TODO EASE UP LONELINESS MAYBE?
+    // TODO IMPLEMENT STAT METERS
+    // TODO CAP STATS AT -100/100
+    // TODO STOP FLIRTING WITH SAME GIRL TWICE IN A DAY
+    // TODO PRIDE IS TOO EASY
 
     void MainScreen()
     {
@@ -965,8 +972,6 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
-    // TODO GIRLFRIEND INTRODUCTION SCREEN
-
     void Abscences() // Checks if the player showed up to work/school and fires them if they've missed too much
     {
         if (workedToday == false && workDay == true && employedYesterday == true)
@@ -1407,6 +1412,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("You can't afford your own place");
                 Terminal.WriteLine("The deposit is $10");
             }
+            AddSpace();
             Terminal.WriteLine("Type 'cancel' to go back to the main screen instead");
         }
         if (currentHouse == House.Parents)
@@ -1432,6 +1438,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("The deposit is $10");
             }
             Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+            AddSpace();
             Terminal.WriteLine("Type 'cancel' to go back to the main screen instead");
         }
         if (currentHouse == House.Friend)
@@ -1457,6 +1464,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("The deposit is $10");
             }
             Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+            AddSpace();
             Terminal.WriteLine("Type 'cancel' to go back to the main screen instead");
         }
         if (currentHouse == House.Rent)
@@ -1480,6 +1488,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("Your friend doesn't want you staying there");
             }
             Terminal.WriteLine("If you have no other choice, you could be homeless      (type 'homeless')");
+            AddSpace();
             Terminal.WriteLine("Type 'cancel' to go back to the main screen instead");
         }
         AddSpace();
@@ -1508,7 +1517,7 @@ public class Gameplay : MonoBehaviour {
                 MeetGirl();
                 happiness = (happiness + 3);
                 pride = (pride + 1);
-                earnings = 2;
+                earnings = 4;
             }
             else if (dailyRand < 20)
             {
@@ -1516,7 +1525,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 2);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
-                earnings = 2;
+                earnings = 4;
             }
             else
             {
@@ -1524,7 +1533,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 1);
-                earnings = 2;
+                earnings = 4;
             }
         }
         if (currentJob == Job.LumberYard)
@@ -1534,7 +1543,7 @@ public class Gameplay : MonoBehaviour {
                 MeetGirl();
                 happiness = (happiness + 3);
                 pride = (pride + 2);
-                earnings = 4;
+                earnings = 8;
             }
             else if (dailyRand < 10)
             {
@@ -1542,7 +1551,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 2);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
-                earnings = 4;
+                earnings = 8;
             }
             else if (dailyRand > 90)
             {
@@ -1550,7 +1559,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 1);
                 happiness = (happiness + 1);
                 pride = (pride + 4);
-                earnings = 4;
+                earnings = 8;
             }
             else
             {
@@ -1558,7 +1567,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 3);
-                earnings = 4;
+                earnings = 8;
             }
         }
         if (currentJob == Job.PaintStore)
@@ -1568,7 +1577,7 @@ public class Gameplay : MonoBehaviour {
                 MeetGirl();
                 happiness = (happiness + 3);
                 pride = (pride + 5);
-                earnings = 3;
+                earnings = 6;
             }
             else if (dailyRand < 10)
             {
@@ -1576,7 +1585,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 2);
                 happiness = (happiness - 3);
                 pride = (pride - 1);
-                earnings = 3;
+                earnings = 6;
             }
             else if (dailyRand > 80)
             {
@@ -1584,13 +1593,13 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 1);
                 happiness = (happiness + 1);
                 pride = (pride + 7);
-                earnings = 3;
+                earnings = 6;
             }
             else
             {
                 Terminal.WriteLine("You finish work.");
                 stress = (stress - 1);
-                earnings = 3;
+                earnings = 6;
             }
         }
         if (currentJob == Job.PizzaPlace)
@@ -1601,14 +1610,14 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 5);
                 pride = (pride - 1);
-                earnings = 1;
+                earnings = 2;
             }
             else if (dailyRand > 85)
             {
                 Terminal.WriteLine("You make good tips at work.");
                 happiness = (happiness + 1);
                 pride = (pride + 1);
-                earnings = 3;
+                earnings = 6;
             }
             else
             {
@@ -1616,7 +1625,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride + 1);
-                earnings = 3;
+                earnings = 4;
             }
         }
         if (currentJob == Job.TravelingSales)
@@ -1626,7 +1635,7 @@ public class Gameplay : MonoBehaviour {
                 MeetGirl();
                 happiness = (happiness + 3);
                 pride = (pride + 5);
-                earnings = 6;
+                earnings = 12;
             }
             else if (dailyRand < 15)
             {
@@ -1634,7 +1643,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 5);
                 happiness = (happiness - 10);
                 pride = (pride - 5);
-                earnings = 6;
+                earnings = 12;
             }
             else if (dailyRand > 95)
             {
@@ -1642,7 +1651,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 2);
                 happiness = (happiness + 3);
                 pride = (pride + 5);
-                earnings = 6;
+                earnings = 12;
             }
             else
             {
@@ -1650,7 +1659,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 2);
                 happiness = (happiness - 3);
                 pride = (pride + 3);
-                earnings = 6;
+                earnings = 12;
             }
         }
         if (currentJob == Job.GameCompany)
@@ -1661,7 +1670,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress - 1);
                 happiness = (happiness - 1);
                 pride = (pride - 1);
-                money = (money + 1);
+                earnings = 2;
             }
             else if (dailyRand > 95)
             {
@@ -1669,7 +1678,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 1);
                 happiness = (happiness + 3);
                 pride = (pride + 3);
-                earnings = 3;
+                earnings = 6;
                 spoons++;
                 Terminal.WriteLine("You don't even feel tired from working!");
             }
@@ -1678,13 +1687,13 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("You finish work.");
                 happiness = (happiness + 1);
                 pride = (pride + 2);
-                earnings = 1;
+                earnings = 2;
                 spoons++;
                 Terminal.WriteLine("You don't even feel tired from working!");
             }
         }
         AddSpace();
-        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
     }
 
     void Date() 
@@ -2132,7 +2141,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (dailyRand > 25)
         {
-            randomLine = "You tell she's hilarious. She makes a joke! It's funny!";
+            randomLine = "You tell her she's hilarious. She makes a joke! It's funny!";
         }
         else
         {
@@ -2187,6 +2196,8 @@ public class Gameplay : MonoBehaviour {
 
     void WinryFlirt(string input)
     {
+        AddSpace();
+        flirtToday = true;
         currentScreen = Screen.FlirtWinry;
         if (input == "gift")
         {
@@ -2234,6 +2245,8 @@ public class Gameplay : MonoBehaviour {
 
     void SammyFlirt(string input)
     {
+        AddSpace();
+        flirtToday = true;
         currentScreen = Screen.FlirtSammy;
         if (input == "gift")
         {
@@ -2281,6 +2294,8 @@ public class Gameplay : MonoBehaviour {
 
     void PinaFlirt(string input)
     {
+        AddSpace();
+        flirtToday = true;
         currentScreen = Screen.FlirtPina;
         if (input == "gift")
         {
@@ -2328,6 +2343,8 @@ public class Gameplay : MonoBehaviour {
 
     void AlexFlirt(string input)
     {
+        AddSpace();
+        flirtToday = true;
         currentScreen = Screen.FlirtAlex;
         if (input == "gift")
         {
@@ -2375,6 +2392,8 @@ public class Gameplay : MonoBehaviour {
 
     void JennaFlirt(string input)
     {
+        AddSpace();
+        flirtToday = true;
         currentScreen = Screen.FlirtJenna;
         if (input == "gift")
         {
@@ -2422,6 +2441,8 @@ public class Gameplay : MonoBehaviour {
 
     void LinaFlirt(string input)
     {
+        AddSpace();
+        flirtToday = true;
         currentScreen = Screen.FlirtLina;
         if (input == "gift")
         {
@@ -2573,7 +2594,7 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness + 1);
         }
         AddSpace();
-        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
     }
 
     void JobSearch()
@@ -2638,7 +2659,7 @@ public class Gameplay : MonoBehaviour {
             pride++;
         }
         AddSpace();
-        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
     } // TODO Ask if player wants to take new job
 
     void Friends()
@@ -2688,7 +2709,7 @@ public class Gameplay : MonoBehaviour {
             friendAttitude = (friendAttitude - 3);
         }
         AddSpace();
-        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
     }
 
     void Online()
@@ -2747,7 +2768,7 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness - 1);
         }
         AddSpace();
-        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
     }
 
     void Hobby()  
@@ -2826,7 +2847,7 @@ public class Gameplay : MonoBehaviour {
             pride = (pride + 0);
         }
         AddSpace();
-        Terminal.WriteLine("Continue to 'home' or 'actions' from here!");
+        Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
     }
 
     void RefreshScreen() 
