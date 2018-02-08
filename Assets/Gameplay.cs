@@ -8,7 +8,7 @@ public class Gameplay : MonoBehaviour {
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut };
+    enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -156,6 +156,10 @@ public class Gameplay : MonoBehaviour {
         currentScreen = Screen.Gameplay;
         RefreshScreen();
         MeetGirl(); // FOR DEBUG, REMOVE ME
+        Terminal.WriteLine("Enter an action!                (You can enter 'actions' to see a list)");
+        AddSpace();
+        Terminal.WriteLine("These are the people you know:");      //TODO add list of known women
+        AddSpace();
         if (schoolDay == true && school == true && schooledToday == false)
         {
             Terminal.WriteLine("Today is a school day. You should go to school");
@@ -172,12 +176,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You worked today.");
         }
-        AddSpace();                                                                                  //TODO add list of known women
-        Terminal.WriteLine("These are the people you know:");                                                                                                    
-        AddSpace();
-        Terminal.WriteLine("Enter an action!");
-        Terminal.WriteLine("(You can enter 'actions' to see a list)");
-        AddSpace();
+        AddSpace();                                                                            
         if (spoons == 0)
         {
             RefreshScreen();
@@ -238,6 +237,18 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         FulfillmentCheck();
         AddSpace();
+        Terminal.WriteLine("Write 'next' to proceed");
+    }
+
+    void RelationshipStats()
+    {
+        currentScreen = Screen.RelationshipsScreen;
+        RefreshScreen();
+        NightRelationships();
+        AddSpace();
+        GirlfriendAttitude();
+        AddSpace();
+        RelationshipAttitudes();
         Terminal.WriteLine("Write 'next' to proceed");
     }
 
@@ -594,6 +605,318 @@ public class Gameplay : MonoBehaviour {
         }
         AddSpace();
         RelationshipAttitudes();
+        AddSpace();
+        GirlfriendAttitude();
+    }
+
+    void GirlfriendAttitude()
+    {
+        if (girlfriend == true)
+        {
+            Terminal.WriteLine("You are in a relationship with " + girlfriendName);
+            if (girlfriendName == "Lina")
+            {
+                Terminal.WriteLine(LinaStatus());
+            }
+            if (girlfriendName == "Jenna")
+            {
+                Terminal.WriteLine(JennaStatus());
+            }
+            if (girlfriendName == "Alex")
+            {
+                Terminal.WriteLine(AlexStatus());
+            }
+            if (girlfriendName == "Pina")
+            {
+                Terminal.WriteLine(PinaStatus());
+            }
+            if (girlfriendName == "Sammy")
+            {
+                Terminal.WriteLine(SammyStatus());
+            }
+            if (girlfriendName == "Winry")
+            {
+                Terminal.WriteLine(WinryStatus());
+            }
+        }
+    }
+
+    string WinryStatus()
+    {
+        string statusMessage;
+        if (winryAttitude > 75 && dailyRand > 50)
+        {
+            statusMessage = "Winry tells you she's in love with you. It makes you very happy";
+            happiness = (happiness + 5);
+            pride = (pride + 2);
+            stress = (stress + 2);
+            loneliness = (loneliness + 3);
+
+        }
+        else if (winryAttitude > 75)
+        {
+            statusMessage = "Winry invites you to stay the night with her, and you both have a great time.";
+            happiness = (happiness + 2);
+            stress = (stress + 3);
+            loneliness = (loneliness + 2);
+        }
+        else if (winryAttitude > 0 && dailyRand > 50)
+        {
+            statusMessage = "Winry calls to say goodnight before you fall asleep.";
+            happiness = (happiness + 1);
+            loneliness = (loneliness + 1);
+        }
+        else if (winryAttitude > 0)
+        {
+            statusMessage = "Winry texts you to say goodnight.";
+        }
+        else if (dailyRand > 50)
+        {
+            statusMessage = "Winry isn't talking to you tonight.";
+        }
+        else
+        {
+            statusMessage = "Winry breaks up with you. You're heartbroken.";
+            happiness = (happiness - 45);
+            stress = (stress - 15);
+            loneliness = (loneliness - 40);
+            pride = (pride - 10);
+            girlfriend = false;
+            girlfriendName = "none";
+        }
+        return statusMessage;
+    }
+
+    string SammyStatus()
+    {
+        string statusMessage;
+        if (sammyAttitude > 75 && dailyRand > 50)
+        {
+            statusMessage = "Sammy spends the night in with you, listening to music and dancing.";
+            happiness = (happiness + 2);
+            stress = (stress + 2);
+            loneliness = (loneliness + 2);
+        }
+        else if (sammyAttitude > 75)
+        {
+            statusMessage = "Sammy gets concert tickets and you both attend a show. She has a lot of fun!";
+            happiness = (happiness + 1);
+            stress = (stress - 1);
+        }
+        else if (sammyAttitude > 0 && dailyRand > 50)
+        {
+            statusMessage = "Sammy texts you to say goodnight";
+            loneliness = (loneliness + 1);
+        }
+        else if (sammyAttitude > 0)
+        {
+            statusMessage = "You don't hear from Sammy tonight. You think she might be busy";
+            loneliness = (loneliness - 1);
+        }
+        else if (dailyRand > 50)
+        {
+            statusMessage = "Sammy is ignoring your messages.";
+        }
+        else
+        {
+            statusMessage = "Sammy breaks up with you. You're heartbroken.";
+            happiness = (happiness - 25);
+            stress = (stress - 15);
+            loneliness = (loneliness - 20);
+            pride = (pride - 5);
+            girlfriend = false;
+            girlfriendName = "none";
+        }
+        return statusMessage;
+    }
+
+    string PinaStatus()
+    {
+        string statusMessage;
+        if (pinaAttitude > 75 && dailyRand > 50)
+        {
+            statusMessage = "Pina makes you dinner and then you spent the entire night cuddling together.";
+            happiness = (happiness + 6);
+            if (stress < 0)
+            {
+                stress = 0;
+            }
+            else
+            {
+                stress = (stress + 5);
+            }
+            pride = (pride + 3);
+            loneliness = (loneliness + 2);
+        }
+        else if (pinaAttitude > 75)
+        {
+            statusMessage = "Pina pulls you to bed and smiles at you suggestively.";
+            happiness = (happiness + 3);
+            stress = (stress + 3);
+            loneliness = (loneliness + 1);
+        }
+        else if (pinaAttitude > 0 && dailyRand > 50)
+        {
+            statusMessage = "Pina comes over to your place and watches TV with you all night.";
+            happiness = (happiness + 2);
+            stress = (stress + 1);
+            loneliness = (loneliness + 1);
+        }
+        else if (pinaAttitude > 0)
+        {
+            statusMessage = "Pina is upset with you tonight. You're not sure why, you think it'll blow over though.";
+            loneliness = (loneliness - 1);
+            stress = (stress - 1);
+            happiness = (happiness - 1);
+        }
+        else if (dailyRand > 50)
+        {
+            statusMessage = "Pina isn't talking to you tonight.";
+        }
+        else
+        {
+            statusMessage = "Pina leaves you. You're heartbroken.";
+            happiness = (happiness - 35);
+            stress = (stress - 25);
+            loneliness = (loneliness - 30);
+            pride = (pride - 20);
+            girlfriend = false;
+            girlfriendName = "none";
+        }
+        return statusMessage;
+    }
+
+    string AlexStatus()
+    {
+        string statusMessage;
+        if (alexAttitude > 75 && dailyRand > 50)
+        {
+            statusMessage = "Alex comes up with something fun and creative to do with her tonight.";
+            happiness = (happiness + 3);
+            loneliness = (loneliness + 3);
+            stress = (stress - 1);
+        }
+        else if (alexAttitude > 75)
+        {
+            statusMessage = "You and Alex have some wine and she takes you to bed with her.";
+            happiness = (happiness + 1);
+            loneliness = (loneliness + 1);
+            stress = (stress + 5);
+
+        }
+        else if (alexAttitude > 0 && dailyRand > 50)
+        {
+            statusMessage = "You go shopping with Alex to some of her favorite stores.";
+            happiness = (happiness + 1);
+            loneliness = (loneliness + 1);
+            stress = (stress - 1);
+        }
+        else if (alexAttitude > 0)
+        {
+            statusMessage = "Alex is busy hanging out with someone else tonight.";
+            loneliness = (loneliness - 2);
+            stress = (stress - 2);
+            happiness = (happiness - 1);
+        }
+        else if (dailyRand > 50)
+        {
+            statusMessage = "Alex isn't talking to you tonight.";
+        }
+        else
+        {
+            statusMessage = "Alex starts seeing other people. You're heartbroken.";
+            happiness = (happiness - 45);
+            stress = (stress - 15);
+            loneliness = (loneliness - 40);
+            pride = (pride - 10);
+            girlfriend = false;
+            girlfriendName = "none";
+        }
+        return statusMessage;
+    }
+
+    string JennaStatus()
+    {
+        string statusMessage;
+        if (jennaAttitude > 75 && dailyRand > 50)
+        {
+            statusMessage = "You have pizza and binge Netflix and cuddles with Jenna all night.";
+            happiness = (happiness + 2);
+            stress = (stress + 1);
+            loneliness = (loneliness + 1);
+        }
+        else if (jennaAttitude > 75)
+        {
+            statusMessage = "You hang out with Jenna and her friends for a while.";
+            happiness = (happiness + 1);
+            stress = (stress - 2);
+            loneliness = (loneliness + 2);
+        }
+        else if (jennaAttitude > 0 && dailyRand > 50)
+        {
+            statusMessage = "Jenna sends you fun Snapchats for a while before bed.";
+            happiness = (happiness + 1);
+        }
+        else if (jennaAttitude > 0)
+        {
+            statusMessage = "Jenna sends you a quick good night message.";
+        }
+        else if (dailyRand > 50)
+        {
+            statusMessage = "Jenna isn't talking to you tonight.";
+        }
+        else
+        {
+            statusMessage = "Jenna stops talking to you. You're crushed.";
+            happiness = (happiness - 25);
+            stress = (stress - 15);
+            loneliness = (loneliness - 20);
+            pride = (pride - 5);
+            girlfriend = false;
+            girlfriendName = "none";
+        }
+        return statusMessage;
+    }
+
+    string LinaStatus()
+    {
+        string statusMessage;
+        if (linaAttitude > 75 && dailyRand > 50)
+        {
+            statusMessage = "Lina brings you tasty snacks and comes over for a hangout.";
+            happiness = (happiness + 2);
+            loneliness = (loneliness + 1);
+        }
+        else if (linaAttitude > 75)
+        {
+            statusMessage = "Lina plays video games with you for hours. It's a lot of fun!";
+            happiness = (happiness + 1);
+            loneliness = (loneliness + 1);
+        }
+        else if (linaAttitude > 0 && dailyRand > 50)
+        {
+            statusMessage = "Lina Skype calls with you for an hour before bed.";
+            loneliness = (loneliness + 1);
+        }
+        else if (linaAttitude > 0)
+        {
+            statusMessage = "Lina texts you goodnight.";
+        }
+        else if (dailyRand > 50)
+        {
+            statusMessage = "Lina isn't talking to you tonight.";
+        }
+        else
+        {
+            statusMessage = "Lina breaks up with you. You're heartbroken.";
+            happiness = (happiness - 35);
+            stress = (stress - 15);
+            loneliness = (loneliness - 20);
+            pride = (pride - 15);
+            girlfriend = false;
+            girlfriendName = "none";
+        }
+        return statusMessage;
     }
 
     void RelationshipAttitudes()
@@ -603,11 +926,41 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You didn't spend time with Lina today. She misses you some.");
             linaAttitude = (linaAttitude - 1);
         }
-        else if (knownWomen.Contains("Lina") == true && flirted == true)
+        else if (knownWomen.Contains("Lina") == true && flirted == true && dailyRand > 70)
         {
             Terminal.WriteLine("Lina is jealous you spent time with someone else today.");
             linaAttitude = (linaAttitude - 4);
-        } // TODO EVERYONE ELSE MISSING + JEALOUSY FOR SOME
+        }
+        if (knownWomen.Contains("Jenna") == true && flirtJenna == false)
+        {
+            Terminal.WriteLine("You didn't spend time with Jenna today. She misses you some.");
+            linaAttitude = (linaAttitude - 1);
+        }
+        if (knownWomen.Contains("Alex") == true && flirtAlex == false)
+        {
+            Terminal.WriteLine("You didn't spend time with Alex today. She misses you some.");
+            linaAttitude = (linaAttitude - 1);
+        }
+        else if (knownWomen.Contains("Alex") == true && flirted == true && dailyRand > 80)
+        {
+            Terminal.WriteLine("Alex is jealous you spent time with someone else today.");
+            linaAttitude = (linaAttitude - 4);
+        }
+        if (knownWomen.Contains("Pina") == true && flirtPina == false)
+        {
+            Terminal.WriteLine("You didn't spend time with Pina today. She misses you.");
+            linaAttitude = (linaAttitude - 2);
+        }
+        else if (knownWomen.Contains("Pina") == true && flirted == true)
+        {
+            Terminal.WriteLine("Pina is very jealous you spent time with someone else today.");
+            linaAttitude = (linaAttitude - 8);
+        }
+        if (knownWomen.Contains("Winry") == true && flirtWinry == false)
+        {
+            Terminal.WriteLine("You didn't spend time with Winry today. She misses you.");
+            linaAttitude = (linaAttitude - 1);
+        }
     }
 
     // TODO GIRLFRIEND INTRODUCTION SCREEN
@@ -732,7 +1085,7 @@ public class Gameplay : MonoBehaviour {
         {
             if (input == "next")
             {
-                NightStats();
+                RelationshipStats();
             }
         }
         else if (currentScreen == Screen.NightStats)
@@ -740,6 +1093,13 @@ public class Gameplay : MonoBehaviour {
             if (input == "next")
             {
                 Morning();
+            }
+        }
+        else if (currentScreen == Screen.RelationshipsScreen)
+        {
+            if (input == "next")
+            {
+                NightStats();
             }
         }
         else if (currentScreen == Screen.Moving)
@@ -2077,6 +2437,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You meet " + (string)unknownWomen[womenRand]);
             AddSpace();
             Terminal.WriteLine("To learn more about her any time enter !" + (string)unknownWomen[womenRand]);
+            AddSpace();
             knownWomen.Add((string)unknownWomen[womenRand]);
             unknownWomen.Remove((string)unknownWomen[womenRand]);
         }
