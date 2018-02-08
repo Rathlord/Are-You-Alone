@@ -159,7 +159,6 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.Gameplay;
         RefreshScreen();
-        MeetGirl(); // FOR DEBUG, REMOVE ME
         Terminal.WriteLine("Enter an action!                (You can enter 'actions' to see a list)");
         AddSpace();
         Terminal.WriteLine("These are the people you know:");      //TODO add list of known women
@@ -2470,11 +2469,15 @@ public class Gameplay : MonoBehaviour {
 
     void MeetGirl ()
     {
+        RefreshScreen();
         if (unknownWomen.Count > 0)
         {
             womenRand = UnityEngine.Random.Range(0, unknownWomen.Count);
             Terminal.WriteLine("You meet " + (string)unknownWomen[womenRand]);
+            string tempName;
+            tempName = (string)unknownWomen[womenRand];
             AddSpace();
+            Introductions(tempName);
             Terminal.WriteLine("To learn more about her any time enter !" + (string)unknownWomen[womenRand]);
             AddSpace();
             knownWomen.Add((string)unknownWomen[womenRand]);
@@ -2483,6 +2486,40 @@ public class Gameplay : MonoBehaviour {
         else
             return;
     }
+    
+    void Introductions(string tempName)
+    {
+        if (tempName == "Lina")
+        {
+            Terminal.WriteLine("A friend introduces you to a girl named Lina. She gives you her number!");
+            Terminal.WriteLine("She seems really friendly!");
+        }
+        if (tempName == "Jenna")
+        {
+            Terminal.WriteLine("You get to know Jenna at her job and really hit it off. She adds you on Snapchat!");
+            Terminal.WriteLine("She seems kinda into you!");
+        }
+        if (tempName == "Alex")
+        {
+            Terminal.WriteLine("While you have a bit of downtime you peruse a dating app and trade numbers with a girl named Alex!");
+            Terminal.WriteLine("She seems really interesting!");
+        }
+        if (tempName == "Pina")
+        {
+            Terminal.WriteLine("You meet a girl named Pina completely by chance. She's really sweet and gives you her number.");
+            Terminal.WriteLine("She seems fascinating!");
+        }
+        if (tempName == "Sammy")
+        {
+            Terminal.WriteLine("You get a phone call, but it's a wrong number, but the girl on the other end talks to you for a while.");
+            Terminal.WriteLine("She seems bored, and tells you to call her sometime!");
+        }
+        if (tempName == "Winry")
+        {
+            Terminal.WriteLine("You go out and meet a girl in your favorite aisle of the old bookstore. You hit it off immediately!");
+            Terminal.WriteLine("She's charming and excited to talk to you!");
+        }
+    }
 
     void School()
     {
@@ -2490,7 +2527,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("You go to university...");
         schooledToday = true;
         loneliness = (loneliness + 1);
-        if (dailyRand > 95)
+        if (dailyRand > 85 && dailyRand < 90)
         {
             MeetGirl();
         }
