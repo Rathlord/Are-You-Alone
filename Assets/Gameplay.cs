@@ -158,9 +158,18 @@ public class Gameplay : MonoBehaviour {
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO EASE UP LONELINESS MAYBE?
     // TODO IMPLEMENT STAT METERS
-    // TODO CAP STATS AT -100/100
+    // TODO CAP STATS AT -100/100 & penalties/buffs for thems
     // TODO STOP FLIRTING WITH SAME GIRL TWICE IN A DAY
     // TODO PRIDE IS TOO EASY
+	// TODO CHECK EVICTIONS
+	// TODO SCORE DISPLAY
+	// TODO WINS/LOSSES
+	// TODO LIST KNOWN WOMEN ON MAIN
+	// TODO PARENTS ATTITUDE CHECKS
+	// TODO SHOW ACTIONS ON MAIN?
+	// TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
+	// TODO DID I IMPLEMENT PARENTS ATTITUDE AFTER DROPPING OUT?
+	// TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
 
     void MainScreen()
     {
@@ -572,7 +581,7 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
-    void Attitudes() // Does daily attitude adjustments and then resets daily encounters        TODO parents attiude & women attitude checks
+    void Attitudes() // Does daily attitude adjustments and then resets daily encounters       
     {
         if (friendToday == true)
         {
