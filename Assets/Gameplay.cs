@@ -164,12 +164,40 @@ public class Gameplay : MonoBehaviour {
 	// TODO CHECK EVICTIONS
 	// TODO SCORE DISPLAY
 	// TODO WINS/LOSSES
-	// TODO LIST KNOWN WOMEN ON MAIN
 	// TODO PARENTS ATTITUDE CHECKS  (parents now lose all attitude if you quit school while living with them)
 	// TODO SHOW ACTIONS ON MAIN?
 	// TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
 	// TODO DID I IMPLEMENT PARENTS ATTITUDE AFTER DROPPING OUT?
 	// TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
+
+    void Event1()
+    {
+        Terminal.WriteLine("You run into your friend at the coffee shop. He says he's sorry for what he did and wants to be friends again.");
+        Terminal.WriteLine("Enter '1' to be friends again, or '2' to walk away from him");
+        //input manager handles the input
+        answer = Input;
+        if (answer = 1)
+        {
+            happiness = (happiness + 5);
+            stress = (stress - 5);
+            friendAttitude = 0;
+        }
+        else
+        {
+            happiness = (happiness - 3);
+            stress = (stress + 2);
+        }
+    }
+    
+    void Event2()
+    {
+
+    }
+
+    void RandomEvent()
+    {
+        Terminal.WriteLine();
+    }
 
     void WomenList()
     {
@@ -1785,11 +1813,11 @@ public class Gameplay : MonoBehaviour {
         {
             randomDate = "You have kind of an awkward date. You're not sure why";
         }
-        if (dailyRand > 50)
+        else if (dailyRand > 50)
         {
             randomDate = "You go out for a nice dinner and drinks afterwords and have a really good time.";
         }
-        if (dailyRand > 25)
+        else if (dailyRand > 25)
         {
             randomDate = "You walk around downtown looking in shops and talking all afternoon. You have a good time!";
         }
