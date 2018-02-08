@@ -151,6 +151,10 @@ public class Gameplay : MonoBehaviour {
         unknownWomen.Add("Winry");
     }
 
+    // TODO HANDLE ASKING OUT WHEN YOU ALREADY HAVE A GIRLFRIEND
+    // TODO LIMIT MORE ACTIONS WITH STATS
+    // TODO IMPLEMENT "IN LOVE"
+
     void MainScreen()
     {
         currentScreen = Screen.Gameplay;
@@ -651,7 +655,6 @@ public class Gameplay : MonoBehaviour {
             pride = (pride + 2);
             stress = (stress + 2);
             loneliness = (loneliness + 3);
-
         }
         else if (winryAttitude > 75)
         {
@@ -2222,6 +2225,12 @@ public class Gameplay : MonoBehaviour {
                 pride = (pride - 1);
             }
         }
+        else if (input == "home")
+        {
+            MainScreen();
+        }
+        AddSpace();
+        Terminal.WriteLine("Enter 'home' to go to the main screen.");
     }
 
     void SammyFlirt(string input)
@@ -2263,6 +2272,12 @@ public class Gameplay : MonoBehaviour {
                 pride = (pride - 4);
             }
         }
+        else if (input == "home")
+        {
+            MainScreen();
+        }
+        AddSpace();
+        Terminal.WriteLine("Enter 'home' to go to the main screen.");
     }
 
     void PinaFlirt(string input)
@@ -2304,6 +2319,12 @@ public class Gameplay : MonoBehaviour {
                 pride = (pride - 4);
             }
         }
+        else if (input == "home")
+        {
+            MainScreen();
+        }
+        AddSpace();
+        Terminal.WriteLine("Enter 'home' to go to the main screen.");
     }
 
     void AlexFlirt(string input)
@@ -2345,6 +2366,12 @@ public class Gameplay : MonoBehaviour {
                 pride = (pride - 2);
             }
         }
+        else if (input == "home")
+        {
+            MainScreen();
+        }
+        AddSpace();
+        Terminal.WriteLine("Enter 'home' to go to the main screen.");
     }
 
     void JennaFlirt(string input)
@@ -2386,6 +2413,12 @@ public class Gameplay : MonoBehaviour {
                 pride = (pride - 4);
             }
         }
+        else if (input == "home")
+        {
+            MainScreen();
+        }
+        AddSpace();
+        Terminal.WriteLine("Enter 'home' to go to the main screen.");
     }
 
     void LinaFlirt(string input)
@@ -2427,6 +2460,12 @@ public class Gameplay : MonoBehaviour {
                 pride = (pride - 4);
             }
         }
+        else if (input == "home")
+        {
+            MainScreen();
+        }
+        AddSpace();
+        Terminal.WriteLine("Enter 'home' to go to the main screen.");
     }
 
     void MeetGirl ()
