@@ -169,6 +169,7 @@ public class Gameplay : MonoBehaviour {
 	// TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
 	// TODO DID I IMPLEMENT PARENTS ATTITUDE AFTER DROPPING OUT?
 	// TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
+	// TODO MAKE JEALOUS COME BEFORE MISSING, DUH
 
 	//    void Event1()
 	//    {
@@ -968,40 +969,40 @@ public class Gameplay : MonoBehaviour {
 
     void RelationshipAttitudes()
     {
-        if (knownWomen.Contains("Lina") == true && flirtLina == false)
+		if (knownWomen.Contains("Lina") == true && flirted == true && dailyRand > 70 && flirtLina == false)
+		{
+			Terminal.WriteLine("Lina is jealous you spent time with someone else today.");
+			linaAttitude = (linaAttitude - 4);
+		}
+        else if (knownWomen.Contains("Lina") == true && flirtLina == false)
         {
             Terminal.WriteLine("You didn't spend time with Lina today. She misses you some.");
             linaAttitude = (linaAttitude - 1);
-        }
-		else if (knownWomen.Contains("Lina") == true && flirted == true && dailyRand > 70 && flirtLina == false)
-        {
-            Terminal.WriteLine("Lina is jealous you spent time with someone else today.");
-            linaAttitude = (linaAttitude - 4);
         }
         if (knownWomen.Contains("Jenna") == true && flirtJenna == false)
         {
             Terminal.WriteLine("You didn't spend time with Jenna today. She misses you some.");
             linaAttitude = (linaAttitude - 1);
         }
-        if (knownWomen.Contains("Alex") == true && flirtAlex == false)
+		if (knownWomen.Contains("Alex") == true && flirted == true && dailyRand > 80 && flirtAlex == false)
+		{
+			Terminal.WriteLine("Alex is jealous you spent time with someone else today.");
+			linaAttitude = (linaAttitude - 4);
+		}
+        else if (knownWomen.Contains("Alex") == true && flirtAlex == false)
         {
             Terminal.WriteLine("You didn't spend time with Alex today. She misses you some.");
             linaAttitude = (linaAttitude - 1);
         }
-		else if (knownWomen.Contains("Alex") == true && flirted == true && dailyRand > 80 && flirtAlex == false)
-        {
-            Terminal.WriteLine("Alex is jealous you spent time with someone else today.");
-            linaAttitude = (linaAttitude - 4);
-        }
-        if (knownWomen.Contains("Pina") == true && flirtPina == false)
+		if (knownWomen.Contains("Pina") == true && flirted == true && flirtPina == false)
+		{
+			Terminal.WriteLine("Pina is very jealous you spent time with someone else today.");
+			linaAttitude = (linaAttitude - 8);
+		}
+        else if (knownWomen.Contains("Pina") == true && flirtPina == false)
         {
             Terminal.WriteLine("You didn't spend time with Pina today. She misses you.");
             linaAttitude = (linaAttitude - 2);
-        }
-		else if (knownWomen.Contains("Pina") == true && flirted == true && flirtPina == false)
-        {
-            Terminal.WriteLine("Pina is very jealous you spent time with someone else today.");
-            linaAttitude = (linaAttitude - 8);
         }
         if (knownWomen.Contains("Winry") == true && flirtWinry == false)
         {
