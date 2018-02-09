@@ -2924,10 +2924,178 @@ public class Gameplay : MonoBehaviour {
         Terminal.ClearScreen();
         AddSpace();
         Terminal.WriteLine("Are You Alone?            Current Money: " + money +"$           Current Spoons: " + spoons);
-        Terminal.WriteLine("           Type 'home' to get back to the home screen at any time.  ");
+		Terminal.WriteLine("Hap: "+HappyMeter() +" "+ "Strs: "+StressMeter() +" "+ "Prd: "+PrideMeter() +" "+ "Lnly: "+LonelyMeter());
         Terminal.WriteLine("------------------------------------------------------------------------");
         AddSpace();
     }
+
+	public string LonelyMeter()
+	{
+		string lonelyMeter;
+		if (loneliness > 74)
+		{
+			lonelyMeter = "││││";
+		}
+		else if (loneliness > 49)
+		{
+			lonelyMeter = "│││∥ ";
+		}
+		else if (loneliness > 24)
+		{
+			lonelyMeter = "{│││·";
+		}
+		else if (loneliness > 5)
+		{
+			lonelyMeter = "││∥ ·";
+		}
+		else if (loneliness > -6 && loneliness < 6)
+		{
+			lonelyMeter = "││··";
+		}
+		else if (loneliness > -26)
+		{
+			lonelyMeter = "│∥··";
+		}
+		else if (loneliness > -51)
+		{
+			lonelyMeter = "│···";
+		}
+		else if (loneliness > -76)
+		{
+			lonelyMeter = "∥···";
+		}
+		else
+		{
+			lonelyMeter = "····";
+		}
+		return lonelyMeter;
+	}
+
+	public string HappyMeter()
+	{
+		string happyMeter;
+		if (happiness > 74)
+		{
+			happyMeter = "││││";
+		}
+		else if (happiness > 49)
+		{
+			happyMeter = "│││∥ ";
+		}
+		else if (happiness > 24)
+		{
+			happyMeter = "│││·";
+		}
+		else if (happiness > 5)
+		{
+			happyMeter = "││∥ ·";
+		}
+		else if (happiness > -6 && happiness < 6)
+		{
+			happyMeter = "││··";
+		}
+		else if (happiness > -26)
+		{
+			happyMeter = "│∥··";
+		}
+		else if (happiness > -51)
+		{
+			happyMeter = "│···";
+		}
+		else if (happiness > -76)
+		{
+			happyMeter = "∥···";
+		}
+		else
+		{
+			happyMeter = "····";
+		}
+		return happyMeter;
+	}
+
+	public string StressMeter()
+	{
+		string stressMeter;
+		if (stress > 74)
+		{
+			stressMeter = "││││";
+		}
+		else if (stress > 49)
+		{
+			stressMeter = "│││∥ ";
+		}
+		else if (stress > 24)
+		{
+			stressMeter = "│││·";
+		}
+		else if (stress > 5)
+		{
+			stressMeter = "││∥ ·";
+		}
+		else if (stress > -6 && stress < 6)
+		{
+			stressMeter = "││··";
+		}
+		else if (stress > -26)
+		{
+			stressMeter = "│∥··";
+		}
+		else if (stress > -51)
+		{
+			stressMeter = "│···";
+		}
+		else if (stress > -76)
+		{
+			stressMeter = "∥···";
+		}
+		else
+		{
+			stressMeter = "····";
+		}
+		return stressMeter;
+	}
+
+	public string PrideMeter()
+	{
+		string prideMeter;
+		if (pride > 74)
+		{
+			prideMeter = "││││";
+		}
+		else if (pride > 49)
+		{
+			prideMeter = "│││∥ ";
+		}
+		else if (pride > 24)
+		{
+			prideMeter = "│││·";
+		}
+		else if (pride > 5)
+		{
+			prideMeter = "││∥ ·";
+		}
+		else if (pride > -6 && pride < 6)
+		{
+			prideMeter = "││··";
+		}
+		else if (pride > -26)
+		{
+			prideMeter = "│∥··";
+		}
+		else if (pride > -51)
+		{
+			prideMeter = "│···";
+		}
+		else if (pride > -76)
+		{
+			prideMeter = "∥···";
+		}
+		else
+		{
+			prideMeter = "····";
+		}
+		return prideMeter;
+	}
 
     void AddSpace() //Quick Method for adding spaces
     {
