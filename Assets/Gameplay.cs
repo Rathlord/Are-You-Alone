@@ -2924,7 +2924,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.ClearScreen();
         AddSpace();
         Terminal.WriteLine("Are You Alone?            Current Money: " + money +"$           Current Spoons: " + spoons);
-		Terminal.WriteLine("Hap: "+HappyMeter() +" "+ "Strs: "+StressMeter() +" "+ "Prd: "+PrideMeter() +" "+ "Lnly: "+LonelyMeter());
+		Terminal.WriteLine("        Hap: "+HappyMeter() +"    "+ "Strs: "+StressMeter() +"    "+ "Prd: "+PrideMeter() +"    "+ "Lnly: "+LonelyMeter());
         Terminal.WriteLine("------------------------------------------------------------------------");
         AddSpace();
     }
