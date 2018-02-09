@@ -170,34 +170,24 @@ public class Gameplay : MonoBehaviour {
 	// TODO DID I IMPLEMENT PARENTS ATTITUDE AFTER DROPPING OUT?
 	// TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
 
-    void Event1()
-    {
-        Terminal.WriteLine("You run into your friend at the coffee shop. He says he's sorry for what he did and wants to be friends again.");
-        Terminal.WriteLine("Enter '1' to be friends again, or '2' to walk away from him");
-        //input manager handles the input
-        answer = Input;
-        if (answer = 1)
-        {
-            happiness = (happiness + 5);
-            stress = (stress - 5);
-            friendAttitude = 0;
-        }
-        else
-        {
-            happiness = (happiness - 3);
-            stress = (stress + 2);
-        }
-    }
-    
-    void Event2()
-    {
-
-    }
-
-    void RandomEvent()
-    {
-        Terminal.WriteLine();
-    }
+	//    void Event1()
+	//    {
+	//        Terminal.WriteLine("You run into your friend at the coffee shop. He says he's sorry for what he did and wants to be friends again.");
+	//        Terminal.WriteLine("Enter '1' to be friends again, or '2' to walk away from him");
+	//        //input manager handles the input
+	//        answer = Input;
+	//        if (answer = 1)
+	//       {
+	//           happiness = (happiness + 5);
+	//           stress = (stress - 5);
+	//           friendAttitude = 0;
+	//        }
+    //        else
+	//       {
+	//            happiness = (happiness - 3);
+    //            stress = (stress + 2);
+	//        }
+	//    }
 
     void WomenList()
     {
@@ -2264,6 +2254,11 @@ public class Gameplay : MonoBehaviour {
         }
         else if (input == "relationship")
         {
+			if (girlfriend == true) 
+			{
+				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				return;
+			}
             Terminal.WriteLine(RandomAskOut());
             if (dailyRand + winryAttitude >= winryDifficulty)
             {
@@ -2313,6 +2308,11 @@ public class Gameplay : MonoBehaviour {
         }
         else if (input == "relationship")
         {
+			if (girlfriend == true) 
+			{
+				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				return;
+			}
             Terminal.WriteLine(RandomAskOut());
             if (dailyRand + sammyAttitude >= sammyDifficulty)
             {
@@ -2362,6 +2362,11 @@ public class Gameplay : MonoBehaviour {
         }
         else if (input == "relationship")
         {
+			if (girlfriend == true) 
+			{
+				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				return;
+			}
             Terminal.WriteLine(RandomAskOut());
             if (dailyRand + pinaAttitude >= pinaDifficulty)
             {
@@ -2411,6 +2416,11 @@ public class Gameplay : MonoBehaviour {
         }
         else if (input == "relationship")
         {
+			if (girlfriend == true) 
+			{
+				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				return;
+			}
             Terminal.WriteLine(RandomAskOut());
             if (dailyRand + alexAttitude >= alexDifficulty)
             {
@@ -2460,6 +2470,11 @@ public class Gameplay : MonoBehaviour {
         }
         else if (input == "relationship")
         {
+			if (girlfriend == true) 
+			{
+				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				return;
+			}
             Terminal.WriteLine(RandomAskOut());
             if (dailyRand + jennaAttitude >= jennaDifficulty)
             {
@@ -2509,6 +2524,11 @@ public class Gameplay : MonoBehaviour {
         }
         else if (input == "relationship")
         {
+			if (girlfriend == true) 
+			{
+				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				return;
+			}
             Terminal.WriteLine(RandomAskOut());
             if (dailyRand + linaAttitude >= linaDifficulty)
             {
