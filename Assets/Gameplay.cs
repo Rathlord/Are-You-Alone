@@ -151,12 +151,11 @@ public class Gameplay : MonoBehaviour {
         unknownWomen.Add("Winry");
     }
 		
-	// TODO ENSURE ABSENCES ARE HANDLED WITH NEW JOBS
+
     // TODO LIMIT MORE ACTIONS WITH STATS
     // TODO IMPLEMENT "IN LOVE"
     // TODO IMPLEMENT RANDOM MESSAGES FOR POST-DAY SCREEN
     // TODO IMPLEMENT RANDOM DAILY EVENTS
-    // TODO EASE UP LONELINESS MAYBE?
     // TODO IMPLEMENT STAT METERS
     // TODO CAP STATS AT -100/100 & penalties/buffs for thems
     // TODO STOP FLIRTING WITH SAME GIRL TWICE IN A DAY
@@ -436,7 +435,7 @@ public class Gameplay : MonoBehaviour {
         if (flirtToday == false && dateToday == false)
         {
             Terminal.WriteLine("You miss talking to someone special.");
-            loneliness = (loneliness - 7);
+            loneliness = (loneliness - 4);
         }
         if (loneliness < 0)
         {
@@ -642,7 +641,7 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness - 5);
             pride = (pride - 2);
             stress = (stress + 1);
-            loneliness = (loneliness - 5);
+            loneliness = (loneliness - 3);
         }
         else
         {
