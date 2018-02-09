@@ -1030,6 +1030,7 @@ public class Gameplay : MonoBehaviour {
             AddSpace();
             currentJob = Job.None;
             employed = false;
+			workAbscence = 0;
         }
         if (schoolAbscence > 5)
         {
