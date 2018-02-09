@@ -150,8 +150,7 @@ public class Gameplay : MonoBehaviour {
         unknownWomen.Add("Sammy");
         unknownWomen.Add("Winry");
     }
-
-    // TODO HANDLE ASKING OUT WHEN YOU ALREADY HAVE A GIRLFRIEND
+		
     // TODO LIMIT MORE ACTIONS WITH STATS
     // TODO IMPLEMENT "IN LOVE"
     // TODO IMPLEMENT RANDOM MESSAGES FOR POST-DAY SCREEN
@@ -2256,7 +2255,7 @@ public class Gameplay : MonoBehaviour {
         {
 			if (girlfriend == true) 
 			{
-				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				Terminal.WriteLine ("You already have a girlfriend! You'd have to break up with her first!");
 				return;
 			}
             Terminal.WriteLine(RandomAskOut());
@@ -2310,7 +2309,7 @@ public class Gameplay : MonoBehaviour {
         {
 			if (girlfriend == true) 
 			{
-				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				Terminal.WriteLine ("You already have a girlfriend! You'd have to break up with her first!");
 				return;
 			}
             Terminal.WriteLine(RandomAskOut());
@@ -2364,7 +2363,7 @@ public class Gameplay : MonoBehaviour {
         {
 			if (girlfriend == true) 
 			{
-				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				Terminal.WriteLine ("You already have a girlfriend! You'd have to break up with her first!");
 				return;
 			}
             Terminal.WriteLine(RandomAskOut());
@@ -2418,7 +2417,7 @@ public class Gameplay : MonoBehaviour {
         {
 			if (girlfriend == true) 
 			{
-				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				Terminal.WriteLine ("You already have a girlfriend! You'd have to break up with her first!");
 				return;
 			}
             Terminal.WriteLine(RandomAskOut());
@@ -2472,7 +2471,7 @@ public class Gameplay : MonoBehaviour {
         {
 			if (girlfriend == true) 
 			{
-				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				Terminal.WriteLine ("You already have a girlfriend! You'd have to break up with her first!");
 				return;
 			}
             Terminal.WriteLine(RandomAskOut());
@@ -2526,7 +2525,7 @@ public class Gameplay : MonoBehaviour {
         {
 			if (girlfriend == true) 
 			{
-				Terminal.WriteLine("You already have a girlfriend! You'd have to break up with her first!")
+				Terminal.WriteLine ("You already have a girlfriend! You'd have to break up with her first!");
 				return;
 			}
             Terminal.WriteLine(RandomAskOut());
