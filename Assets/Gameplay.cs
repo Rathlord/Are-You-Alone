@@ -151,6 +151,7 @@ public class Gameplay : MonoBehaviour {
         unknownWomen.Add("Winry");
     }
 		
+	// TODO ENSURE ABSENCES ARE HANDLED WITH NEW JOBS
     // TODO LIMIT MORE ACTIONS WITH STATS
     // TODO IMPLEMENT "IN LOVE"
     // TODO IMPLEMENT RANDOM MESSAGES FOR POST-DAY SCREEN
@@ -972,7 +973,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You didn't spend time with Lina today. She misses you some.");
             linaAttitude = (linaAttitude - 1);
         }
-        else if (knownWomen.Contains("Lina") == true && flirted == true && dailyRand > 70)
+		else if (knownWomen.Contains("Lina") == true && flirted == true && dailyRand > 70 && flirtLina == false)
         {
             Terminal.WriteLine("Lina is jealous you spent time with someone else today.");
             linaAttitude = (linaAttitude - 4);
@@ -987,7 +988,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You didn't spend time with Alex today. She misses you some.");
             linaAttitude = (linaAttitude - 1);
         }
-        else if (knownWomen.Contains("Alex") == true && flirted == true && dailyRand > 80)
+		else if (knownWomen.Contains("Alex") == true && flirted == true && dailyRand > 80 && flirtAlex == false)
         {
             Terminal.WriteLine("Alex is jealous you spent time with someone else today.");
             linaAttitude = (linaAttitude - 4);
@@ -997,7 +998,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You didn't spend time with Pina today. She misses you.");
             linaAttitude = (linaAttitude - 2);
         }
-        else if (knownWomen.Contains("Pina") == true && flirted == true)
+		else if (knownWomen.Contains("Pina") == true && flirted == true && flirtPina == false)
         {
             Terminal.WriteLine("Pina is very jealous you spent time with someone else today.");
             linaAttitude = (linaAttitude - 8);
