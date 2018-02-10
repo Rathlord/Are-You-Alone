@@ -41,6 +41,7 @@ public class Gameplay : MonoBehaviour {
     bool flirtPina = false;
     bool flirtSammy = false;
     bool flirtWinry = false;
+    bool inLove = false;
 
     // Many character variables will be stored here
 
@@ -153,7 +154,7 @@ public class Gameplay : MonoBehaviour {
 		
 
     // TODO LIMIT MORE ACTIONS WITH STATS
-    // TODO IMPLEMENT "IN LOVE"
+    // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
     // TODO IMPLEMENT RANDOM MESSAGES FOR POST-DAY SCREEN
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO IMPLEMENT STAT METERS
@@ -474,11 +475,11 @@ public class Gameplay : MonoBehaviour {
     {
         if (friendToday == true)
         {
-            Terminal.WriteLine("You spent some time with your friend today.");
+            Terminal.WriteLine("You made time for your friend today.");
         }
         if (onlineToday == true)
         {
-            Terminal.WriteLine("You spent some time online today.");
+            Terminal.WriteLine("You spent some time with your online friends today.");
         }
         if (friendToday == false && onlineToday == false)
         {
@@ -493,8 +494,8 @@ public class Gameplay : MonoBehaviour {
         if (loneliness < 0)
         {
             Terminal.WriteLine("You feel disconnected and lonely.");
-            happiness = (happiness - 10);
-            stress = (stress + 1);
+            happiness = (happiness - 7);
+            stress = (stress - 1);
             pride = (pride - 5);
         }
     }
@@ -529,7 +530,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentHouse == House.Rent)
         {
-            Terminal.WriteLine("You rent your own place. It's not much, but at least you're independent");
+            Terminal.WriteLine("You rent your own place. It's not much, but at least you're independent.");
             happiness = (happiness + 3);
             stress = (stress - 1);
             pride = (pride + 5);
@@ -543,7 +544,7 @@ public class Gameplay : MonoBehaviour {
         {
             currentHouse = House.None;
             Terminal.WriteLine("Your parents aren't okay with you dropping out of school.");
-            Terminal.WriteLine("They've kicked you out! You're homeless!");
+            Terminal.WriteLine("They've kicked you out. You're homeless!");
             if (parentsAttitude > 0)
             {
                 parentsAttitude = 0;
@@ -555,7 +556,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("Your friend is sick of you. He asks you to leave.");
             Terminal.WriteLine("You're homeless!");
         }
-        if (currentHouse == House.Rent && money < 1)
+        if (currentHouse == House.Rent && money < 4)
         {
             currentHouse = House.None;
             Terminal.WriteLine("You can't afford to pay rent. Your landlord kicks you out!");
@@ -567,39 +568,39 @@ public class Gameplay : MonoBehaviour {
     {
         if (happiness > yesterdayHappiness)
         {
-            Terminal.WriteLine("You feel happier than before");
+            Terminal.WriteLine("You feel happier.");
         }
         else if (happiness == yesterdayHappiness)
         {
-            Terminal.WriteLine("You feel about the same happiness as before");
+            Terminal.WriteLine("You feel about the same happiness.");
         }
         else if (happiness < yesterdayHappiness)
         {
-            Terminal.WriteLine("You feel sadder than before");
+            Terminal.WriteLine("You feel sadder.");
         }
         if (stress > yesterdayStress)
         {
-            Terminal.WriteLine("You feel less stressed than before");
+            Terminal.WriteLine("You feel less stressed.");
         }
         else if (stress == yesterdayStress)
         {
-            Terminal.WriteLine("Your stress level feels constant");
+            Terminal.WriteLine("Your stress level feels constant.");
         }
         else if (stress < yesterdayStress)
         {
-            Terminal.WriteLine("You feel more stressed out");
+            Terminal.WriteLine("You feel more stressed out.");
         }
         if (pride > yesterdayPride)
         {
-            Terminal.WriteLine("You feel more proud of yourself than before");
+            Terminal.WriteLine("You feel more proud of yourself.");
         }
         else if (pride == yesterdayPride)
         {
-            Terminal.WriteLine("Your thoughts about yourself haven't changed");
+            Terminal.WriteLine("Your thoughts about yourself haven't changed.");
         }
         else if (pride < yesterdayPride)
         {
-            Terminal.WriteLine("You feel less proud than before");
+            Terminal.WriteLine("You feel less proud.");
         }
     }
 
@@ -749,6 +750,8 @@ public class Gameplay : MonoBehaviour {
         {
             statusMessage = "Winry tells you she's in love with you. It makes you very happy";
             happiness = (happiness + 5);
+            winryLove = true;
+            inLove = true;
             pride = (pride + 2);
             stress = (stress + 2);
             loneliness = (loneliness + 3);
@@ -777,6 +780,8 @@ public class Gameplay : MonoBehaviour {
         else
         {
             statusMessage = "Winry breaks up with you. You're heartbroken.";
+            inLove = false;
+            winryLove = false;
             happiness = (happiness - 45);
             stress = (stress - 15);
             loneliness = (loneliness - 40);
@@ -793,6 +798,8 @@ public class Gameplay : MonoBehaviour {
         if (sammyAttitude > 75 && dailyRand > 50)
         {
             statusMessage = "Sammy spends the night in with you, listening to music and dancing.";
+            sammyLove = true;
+            inLove = true;
             happiness = (happiness + 2);
             stress = (stress + 2);
             loneliness = (loneliness + 2);
@@ -820,6 +827,8 @@ public class Gameplay : MonoBehaviour {
         else
         {
             statusMessage = "Sammy breaks up with you. You're heartbroken.";
+            inLove = false;
+            sammyLove = false;
             happiness = (happiness - 25);
             stress = (stress - 15);
             loneliness = (loneliness - 20);
@@ -836,6 +845,8 @@ public class Gameplay : MonoBehaviour {
         if (pinaAttitude > 75 && dailyRand > 50)
         {
             statusMessage = "Pina makes you dinner and then you spent the entire night cuddling together.";
+            pinaLove = true;
+            inLove = true;
             happiness = (happiness + 6);
             if (stress < 0)
             {
@@ -876,6 +887,8 @@ public class Gameplay : MonoBehaviour {
         else
         {
             statusMessage = "Pina leaves you. You're heartbroken.";
+            inLove = false;
+            pinaLove = false;
             happiness = (happiness - 35);
             stress = (stress - 25);
             loneliness = (loneliness - 30);
@@ -892,6 +905,8 @@ public class Gameplay : MonoBehaviour {
         if (alexAttitude > 75 && dailyRand > 50)
         {
             statusMessage = "Alex comes up with something fun and creative to do with her tonight.";
+            alexLove = true;
+            inLove = true;
             happiness = (happiness + 3);
             loneliness = (loneliness + 3);
             stress = (stress - 1);
@@ -925,6 +940,8 @@ public class Gameplay : MonoBehaviour {
         else
         {
             statusMessage = "Alex starts seeing other people. You're heartbroken.";
+            inLove = false;
+            alexLove = false;
             happiness = (happiness - 45);
             stress = (stress - 15);
             loneliness = (loneliness - 40);
@@ -941,6 +958,8 @@ public class Gameplay : MonoBehaviour {
         if (jennaAttitude > 75 && dailyRand > 50)
         {
             statusMessage = "You have pizza and binge Netflix and cuddles with Jenna all night.";
+            jennaLove = true;
+            inLove = true;
             happiness = (happiness + 2);
             stress = (stress + 1);
             loneliness = (loneliness + 1);
@@ -968,6 +987,8 @@ public class Gameplay : MonoBehaviour {
         else
         {
             statusMessage = "Jenna stops talking to you. You're crushed.";
+            inLove = false;
+            jennaLove = false;
             happiness = (happiness - 25);
             stress = (stress - 15);
             loneliness = (loneliness - 20);
@@ -984,6 +1005,8 @@ public class Gameplay : MonoBehaviour {
         if (linaAttitude > 75 && dailyRand > 50)
         {
             statusMessage = "Lina brings you tasty snacks and comes over for a hangout.";
+            linaLove = true;
+            inLove = true;
             happiness = (happiness + 2);
             loneliness = (loneliness + 1);
         }
@@ -1014,6 +1037,8 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness - 20);
             pride = (pride - 15);
             girlfriend = false;
+            inLove = false;
+            linaLove = false;
             girlfriendName = "none";
         }
         return statusMessage;
