@@ -450,7 +450,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You feel rich! You spend some of your money. It makes you feel good.");
             happiness = (happiness + 15);
-            stress = (stress - 5);
+            stress = (stress + 5);
             pride = (pride + 10);
             money = (money - 25);
         }
@@ -458,7 +458,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("You feel financially stable.");
             happiness = (happiness + 5);
-            stress = (stress - 2);
+            stress = (stress + 2);
             pride = (pride + 3);
         }
         else if (money < 20)
