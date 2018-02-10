@@ -169,6 +169,7 @@ public class Gameplay : MonoBehaviour {
 	// TODO DID I IMPLEMENT PARENTS ATTITUDE AFTER DROPPING OUT?
 	// TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
 	// TODO MAKE JEALOUS COME BEFORE MISSING, DUH
+    // TODO HOLY SHIT SCHOOL ABSCENCE BUG WHAT THE TITS
 
 	//    void Event1()
 	//    {
@@ -203,13 +204,13 @@ public class Gameplay : MonoBehaviour {
         RefreshScreen();
         Terminal.WriteLine("Enter an action!                (You can enter 'actions' to see a list)");
         AddSpace();
-        Terminal.WriteLine("These are the people you know:");      //TODO add list of known women
+        Terminal.WriteLine("These are the people you know:");
         AddSpace();
         WomenList();
         AddSpace();
         if (schoolDay == true && school == true && schooledToday == false)
         {
-            Terminal.WriteLine("Today is a school day. You should go to school");
+            Terminal.WriteLine("Today is a school day. You should go to university.");
         }
         else if (schooledToday == true && schoolDay == true)
         {
@@ -236,7 +237,7 @@ public class Gameplay : MonoBehaviour {
     void Morning()
     {
         RefreshScreen();
-        Terminal.WriteLine("You wake up.");
+        Terminal.WriteLine(WakeUp());
         turn++;
         spoons = 3;
         CheckDays();
@@ -261,6 +262,51 @@ public class Gameplay : MonoBehaviour {
         {
             employedYesterday = false;
         }
+    }
+
+    public string WakeUp()
+    {
+        string wakeUp;
+        if (dailyRand > 95)
+        {
+            wakeUp = "You had horrible nightmares in which people you love were hurt. You feel terrible.";
+            happiness--;
+            stress--;
+        }
+        else if (dailyRand > 80)
+        {
+            wakeUp = "You couldn't sleep, tossing and turning all night. Sleep deprivation stresses you out.";
+            stress = (stress - 2);
+        }
+        else if (dailyRand > 78)
+        {
+            wakeUp = "In your dreams you found someone who made you happy... but then you lost them.";
+            loneliness--;
+        }
+        else if (dailyRand > 65)
+        {
+            wakeUp = "It took you hours to fall asleep. You don't feel very rested.";
+            stress--;
+        }
+        else if (dailyRand > 50)
+        {
+            wakeUp = "You feel like you slept in a strange position. You feel kind of achey.";
+            happiness--;
+        }
+        else if (dailyRand > 30)
+        {
+            wakeUp = "You didn't sleep much, but that's pretty normal for you these days.";
+        }
+        else if (dailyRand > 10)
+        {
+            wakeUp = "You actually got a decent night's sleep, pretty rare for you.";
+            stress++;
+        }
+        else
+        {
+            wakeUp = "You sleep really well, and wake up feeling good.";
+        }
+        return wakeUp;
     }
 
     void Night()
