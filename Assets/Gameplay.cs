@@ -293,6 +293,13 @@ public class Gameplay : MonoBehaviour {
             wakeUp = "You feel like you slept in a strange position. You feel kind of achey.";
             happiness--;
         }
+        else if (dailyRand > 48)
+        {
+            wakeUp = "You dreamt you were fighting all night. You're not sure how it makes you feel";
+            loneliness--;
+            happiness--;
+            stress++;
+        }
         else if (dailyRand > 30)
         {
             wakeUp = "You didn't sleep much, but that's pretty normal for you these days.";
@@ -357,19 +364,19 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You skipped work today. Better not do that too often...");
         }
         AddSpace();
-        int picker = UnityEngine.Random.Range(0, 4);
-        string[] happinessGreat = { "You feel ecstatic", "You fall asleep with a big grin", "You feel like partying!", "Today was an awesome day" };
-        string[] happinessGood = { "You feel happy", "This was a good day", "You fall asleep with a slight smile", "You're feeling good" };
-        string[] happinessBad = { "Today wasn't a great day", "You're not feeling very well", "You feel sadder", "Things aren't going so well" };
-        string[] happinessTerrible = { "Life doesn't feel worth living", "You're having dark thoughts", "You feel awful", "Why bother sleeping..." };
-        string[] stressGreat = { "You feel like you can do anything!", "You're ready to tackle life", "You feel studious", "You're carefree!" };
-        string[] stressGood = { "You feel chill", "You feel relaxed", "You feel like going out and doing something", "You're not worried about life" };
-        string[] stressBad = { "You feel kind of stressed", "You're having trouble concentrating", "You're under a lot of pressure", "You don't feel like doing much" };
-        string[] stressTerrible = { "You're done with life's shit", "Why bother with anything...", "You don't wanna get out of bed", "You're buckling under the pressure" };
-        string[] prideGreat = { "You're proud of yourself", "You think you have a lot to offer", "You know you're the best", "You're all you need" };
-        string[] prideGood = { "You think you're doing a good job", "You're confident in yourself", "You think you're pretty cool", "You feel strong" };
-        string[] prideBad = { "You know you're not doing your best", "You wish you felt more fulfilled", "What do you have to offer?", "You don't feel like you contribute to society" };
-        string[] prideTerrible = { "You're useless", "You feel worthless", "You don't feel like you've accomplished anything at all", "You feel like a waste of breath" };
+        int picker = UnityEngine.Random.Range(0, 5);
+        string[] happinessGreat = { "You feel strangely hopeful.", "You fall asleep with a big grin.", "You're in a good mood despite everything.", "You fall asleep listening to music you love, dancing to the beat.", "You feel like everything will be okay" };
+        string[] happinessGood = { "You feel content.", "You let yourself think about good things in the future.", "You fall asleep with a slight smile.", "You're feeling good.", "You're thankful for your current situation." };
+        string[] happinessBad = { "You're in a bad mood.", "You think about things ending.", "You're upset, even though you don't know exactly why.", "You don't feel hopefuly about your future.", "You go to sleep feeling upset." };
+        string[] happinessTerrible = { "Life doesn't feel worth living.", "You find yourself wanting to be in pain, but not knowing why.", "You're ready to give up.", "You wonder what the world would be like without you.", "You regret your choices in life." };
+        string[] stressGreat = { "You feel like you can do anything!", "You're ready to tackle life.", "You feel incredibly focused.", "For once, you have no worries.", "You feel like you could learn anything." };
+        string[] stressGood = { "You feel at ease.", "You feel relaxed.", "You feel like going out and doing something", "You're not worried about life", "Things aren't perfect, but you don't spend your time worrying about it." };
+        string[] stressBad = { "Stress feels like a weight on your shoulders.", "You're having trouble concentrating on anything.", "You're under a lot of pressure", "You don't feel like doing anything.", "Your worries are making you anxious." };
+        string[] stressTerrible = { "You're done with life's shit.", "Why bother with anything?", "You can barely force yourself out of bed.", "You're buckling under the pressure.", "Any task, no matter how small, feels overwhelming." };
+        string[] prideGreat = { "You're proud of yourself.", "You think you have a lot to offer the world.", "You know you're the best.", "You feel self sufficient.", "You don't care what others think of you." };
+        string[] prideGood = { "You think you're doing a good job.", "You're confident in yourself.", "You think you're pretty cool.", "You feel strong.", "You're not bothered by other people." };
+        string[] prideBad = { "You know you're not doing your best.", "You wish you felt more fulfilled.", "What do you have to offer?", "You don't feel like you contribute to society.", "You worry what other people think of you." };
+        string[] prideTerrible = { "You feel useless and worthless.", "You feel like you've fucked your entire life up.", "You don't feel like you've accomplished anything at all.", "You feel like a waste of breath.", "You hate yourself." };
         HappinessCheck(picker, happinessGreat, happinessGood, happinessBad, happinessTerrible);
         StressChecker(picker, stressGreat, stressGood, stressBad, stressTerrible);
         PrideCheck(picker, prideGreat, prideGood, prideBad, prideTerrible);
