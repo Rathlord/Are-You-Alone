@@ -137,7 +137,7 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         Tutorial();
         currentHouse = House.Parents;
-        dailyRand = UnityEngine.Random.Range(0, 101);
+        dailyRand = UnityEngine.Random.Range(1, 101);
         currentJob = Job.None;
         currentScreen = Screen.Tutorial;
         yesterdayStress = stress;
@@ -242,7 +242,7 @@ public class Gameplay : MonoBehaviour {
         turn++;
         spoons = 3;
         CheckDays();
-        dailyRand = UnityEngine.Random.Range(0, 101);
+        dailyRand = UnityEngine.Random.Range(1, 101);
         Attitudes();
         Invoke("MainScreen", 3f);
         yesterdayStress = stress;
@@ -368,10 +368,10 @@ public class Gameplay : MonoBehaviour {
         int picker = UnityEngine.Random.Range(0, 5);
         string[] happinessGreat = { "You feel strangely hopeful.", "You fall asleep with a big grin.", "You're in a good mood despite everything.", "You fall asleep listening to music you love, dancing to the beat.", "You feel like everything will be okay" };
         string[] happinessGood = { "You feel content.", "You let yourself think about good things in the future.", "You fall asleep with a slight smile.", "You're feeling good.", "You're thankful for your current situation." };
-        string[] happinessBad = { "You're in a bad mood.", "You think about things ending.", "You're upset, even though you don't know exactly why.", "You don't feel hopefuly about your future.", "You go to sleep feeling upset." };
+        string[] happinessBad = { "You're in a bad mood.", "You think about things ending.", "You're upset, even though you don't know exactly why.", "You don't feel hopeful about your future.", "You go to sleep feeling upset." };
         string[] happinessTerrible = { "Life doesn't feel worth living.", "You find yourself wanting to be in pain, but not knowing why.", "You're ready to give up.", "You wonder what the world would be like without you.", "You regret your choices in life." };
         string[] stressGreat = { "You feel like you can do anything!", "You're ready to tackle life.", "You feel incredibly focused.", "For once, you have no worries.", "You feel like you could learn anything." };
-        string[] stressGood = { "You feel at ease.", "You feel relaxed.", "You feel like going out and doing something", "You're not worried about life", "Things aren't perfect, but you don't spend your time worrying about it." };
+        string[] stressGood = { "You feel at ease.", "You feel relaxed.", "You feel like going out and doing something.", "You're not worried about life", "Things aren't perfect, but you don't spend your time worrying about it." };
         string[] stressBad = { "Stress feels like a weight on your shoulders.", "You're having trouble concentrating on anything.", "You're under a lot of pressure", "You don't feel like doing anything.", "Your worries are making you anxious." };
         string[] stressTerrible = { "You're done with life's shit.", "Why bother with anything?", "You can barely force yourself out of bed.", "You're buckling under the pressure.", "Any task, no matter how small, feels overwhelming." };
         string[] prideGreat = { "You're proud of yourself.", "You think you have a lot to offer the world.", "You know you're the best.", "You feel self sufficient.", "You don't care what others think of you." };
@@ -392,19 +392,41 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.Tutorial;
         RefreshScreen();
+        AddSpace();
         Terminal.WriteLine("Play the game by entering commands on the keyboard.");
         Terminal.WriteLine("You can type 'home' from almost any screen to return to the main screen.");
         AddSpace();
-        Terminal.WriteLine("You can perform three actions per day. These are called spoons.");
+        Terminal.WriteLine("You can usually perform three actions per day. These are called spoons.");
         Terminal.WriteLine("Spoons are tracked at the top right of your screen.");
-        AddSpace();
-        Terminal.WriteLine("On the main screen you can type 'actions' to list what you can do.");
         Terminal.WriteLine("Most actions can only be performed once per day.");
         AddSpace();
         Terminal.WriteLine("You can learn about most actions by typing them with an exclamation mark.");
         Terminal.WriteLine("For instance, type '!home' to learn about the home command.");
         AddSpace();
         Terminal.WriteLine("Type 'next' for the next page.");
+        AddSpace();
+        Terminal.WriteLine(@"
+ █████╗ ██████╗ ███████╗                                           
+██╔══██╗██╔══██╗██╔════╝                                           
+███████║██████╔╝█████╗                                             
+██╔══██║██╔══██╗██╔══╝                                             
+██║  ██║██║  ██║███████╗                                           
+╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝                                           
+                                                                   
+        ██╗   ██╗ ██████╗ ██╗   ██╗                                
+        ╚██╗ ██╔╝██╔═══██╗██║   ██║                                
+         ╚████╔╝ ██║   ██║██║   ██║                                
+          ╚██╔╝  ██║   ██║██║   ██║                                
+           ██║   ╚██████╔╝╚██████╔╝                                
+           ╚═╝    ╚═════╝  ╚═════╝                                 
+                                                                   
+                 █████╗ ██╗      ██████╗ ███╗   ██╗███████╗██████╗ 
+                ██╔══██╗██║     ██╔═══██╗████╗  ██║██╔════╝╚════██╗
+                ███████║██║     ██║   ██║██╔██╗ ██║█████╗    ▄███╔╝
+                ██╔══██║██║     ██║   ██║██║╚██╗██║██╔══╝    ▀▀══╝ 
+                ██║  ██║███████╗╚██████╔╝██║ ╚████║███████╗  ██╗   
+                ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝  ╚═╝   
+                                                                    ");
     }
 
     void TutorialTwo()
@@ -413,7 +435,7 @@ public class Gameplay : MonoBehaviour {
         RefreshScreen();
         Terminal.WriteLine("You can 'Win' the game by becoming happy or giving yourself a good future.");
         Terminal.WriteLine("You will lose the game if you become too sad or otherwise can't continue.");
-        Terminal.WriteLine("If your stress, pride, or happiness get too low you won't be able to do things.");
+        Terminal.WriteLine("If your stress, pride, or happiness get too low you won't be able to do certain things.");
         AddSpace();
         Terminal.WriteLine("Increase your happiness by doing things you enjoy.");
         Terminal.WriteLine("Decrease your stress by relaxing and doing things that aren't strenuous.");
@@ -2747,7 +2769,7 @@ public class Gameplay : MonoBehaviour {
     void JobSearch()
     {
         RefreshScreen();
-        dailyRand = UnityEngine.Random.Range(0, 101);
+        dailyRand = UnityEngine.Random.Range(1, 101);
         Terminal.WriteLine("You search for a job...");
         if (dailyRand == 100)
         {
@@ -2920,7 +2942,7 @@ public class Gameplay : MonoBehaviour {
 
     void Hobby()  
     {
-        dailyRand = UnityEngine.Random.Range(0, 101);
+        dailyRand = UnityEngine.Random.Range(1, 101);
         RefreshScreen();
         loneliness = (loneliness - 1);
         if (dailyRand > 90)
@@ -2986,7 +3008,7 @@ public class Gameplay : MonoBehaviour {
             happiness = (happiness + 0);
             pride = (pride + 1);
         }
-        else if(dailyRand > 0)
+        else
         {
             Terminal.WriteLine("You can't think of anything to do. You're bored.");
             stress = (stress + 0);
