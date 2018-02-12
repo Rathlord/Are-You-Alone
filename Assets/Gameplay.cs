@@ -57,8 +57,8 @@ public class Gameplay : MonoBehaviour {
     [SerializeField] int pride = 50;
     [SerializeField] int determination = 0;
     [SerializeField] int loneliness = 0;
-    [SerializeField] int workAbscence = 0;
-    [SerializeField] int schoolAbscence = 0;
+    [SerializeField] int workabsence = 0;
+    [SerializeField] int schoolabsence = 0;
     [SerializeField] int friendAttitude = 50;
     [SerializeField] int onlineAttitude = 50;
     [SerializeField] int parentsAttitude = 30;
@@ -155,22 +155,18 @@ public class Gameplay : MonoBehaviour {
 
     // TODO LIMIT MORE ACTIONS WITH STATS
     // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
-    // TODO IMPLEMENT RANDOM MESSAGES FOR POST-DAY SCREEN
     // TODO IMPLEMENT RANDOM DAILY EVENTS
-    // TODO IMPLEMENT STAT METERS
     // TODO CAP STATS AT -100/100 & penalties/buffs for thems
     // TODO STOP FLIRTING WITH SAME GIRL TWICE IN A DAY
-    // TODO PRIDE IS TOO EASY
 	// TODO CHECK EVICTIONS
 	// TODO SCORE DISPLAY
 	// TODO WINS/LOSSES
 	// TODO PARENTS ATTITUDE CHECKS  (parents now lose all attitude if you quit school while living with them)
 	// TODO SHOW ACTIONS ON MAIN?
 	// TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
-	// TODO DID I IMPLEMENT PARENTS ATTITUDE AFTER DROPPING OUT?
 	// TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
-	// TODO MAKE JEALOUS COME BEFORE MISSING, DUH
-    // TODO HOLY SHIT SCHOOL ABSCENCE BUG WHAT THE TITS
+
+
 
 	//    void Event1()
 	//    {
@@ -384,7 +380,7 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         ImprovementCheck();
         AddSpace();
-        Abscences();
+        absences();
         Terminal.WriteLine("Write 'next' to continue to a new day.");
     }
 
@@ -1110,28 +1106,28 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
-    void Abscences() // Checks if the player showed up to work/school and fires them if they've missed too much
+    void absences() // Checks if the player showed up to work/school and fires them if they've missed too much
     {
         if (workedToday == false && workDay == true && employedYesterday == true)
         {
-            workAbscence++;
+            workabsence++;
         }
-        if (schooledToday == false && schoolDay == false)
+        if (schooledToday == false && schoolDay == true)
         {
-            schoolAbscence++;
+            schoolabsence++;
         }
         AddSpace();
         workedToday = false;
         schooledToday = false;
-        if (workAbscence > 5)
+        if (workabsence > 5)
         {
             Terminal.WriteLine("You get fired for not showing up to work!");
             AddSpace();
             currentJob = Job.None;
             employed = false;
-			workAbscence = 0;
+			workabsence = 0;
         }
-        if (schoolAbscence > 5)
+        if (schoolabsence > 5)
         {
             Terminal.WriteLine("You get expelled for not showing up to university");
             AddSpace();
@@ -1161,7 +1157,7 @@ public class Gameplay : MonoBehaviour {
 
     void OnUserInput(string input)
     {
-        if (input == "quit") // Exit the game
+        if (input == "exit") // Exit the game
         {
             Application.Quit();
         }
@@ -3226,7 +3222,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("You can't keep going.");
                 Terminal.WriteLine("Game Over!");
                 AddSpace();
-                Terminal.WriteLine("Type 'quit' to exit game");
+                Terminal.WriteLine("Type 'exit' to exit game");
                 currentScreen = Screen.Gameover;
             }
         }
