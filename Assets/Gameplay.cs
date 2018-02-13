@@ -23,6 +23,7 @@ public class Gameplay : MonoBehaviour {
     int giftVar = 0;
     int askOutVar = 0;
     int introState = 0; //determine which intro screen is being shown
+    int availableActions = 0; //gameover if available actions hits zero in actions screen
 
     // Special value, daily random number, impacts many things
 
@@ -176,7 +177,6 @@ public class Gameplay : MonoBehaviour {
     }
 
 
-    // TODO Check zero actions available case?
     // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO CAP STATS AT -100/100 & penalties/buffs for thems
@@ -1320,7 +1320,7 @@ public class Gameplay : MonoBehaviour {
         }
     }     // Pass user input to other methods via this
 
-    void ActionList() //List available actions to player TODO show all the time at mainscreen
+    void ActionList() //List available actions to player                        TODO show all the time at mainscreen            // TODO REPLACE NO ACTIONS WITH PROPER GAME OVER STATE
     {
         RefreshScreen();
         Terminal.WriteLine("You can do the following:");
@@ -1328,6 +1328,7 @@ public class Gameplay : MonoBehaviour {
         if (loneliness > -50)
         {
             Terminal.WriteLine("hobby");
+            availableActions++;
         }
         else
         {
@@ -1336,6 +1337,7 @@ public class Gameplay : MonoBehaviour {
         if (stress > -50)
         {
             Terminal.WriteLine("move");
+            availableActions++;
         }
         else
         {
@@ -1344,22 +1346,27 @@ public class Gameplay : MonoBehaviour {
         if (onlineToday == false)
         {
             Terminal.WriteLine("online");
+            availableActions++;
         }
         else
         {
             Terminal.WriteLine("*Already went online today*");
+            availableActions--;
         }
         if (friendToday == false)
         {
             Terminal.WriteLine("friend");
+            availableActions++;
         }
         else
         {
             Terminal.WriteLine("*Already interacted with your friend today*");
+            availableActions--;
         }
         if (stress > -50 && dailyRand > 50)
         {
             Terminal.WriteLine("jobsearch");
+            availableActions++;
         }
         else
         {
@@ -1368,6 +1375,7 @@ public class Gameplay : MonoBehaviour {
         if (school == true && schoolDay == true && schooledToday == false && happiness >= -50)
         {
             Terminal.WriteLine("school");
+            availableActions++;
         }
         else if (school == false)
         {
@@ -1376,6 +1384,7 @@ public class Gameplay : MonoBehaviour {
         else if (schooledToday == true && schoolDay == true)
         {
             Terminal.WriteLine("*You're done with school for today*");
+            availableActions--;
         }
         else if (schoolDay == true)
         {
@@ -1388,10 +1397,16 @@ public class Gameplay : MonoBehaviour {
         if (knownWomen.Count > 0 && flirted == false && happiness > -50)
         {
             Terminal.WriteLine("flirt");
+            availableActions++;
         }
         else if (happiness <= -50 && knownWomen.Count > 0 && flirted == false)
         {
             Terminal.WriteLine("*You're too sad to flirt today*");
+        }
+        else if (flirted == true)
+        {
+            Terminal.WriteLine("*You've had enough flirting for the day*");
+            availableActions--;
         }
         else
         {
@@ -1400,6 +1415,7 @@ public class Gameplay : MonoBehaviour {
         if ((girlfriend == true || knownWomen.Count > 0) && money > 3 && happiness > -50)
         {
             Terminal.WriteLine("date");
+            availableActions++;
         }
         else if (money < 4)
         {
@@ -1416,6 +1432,7 @@ public class Gameplay : MonoBehaviour {
         if (employed == true  && workedToday == false && workDay == true && stress > -50)
         {
             Terminal.WriteLine("work");
+            availableActions++;
         }
         else if (employed == false)
         {
@@ -1428,12 +1445,24 @@ public class Gameplay : MonoBehaviour {
         else if (workedToday == true && workDay == true)
         {
             Terminal.WriteLine("*You already worked today*");
+            availableActions--;
         }
         else
         {
             Terminal.WriteLine("*You're not scheduled to work today*");
         }
-        AddSpace();  
+        AddSpace();                                                                                         
+        if (availableActions == 0)                                                                           
+        {
+            RefreshScreen();
+            Terminal.WriteLine("You have no available actions.");
+            Terminal.WriteLine("Life has simply become too much with you, and you give in.");
+            AddSpace();
+            Terminal.WriteLine("Game Over!");
+            AddSpace();
+            Terminal.WriteLine("Type 'exit' to exit game");
+            currentScreen = Screen.Gameover;
+        }
     }
 
     void InputManager(string input)
@@ -1718,7 +1747,7 @@ public class Gameplay : MonoBehaviour {
         spoons--;
     }
 
-    void Work() // Work your job. TODO: Double shifts at some maybe?
+    void Work() // Work your job.
     {
         RefreshScreen();
         Terminal.WriteLine("You go to work...");
