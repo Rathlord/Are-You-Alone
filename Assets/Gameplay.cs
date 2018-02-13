@@ -176,7 +176,7 @@ public class Gameplay : MonoBehaviour {
     }
 
 
-    // TODO LIMIT MORE ACTIONS WITH STATS
+    // TODO Check zero actions available case?
     // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO CAP STATS AT -100/100 & penalties/buffs for thems
@@ -484,7 +484,7 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         ImprovementCheck();
         AddSpace();
-        absences();
+        Absences();
         Terminal.WriteLine("Write 'next' to continue to a new day.");
     }
 
@@ -1151,7 +1151,7 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
-    void absences() // Checks if the player showed up to work/school and fires them if they've missed too much
+    void Absences() // Checks if the player showed up to work/school and fires them if they've missed too much
     {
         if (workedToday == false && workDay == true && employedYesterday == true)
         {
@@ -1325,8 +1325,22 @@ public class Gameplay : MonoBehaviour {
         RefreshScreen();
         Terminal.WriteLine("You can do the following:");
         AddSpace();
-        Terminal.WriteLine("hobby");
-        Terminal.WriteLine("move");
+        if (loneliness > -50)
+        {
+            Terminal.WriteLine("hobby");
+        }
+        else
+        {
+            Terminal.WriteLine("*You're too lonely to pursue a hobby*");
+        }
+        if (stress > -50)
+        {
+            Terminal.WriteLine("move");
+        }
+        else
+        {
+            Terminal.WriteLine("*You're too stressed to move*");
+        }
         if (onlineToday == false)
         {
             Terminal.WriteLine("online");
@@ -1343,8 +1357,15 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*Already interacted with your friend today*");
         }
-        Terminal.WriteLine("jobsearch");
-        if (school == true && schoolDay == true && schooledToday == false)
+        if (stress > -50 && dailyRand > 50)
+        {
+            Terminal.WriteLine("jobsearch");
+        }
+        else
+        {
+            Terminal.WriteLine("*You're too stressed to look for a job today.");
+        }
+        if (school == true && schoolDay == true && schooledToday == false && happiness >= -50)
         {
             Terminal.WriteLine("school");
         }
@@ -1356,19 +1377,27 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*You're done with school for today*");
         }
+        else if (schoolDay == true)
+        {
+            Terminal.WriteLine("*You're too depressed to go to school today*");
+        }
         else
         {
             Terminal.WriteLine("*No school today*");
         }
-        if (knownWomen.Count > 0 && flirted == false)
+        if (knownWomen.Count > 0 && flirted == false && happiness > -50)
         {
             Terminal.WriteLine("flirt");
+        }
+        else if (happiness <= -50 && knownWomen.Count > 0 && flirted == false)
+        {
+            Terminal.WriteLine("*You're too sad to flirt today*");
         }
         else
         {
             Terminal.WriteLine("*You don't know anyone to flirt with*");
         }
-        if ((girlfriend == true || knownWomen.Count > 0) && money > 3)
+        if ((girlfriend == true || knownWomen.Count > 0) && money > 3 && happiness > -50)
         {
             Terminal.WriteLine("date");
         }
@@ -1376,17 +1405,25 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*You can't afford to go on a date*");
         }
+        else if (happiness <= -50)
+        {
+            Terminal.WriteLine("*You are too depressed to go on a date*");
+        }
         else
         {
             Terminal.WriteLine("*You don't know anyone to take on a date*");
         }
-        if (employed == true  && workedToday == false && workDay == true)
+        if (employed == true  && workedToday == false && workDay == true && stress > -50)
         {
             Terminal.WriteLine("work");
         }
         else if (employed == false)
         {
             Terminal.WriteLine("*You don't have a job*");
+        }
+        else if (stress <= -50)
+        {
+            Terminal.WriteLine("*You're too stressed out to go to work*");
         }
         else if (workedToday == true && workDay == true)
         {
@@ -1401,11 +1438,11 @@ public class Gameplay : MonoBehaviour {
 
     void InputManager(string input)
     {
-        if (input == "move")
+        if (input == "move" && stress > -50)
         {
             MoveWhere();
         }
-        if (input == "hobby")
+        if (input == "hobby" && loneliness > -50)
         {
             Hobby();
             spoons--;
@@ -1420,27 +1457,27 @@ public class Gameplay : MonoBehaviour {
             Friends();
             spoons--;
         }
-        if (input == "jobsearch")
+        if (input == "jobsearch" && stress > -50 && dailyRand > 50)
         {
             JobSearch();
             spoons--;
         }
-        if (input == "school" && school == true && schoolDay == true && schooledToday == false)
+        if (input == "school" && school == true && schoolDay == true && schooledToday == false && happiness >= -50)
         {
             School();
             spoons--;
         }
-        if (input == "flirt" && knownWomen.Count > 0)
+        if (input == "flirt" && knownWomen.Count > 0 && flirted == false && happiness > -50)
         {
             Flirt();
             spoons--;
         }
-        if (input == "date" && ((girlfriend == true || knownWomen.Count > 0) && money > 0))
+        if (input == "date" && ((girlfriend == true || knownWomen.Count > 0) && money > 0) && happiness > -50)
         {
             Date();
             spoons--;
         }
-        if (input == "work" && employed == true && workedToday == false && workDay == true)
+        if (input == "work" && employed == true && workedToday == false && workDay == true && stress > -50)
         {
             Work();
             spoons--;
