@@ -581,6 +581,32 @@ public class Gameplay : MonoBehaviour {
                 LonelinessGameOver();
             }
         }
+        if (money < 1 && parentsAttitude > 0)
+        {
+            Terminal.WriteLine("You run out of money. Your parents give you a loan... this time.");
+            money = (money + 10);
+            parentsAttitude = (parentsAttitude - 10);
+        }
+        else if (money < 1 && friendAttitude > 0)
+        {
+            Terminal.WriteLine("You run out of money. Your friend gives you a small loan grudgingly.");
+            money = (money + 5);
+            friendAttitude = (friendAttitude - 15);
+        }
+        else
+        {
+            MoneyGameOver();
+        }
+    }
+
+    void MoneyGameOver()
+    {
+        Terminal.WriteLine("You can't even afford your living expenses any more. You're out of money. \n You have no one to support you. You can't keep living like this");
+        AddSpace();
+        Terminal.WriteLine("Game Over");
+        AddSpace();
+        Terminal.WriteLine("Type 'exit' to exit game.");
+        currentScreen = Screen.Gameover;
     }
 
     void LonelinessGameOver()
@@ -717,15 +743,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You're holding down a steady job. Go you!");
             pride = (pride + 2);
         }
-        if (money > 100)
-        {
-            Terminal.WriteLine("You feel rich! You spend some of your money. It makes you feel good.");
-            happiness = (happiness + 15);
-            stress = (stress + 5);
-            pride = (pride + 10);
-            money = (money - 25);
-        }
-        else if (money > 20)
+        if (money >= 20)
         {
             Terminal.WriteLine("You feel financially stable.");
             happiness = (happiness + 5);
