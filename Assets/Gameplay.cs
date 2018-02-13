@@ -179,14 +179,14 @@ public class Gameplay : MonoBehaviour {
 
     // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
     // TODO IMPLEMENT RANDOM DAILY EVENTS
-    // TODO CAP STATS AT -100/100 & penalties/buffs for thems
     // TODO CHECK EVICTIONS
     // TODO SCORE DISPLAY
-    // TODO WINS/LOSSES
+    // TODO WINS
     // TODO PARENTS ATTITUDE CHECKS  (parents now lose all attitude if you quit school while living with them)
     // TODO SHOW ACTIONS ON MAIN?
     // TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
     // TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
+    // TODO WOMEN LEAVE LIFE IF REP TOO LOW
 
 
 
@@ -222,7 +222,7 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
-    private void Introduction()
+    void Introduction()
     {
         if (introState == 0)
         {
@@ -484,8 +484,216 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         ImprovementCheck();
         AddSpace();
+        StatChecks();
         Absences();
         Terminal.WriteLine("Write 'next' to continue to a new day.");
+    }
+
+    void StatChecks() // Caps stats at 100/-100 and fires events at day end if they exceed cap
+    {
+        if (happiness > 100)
+        {
+            happiness = (happiness - 25);
+            determination++;
+            pride = (pride + 10);
+            stress = (stress + 10);
+            loneliness = (loneliness + 5);
+            Terminal.WriteLine("You are so happy you feel your whole life getting better.");
+            Terminal.WriteLine("You are filled with Determination.");
+        }
+        if (happiness < -100) // Game over or save if determination
+        {
+            if (determination > 0)
+            {
+                determination--;
+                happiness = (happiness + 10);
+                Terminal.WriteLine("You are swallowed by dark thoughts, but your Determination helps you pull through.");
+                pride = (pride - 10);
+                stress = (stress - 10);
+            }
+            else
+            {
+                DepressionGameOver();
+            }
+        }
+        if (pride >= 100) // Grant determination
+        {
+            pride = (pride - 25);
+            determination++;
+            AddSpace();
+            Terminal.WriteLine("You are extremely proud of what you've done with your life.");
+            Terminal.WriteLine("You are filled with Determination!");
+            AddSpace();
+        }
+        if (pride < -100 && determination < 1)
+        {
+            if (determination > 0)
+            {
+                determination--;
+                Terminal.WriteLine("The meaninglessness of your life almost overwhelms you, but your determination helps you pull through.");
+                happiness = (happiness - 10);
+                stress = (stress - 10);
+            }
+            else
+            {
+                ShameGameOver();
+            }
+        }
+        if (stress > 100)
+        {
+            stress = (stress - 25);
+            Terminal.WriteLine("You feel so carefree that your whole life just seems better.");
+            happiness = (happiness + 20);
+            pride = (pride + 10);
+            loneliness = (loneliness + 10);
+        }
+        if (stress < -100)
+        {
+            if (determination > 0)
+            {
+                determination--;
+                Terminal.WriteLine("You are so stressed you almost give up, but your Determination helps you pull through.");
+                stress = (stress + 10);
+            }
+            else
+            {
+                StressGameOver();
+            }
+        }
+        if (loneliness > 100)
+        {
+            loneliness = (loneliness - 25);
+            Terminal.WriteLine("You feel overwhelmed by the support of the people who love you.");
+            Terminal.WriteLine("You are filled with Determination.");
+            determination++;
+        }
+        if (loneliness < -100)
+        {
+            if (determination > 0)
+            {
+                determination--;
+                Terminal.WriteLine("You feel so utterly alone that you almost give up, but your Determination helps you pull through");
+                happiness = (happiness - 10);
+                stress = (stress - 10);
+                pride = (pride - 10);
+            }
+            else
+            {
+                LonelinessGameOver();
+            }
+        }
+    }
+
+    void LonelinessGameOver()
+    {
+        RefreshScreen();
+        string randomLine;
+        if (dailyRand > 75)
+        {
+            randomLine = "The entire universe feels like it's closing in on you. \n You feel so undescribably alone that you can't take it anymore.";
+        }
+        else if (dailyRand > 50)
+        {
+            randomLine = "You feel horrible. You check your phone to see if there's anyone you can talk to.  \n There just isn't anyone there, though. You are alone.  \n You just can't take it anymore.";
+        }
+        else if(dailyRand > 25)
+        {
+            randomLine = "You feel like there's no one out there who cares about you.  \n You don't even think you'll be missed when you're gone.  \n You can't take it anymore.";
+        }
+        else
+        {
+            randomLine = "You haven't spoken to anyone who cares about you in days. \n You're sure no one cares. You can't take it anymore.";
+        }
+        Terminal.WriteLine(randomLine);
+        AddSpace();
+        Terminal.WriteLine("Game Over!");
+        AddSpace();
+        Terminal.WriteLine("Type 'exit' to exit game");
+        currentScreen = Screen.Gameover;
+    }
+
+    void StressGameOver()
+    {
+        RefreshScreen();
+        string randomLine;
+        if (dailyRand > 75)
+        {
+            randomLine = "The pressure of your life is just too much to bear. \n You can't take it anymore.";
+        }
+        else if(dailyRand > 50)
+        {
+            randomLine = "Everyone expects so much from you, but that's never been what you wanted. \n You can't bear being a disappointment anymore.";
+        }
+        else if(dailyRand > 25)
+        {
+            randomLine = "You have so much on your plate that you can't handle it. \n You'd rather the alternative than to face all of it.";
+        }
+        else
+        {
+            randomLine = "The stress is so much that you just break down.  \n You just can't take it anymore.";
+        }
+        Terminal.WriteLine(randomLine);
+        AddSpace();
+        Terminal.WriteLine("Game Over!");
+        AddSpace();
+        Terminal.WriteLine("Type 'exit' to exit game");
+        currentScreen = Screen.Gameover;
+    }
+
+    void ShameGameOver()
+    {
+        RefreshScreen();
+        string randomLine;
+        if (dailyRand > 75)
+        {
+            randomLine = "You hate the person you've become and can't stand to live with yourself anymore.";
+        }
+        else if(dailyRand > 50)
+        {
+            randomLine = "You're disgusted by the life you've lived. You squandered so many opportunities. \n You can't live with it anymore.";
+        }
+        else if(dailyRand > 25)
+        {
+            randomLine = "You're so disappointed with the way your life has gone. It's just all gone wrong. \n You can't keep going like this.";
+        }
+        else
+        {
+            randomLine = "You are so ashamed of what you've accomplished that you can't bear it anymore.";
+        }
+        Terminal.WriteLine(randomLine);
+        AddSpace();
+        Terminal.WriteLine("Game Over!");
+        AddSpace();
+        Terminal.WriteLine("Type 'exit' to exit game");
+        currentScreen = Screen.Gameover;
+    }
+
+    void DepressionGameOver()
+    {
+        RefreshScreen();
+        string randomLine;
+        if (dailyRand > 75)
+        {
+            randomLine = "You're so tired of being sad all the time. You just have to get away from it. \n You don't have any choice. You can't take anymore.";
+        }
+        else if(dailyRand > 50)
+        {
+            randomLine = "Every day is misery. You don't see any other future for yourself. \n This kind of life isn't worth it. You can't keep going.";
+        }
+        else if(dailyRand > 25)
+        {
+            randomLine = "It feels like you go through life dragging an anchor behind you. Today it's just too heavy. \n You just can't take it anymore.";
+        }
+        else
+        {
+            randomLine = "You are angry and sad, sick and disappointed. You don't know if you let down life or it let down you. \n All you know is you're through with it.";
+        }
+        Terminal.WriteLine(randomLine);
+        AddSpace();
+        Terminal.WriteLine("Game Over!");
+        AddSpace();
+        Terminal.WriteLine("Type 'exit' to exit game");
+        currentScreen = Screen.Gameover;
     }
 
     void FulfillmentCheck()
@@ -1980,15 +2188,15 @@ public class Gameplay : MonoBehaviour {
             {
                 dateDecline = "She says she's sorry, but she's busy tonight. Maybe another night soon?";
             }
-        if (dateAttitude > 50)
+        else if(dateAttitude > 50)
             {
                 dateDecline = "She says she doesn't feel up for it tonight.";
             }
-        if (dateAttitude > 25)
+        else if (dateAttitude > 25)
             {
                 dateDecline = "She doesn't feel like she knows you well enough";
             }
-        if (dateAttitude > 0)
+        else if (dateAttitude > 0)
             {
                 dateDecline = "She says no.";
             }
@@ -2354,12 +2562,12 @@ public class Gameplay : MonoBehaviour {
             randomLine = "You write her a poem. It's kinda mushy, but well written. She likes it a lot!";
             giftVar = 4;
         }
-        if (dailyRand > 50)
+        else if (dailyRand > 50)
         {
             randomLine = "You surprise her with a boquet of her favorite flowers. She loves them!";
             giftVar = 3;
         }
-        if (dailyRand > 25)
+        else if (dailyRand > 25)
         {
             randomLine = "You get her some jewelry you think she'd like. She thanks you profusely.";
             giftVar = 2;
@@ -2378,11 +2586,11 @@ public class Gameplay : MonoBehaviour {
         {
             randomLine = "You tell her you love spending time with her. She beams.";
         }
-        if (dailyRand > 50)
+        else if (dailyRand > 50)
         {
             randomLine = "You tell her you think she's beautiful. She blushes.";
         }
-        if (dailyRand > 25)
+        else if (dailyRand > 25)
         {
             randomLine = "You tell her she's hilarious. She makes a joke! It's funny!";
         }
@@ -2400,11 +2608,11 @@ public class Gameplay : MonoBehaviour {
         {
             randomLine = "You trade jokes that are so funny you're both crying laughing.";
         }
-        if (dailyRand > 50)
+        else if (dailyRand > 50)
         {
             randomLine = "You tell a joke off a popsicle stick. It's stupid but funny.";
         }
-        if (dailyRand > 25)
+        else if (dailyRand > 25)
         {
             randomLine = "You make a joke about the situation you're in. She laughs.";
         }
@@ -2422,11 +2630,11 @@ public class Gameplay : MonoBehaviour {
         {
             randomLine = "You cook her a delicious dinner and ask her out afterwords.";
         }
-        if (dailyRand > 50)
+        else if (dailyRand > 50)
         {
             randomLine = "You bring her a boquet of her favorite flowers and ask her out.";
         }
-        if (dailyRand > 25)
+        else if (dailyRand > 25)
         {
             randomLine = "You're hanging out having a good time, so you just ask her out on the spot.";
         }
@@ -3312,35 +3520,11 @@ public class Gameplay : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update ()
+    {
         if (Input.GetKey(KeyCode.Escape)) // Exit game on Escape
         {
             Application.Quit();
-        }
-		if (happiness < -100) // Game over or save if determination
-        {
-            if (determination > 0)
-            {
-                determination--;
-                happiness = (happiness + 10);
-            }
-            else
-            {
-                RefreshScreen();
-                Terminal.WriteLine("You can't keep going.");
-                Terminal.WriteLine("Game Over!");
-                AddSpace();
-                Terminal.WriteLine("Type 'exit' to exit game");
-                currentScreen = Screen.Gameover;
-            }
-        }
-        if (pride >= 100) // Grant determination
-        {
-            pride = (pride - 25);
-            determination++;
-            AddSpace();
-            Terminal.WriteLine("You are filled with Determination!");
-            AddSpace();
         }
 	}
 }
