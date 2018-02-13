@@ -177,14 +177,9 @@ public class Gameplay : MonoBehaviour {
     }
 
 
-    // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO WINS
     // TODO SHOW ACTIONS ON MAIN?
-    // TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
-    // TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
-    // TODO WOMEN LEAVE LIFE IF REP TOO LOW
-
 
 
     //    void Event1()
@@ -995,7 +990,43 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         RelationshipAttitudes();
         AddSpace();
+        LeaveLife();
+        AddSpace();
         GirlfriendAttitude();
+    }
+
+    private void LeaveLife()
+    {
+        if (knownWomen.Contains("Winry") == true && winryAttitude < -100)
+        {
+            knownWomen.Remove("Winry");
+            Terminal.WriteLine("Winry moves on. She is no longer in your life.");
+        }
+        if (knownWomen.Contains("Sammy") == true && sammyAttitude < -100)
+        {
+            knownWomen.Remove("Sammy");
+            Terminal.WriteLine("Sammy moves on. She is no longer in your life.");
+        }
+        if (knownWomen.Contains("Lina") == true && linaAttitude < -100)
+        {
+            knownWomen.Remove("Lina");
+            Terminal.WriteLine("Lina moves on. She is no longer in your life.");
+        }
+        if (knownWomen.Contains("Jenna") == true && jennaAttitude < -100)
+        {
+            knownWomen.Remove("Jenna");
+            Terminal.WriteLine("Jenna moves on. She is no longer in your life.");
+        }
+        if (knownWomen.Contains("Alex") == true && alexAttitude < -100)
+        {
+            knownWomen.Remove("Alex");
+            Terminal.WriteLine("Alex moves on. She is no longer in your life.");
+        }
+        if (knownWomen.Contains("Pina") == true && pinaAttitude < -100)
+        {
+            knownWomen.Remove("Pina");
+            Terminal.WriteLine("Pina moves on. She is no longer in your life.");
+        }
     }
 
     void GirlfriendAttitude()
@@ -1679,6 +1710,15 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*You're not scheduled to work today*");
         }
+        if (girlfriend == true)
+        {
+            Terminal.WriteLine("breakup");
+            availableActions++;
+        }
+        else
+        {
+            Terminal.WriteLine("*You don't have anyone to break up with*");
+        }
         AddSpace();                                                                                         
         if (availableActions == 0)                                                                           
         {
@@ -1714,9 +1754,14 @@ public class Gameplay : MonoBehaviour {
             Friends();
             spoons--;
         }
-        if (input == "jobsearch" && stress > -50 && dailyRand > 50)
+        if (input == "jobsearch" && stress > -50)
         {
-            JobSearch();
+            JobSearch("");
+            spoons--;
+        }
+        if (input == "breakup" && girlfriend == true)
+        {
+            BreakUp();
             spoons--;
         }
         if (input == "school" && school == true && schoolDay == true && schooledToday == false && happiness >= -50)
@@ -1745,6 +1790,45 @@ public class Gameplay : MonoBehaviour {
         }
         Tooltips(input);
         WomanInfo(input);
+    }
+
+    void BreakUp()
+    {
+        Terminal.WriteLine("You break up with " + girlfriendName);
+        Terminal.WriteLine("Even though it was your decision it makes you feel terrible.");
+        switch (girlfriendName)
+        {
+            case "Winry":
+                winryAttitude = (winryAttitude - 50);
+                break;
+            case "Sammy":
+                sammyAttitude = (sammyAttitude - 50);
+                break;
+            case "Lina":
+                linaAttitude = (linaAttitude - 50);
+                break;
+            case "Jenna":
+                jennaAttitude = (jennaAttitude - 50);
+                break;
+            case "Alex":
+                alexAttitude = (alexAttitude - 50);
+                break;
+            case "Pina":
+                pinaAttitude = (pinaAttitude - 50);
+                break;
+        }
+        inLove = false;
+        winryLove = false;
+        sammyLove = false;
+        linaLove = false;
+        jennaLove = false;
+        alexLove = false;
+        pinaLove = false;
+        happiness = (happiness - 15);
+        stress = (stress - 15);
+        loneliness = (loneliness - 20);
+        girlfriend = false;
+        girlfriendName = "none";
     }
 
     void WomanInfo(string input)
