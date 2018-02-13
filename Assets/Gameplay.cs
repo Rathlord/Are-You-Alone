@@ -180,7 +180,6 @@ public class Gameplay : MonoBehaviour {
     // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO CHECK EVICTIONS
-    // TODO SCORE DISPLAY
     // TODO WINS
     // TODO PARENTS ATTITUDE CHECKS  (parents now lose all attitude if you quit school while living with them)
     // TODO SHOW ACTIONS ON MAIN?
@@ -3335,7 +3334,7 @@ public class Gameplay : MonoBehaviour {
     {
         Terminal.ClearScreen();
         AddSpace();
-        Terminal.WriteLine("Are You Alone?            Current Money: " + money +"$           Current Spoons: " + spoons);
+        Terminal.WriteLine("Turn: " + turn + "              Current Money: " + money +"$              Current Spoons: " + spoons);
 		Terminal.WriteLine("        Hap: "+HappyMeter() +"    "+ "Strs: "+StressMeter() +"    "+ "Prd: "+PrideMeter() +"    "+ "Lnly: "+LonelyMeter());
         Terminal.WriteLine("------------------------------------------------------------------------");
         AddSpace();
