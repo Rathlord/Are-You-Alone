@@ -8,7 +8,7 @@ public class Gameplay : MonoBehaviour {
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    enum Screen { Introduction, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut };
+    enum Screen { Introduction, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut, JobQuery };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -179,9 +179,7 @@ public class Gameplay : MonoBehaviour {
 
     // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
     // TODO IMPLEMENT RANDOM DAILY EVENTS
-    // TODO CHECK EVICTIONS
     // TODO WINS
-    // TODO PARENTS ATTITUDE CHECKS  (parents now lose all attitude if you quit school while living with them)
     // TODO SHOW ACTIONS ON MAIN?
     // TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
     // TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
@@ -601,6 +599,7 @@ public class Gameplay : MonoBehaviour {
 
     void MoneyGameOver()
     {
+        RefreshScreen();
         Terminal.WriteLine("You can't even afford your living expenses any more. You're out of money. \n You have no one to support you. You can't keep living like this");
         AddSpace();
         Terminal.WriteLine("Game Over");
@@ -1440,6 +1439,10 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
         }
+        else if (currentScreen == Screen.JobQuery)
+        {
+            JobSearch(input);
+        }
         else if (currentScreen == Screen.Introduction && input == "next")
         {
             IntroHandler(input);
@@ -1545,7 +1548,7 @@ public class Gameplay : MonoBehaviour {
         }
     }     // Pass user input to other methods via this
 
-    void ActionList() //List available actions to player                        TODO show all the time at mainscreen            // TODO REPLACE NO ACTIONS WITH PROPER GAME OVER STATE
+    void ActionList() //List available actions to player                        TODO show all the time at mainscreen      
     {
         RefreshScreen();
         Terminal.WriteLine("You can do the following:");
@@ -3095,58 +3098,220 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
     }
 
-    void JobSearch()
+    void JobSearch(string input)
     {
         RefreshScreen();
         dailyRand = UnityEngine.Random.Range(1, 101);
         Terminal.WriteLine("You search for a job...");
         if (dailyRand == 100)
         {
-            AddSpace();
-            Terminal.WriteLine("You get a job at a Paint Store! You're on the schedule soon!");
-            happiness = (happiness + 10);
-            employed = true;
-            currentJob = Job.PaintStore;
+            if (employed == false)
+            {
+                AddSpace();
+                Terminal.WriteLine("You get a job at a Paint Store! You're on the schedule soon!");
+                Terminal.WriteLine("It pays 6$ per work day.");
+                happiness = (happiness + 10);
+                employed = true;
+                currentJob = Job.PaintStore;
+            }
+            else if (employed == true)
+            {
+                currentScreen = Screen.JobQuery;
+                AddSpace();
+                Terminal.WriteLine("You get offered a job at a Paint Store! Quit your curren job and take this one?");
+                Terminal.WriteLine("It pays 6$ per work day.");
+                Terminal.WriteLine("Enter 'yes' or 'no'.");
+                if (input == "yes")
+                {
+                    Terminal.WriteLine("You take the job and quit your current one!");
+                    happiness = (happiness + 10);
+                    employed = true;
+                    currentJob = Job.PaintStore;
+                    currentScreen = Screen.Gameplay;
+                    Invoke("MainScreen", 1f);
+                }
+                else if (input == "no")
+                {
+                    Terminal.WriteLine("You decline the job.");
+                    Invoke("MainScreen", 1f);
+                    currentScreen = Screen.Gameplay;
+                }
+            }
         }
         if (dailyRand > 90 && dailyRand <= 93)
         {
-            AddSpace();
-            Terminal.WriteLine("You get a job at a Department Store! You're on the schedule soon!");
-            happiness = (happiness + 5);
-            employed = true;
-            currentJob = Job.DepartmentStore;
+            if (employed == false)
+            {
+                AddSpace();
+                Terminal.WriteLine("You get a job at a Department Store! You're on the schedule soon!");
+                Terminal.WriteLine("It pays 4$ per work day.");
+                happiness = (happiness + 5);
+                employed = true;
+                currentJob = Job.DepartmentStore;
+            }
+            else if (employed == true)
+            {
+                currentScreen = Screen.JobQuery;
+                AddSpace();
+                Terminal.WriteLine("You get offered a job at a Department Store! Quit your curren job and take this one?");
+                Terminal.WriteLine("It pays 4$ per work day.");
+                Terminal.WriteLine("Enter 'yes' or 'no'.");
+                if (input == "yes")
+                {
+                    Terminal.WriteLine("You take the job and quit your current one!");
+                    happiness = (happiness + 5);
+                    employed = true;
+                    currentJob = Job.DepartmentStore;
+                    currentScreen = Screen.Gameplay;
+                    Invoke("MainScreen", 1f);
+                }
+                else if (input == "no")
+                {
+                    Terminal.WriteLine("You decline the job.");
+                    Invoke("MainScreen", 1f);
+                    currentScreen = Screen.Gameplay;
+                }
+            }
         }
         if (dailyRand > 96 && dailyRand <= 98)
         {
-            AddSpace();
-            Terminal.WriteLine("You get a job at a Lumber Yard! You're on the schedule soon!");
-            happiness = (happiness + 7);
-            employed = true;
-            currentJob = Job.LumberYard;
+            if (employed == false)
+            {
+                AddSpace();
+                Terminal.WriteLine("You get a job at a Lumber Yard! You're on the schedule soon!");
+                Terminal.WriteLine("It pays 8$ per work day.");
+                happiness = (happiness + 7);
+                employed = true;
+                currentJob = Job.LumberYard;
+            }
+            else if (employed == true)
+            {
+                currentScreen = Screen.JobQuery;
+                AddSpace();
+                Terminal.WriteLine("You get offered a job at a Lumber Yard! Quit your curren job and take this one?");
+                Terminal.WriteLine("It pays 8$ per work day.");
+                Terminal.WriteLine("Enter 'yes' or 'no'.");
+                if (input == "yes")
+                {
+                    Terminal.WriteLine("You take the job and quit your current one!");
+                    happiness = (happiness + 7);
+                    employed = true;
+                    currentJob = Job.LumberYard;
+                    currentScreen = Screen.Gameplay;
+                    Invoke("MainScreen", 1f);
+                }
+                else if (input == "no")
+                {
+                    Terminal.WriteLine("You decline the job.");
+                    Invoke("MainScreen", 1f);
+                    currentScreen = Screen.Gameplay;
+                }
+            }
         }
         if (dailyRand >93 && dailyRand <= 95)
         {
-            AddSpace();
-            Terminal.WriteLine("You get a job at a Pizza Place! You're on the schedule soon!");
-            happiness = (happiness + 7);
-            employed = true;
-            currentJob = Job.PizzaPlace;
+            if (employed == false)
+            {
+                AddSpace();
+                Terminal.WriteLine("You get a job at a Pizza Place! You're on the schedule soon!");
+                Terminal.WriteLine("It pays 2$ per work day usually.");
+                happiness = (happiness + 7);
+                employed = true;
+                currentJob = Job.PizzaPlace;
+            }
+            else if (employed == true)
+            {
+                currentScreen = Screen.JobQuery;
+                AddSpace();
+                Terminal.WriteLine("You get offered a job at a Pizza Place! Quit your curren job and take this one?");
+                Terminal.WriteLine("It pays 2$ per work day usually.");
+                Terminal.WriteLine("Enter 'yes' or 'no'.");
+                if (input == "yes")
+                {
+                    Terminal.WriteLine("You take the job and quit your current one!");
+                    happiness = (happiness + 7);
+                    employed = true;
+                    currentJob = Job.PizzaPlace;
+                    currentScreen = Screen.Gameplay;
+                    Invoke("MainScreen", 1f);
+                }
+                else if (input == "no")
+                {
+                    Terminal.WriteLine("You decline the job.");
+                    Invoke("MainScreen", 1f);
+                    currentScreen = Screen.Gameplay;
+                }
+            }
         }
         if (dailyRand == 96)
         {
-            AddSpace();
-            Terminal.WriteLine("You get a job as a Traveling Salesman! You're on the schedule soon!");
-            happiness = (happiness + 10);
-            employed = true;
-            currentJob = Job.TravelingSales;
+            if (employed == false)
+            {
+                AddSpace();
+                Terminal.WriteLine("You get a job as a Traveling Salesman! You're on the schedule soon!");
+                Terminal.WriteLine("It pays 12$ per work day.");
+                happiness = (happiness + 10);
+                employed = true;
+                currentJob = Job.TravelingSales;
+            }
+            else if (employed == true)
+            {
+                currentScreen = Screen.JobQuery;
+                AddSpace();
+                Terminal.WriteLine("You get offered a job as a Traveling Salesman! Quit your curren job and take this one?");
+                Terminal.WriteLine("It pays 12$ per work day.");
+                Terminal.WriteLine("Enter 'yes' or 'no'.");
+                if (input == "yes")
+                {
+                    Terminal.WriteLine("You take the job and quit your current one!");
+                    happiness = (happiness + 10);
+                    employed = true;
+                    currentJob = Job.TravelingSales;
+                    currentScreen = Screen.Gameplay;
+                    Invoke("MainScreen", 1f);
+                }
+                else if (input == "no")
+                {
+                    Terminal.WriteLine("You decline the job.");
+                    Invoke("MainScreen", 1f);
+                    currentScreen = Screen.Gameplay;
+                }
+            }
         }
         if (dailyRand == 99)
         {
-            AddSpace();
-            Terminal.WriteLine("You get a job at a Game Company! You're on the schedule soon!");
-            happiness = (happiness + 15);
-            employed = true;
-            currentJob = Job.GameCompany;
+            if (employed == false)
+            {
+                AddSpace();
+                Terminal.WriteLine("You get a job at a Game Company! You're on the schedule soon!");
+                Terminal.WriteLine("It pays 2$ per work day.");
+                happiness = (happiness + 15);
+                employed = true;
+                currentJob = Job.GameCompany;
+            }
+            else if (employed == true)
+            {
+                currentScreen = Screen.JobQuery;
+                AddSpace();
+                Terminal.WriteLine("You get offered a job at a Game Company! Quit your curren job and take this one?");
+                Terminal.WriteLine("It pays 2$ per work day.");
+                Terminal.WriteLine("Enter 'yes' or 'no'.");
+                if (input == "yes")
+                {
+                    Terminal.WriteLine("You take the job and quit your current one!");
+                    happiness = (happiness + 15);
+                    employed = true;
+                    currentJob = Job.GameCompany;
+                    currentScreen = Screen.Gameplay;
+                    Invoke("MainScreen", 1f);
+                }
+                else if (input == "no")
+                {
+                    Terminal.WriteLine("You decline the job.");
+                    Invoke("MainScreen", 1f);
+                    currentScreen = Screen.Gameplay;
+                }
+            }
         }
         else if (dailyRand <= 90)
         {
@@ -3158,7 +3323,7 @@ public class Gameplay : MonoBehaviour {
         }
         AddSpace();
         Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
-    } // TODO Ask if player wants to take new job
+    }
 
     void Friends()
     {
