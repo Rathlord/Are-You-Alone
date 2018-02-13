@@ -8,7 +8,7 @@ public class Gameplay : MonoBehaviour {
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    enum Screen { Tutorial, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut };
+    enum Screen { Introduction, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -22,6 +22,7 @@ public class Gameplay : MonoBehaviour {
     int earnings = 0;
     int giftVar = 0;
     int askOutVar = 0;
+    int introState = 0; //determine which intro screen is being shown
 
     // Special value, daily random number, impacts many things
 
@@ -42,6 +43,29 @@ public class Gameplay : MonoBehaviour {
     bool flirtSammy = false;
     bool flirtWinry = false;
     bool inLove = false;
+
+    // Random events variables (test)
+
+    /*
+    List<Action> randEvent = new List<Action>();
+
+    void Test()
+    {
+        randEvent.Add(Test2);
+        randEvent.Add(Test3);
+        randEvent[1]();
+    }
+
+    void Test2()
+    {
+        print("This is a test of the random event system");
+    }
+
+    void Test3()
+    {
+        print("This is a further test");
+    }
+    */
 
     // Many character variables will be stored here
 
@@ -133,13 +157,12 @@ public class Gameplay : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        Terminal.WriteLine("Are You Alone?");
         AddSpace();
-        Tutorial();
+        IntroHandler("");
         currentHouse = House.Parents;
         dailyRand = UnityEngine.Random.Range(1, 101);
         currentJob = Job.None;
-        currentScreen = Screen.Tutorial;
+        currentScreen = Screen.Introduction;
         yesterdayStress = stress;
         yesterdayPride = pride;
         yesterdayHappiness = happiness;
@@ -151,47 +174,120 @@ public class Gameplay : MonoBehaviour {
         unknownWomen.Add("Sammy");
         unknownWomen.Add("Winry");
     }
-		
+
 
     // TODO LIMIT MORE ACTIONS WITH STATS
     // TODO IMPLEMENT "IN LOVE" --- PARTIAL IMPLEMENTATION, FLAGS NOW HAPPEN BUT NO CONTENT ---
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO CAP STATS AT -100/100 & penalties/buffs for thems
-    // TODO STOP FLIRTING WITH SAME GIRL TWICE IN A DAY
-	// TODO CHECK EVICTIONS
-	// TODO SCORE DISPLAY
-	// TODO WINS/LOSSES
-	// TODO PARENTS ATTITUDE CHECKS  (parents now lose all attitude if you quit school while living with them)
-	// TODO SHOW ACTIONS ON MAIN?
-	// TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
-	// TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
+    // TODO CHECK EVICTIONS
+    // TODO SCORE DISPLAY
+    // TODO WINS/LOSSES
+    // TODO PARENTS ATTITUDE CHECKS  (parents now lose all attitude if you quit school while living with them)
+    // TODO SHOW ACTIONS ON MAIN?
+    // TODO CHECK IF PLAYER ACTUALLY WANTS NEW JOB WHEN CURRENT JOB = TRUE
+    // TODO ALLOW VOLUNTARY QUITTING SCHOOL/WORK
 
 
 
-	//    void Event1()
-	//    {
-	//        Terminal.WriteLine("You run into your friend at the coffee shop. He says he's sorry for what he did and wants to be friends again.");
-	//        Terminal.WriteLine("Enter '1' to be friends again, or '2' to walk away from him");
-	//        //input manager handles the input
-	//        answer = Input;
-	//        if (answer = 1)
-	//       {
-	//           happiness = (happiness + 5);
-	//           stress = (stress - 5);
-	//           friendAttitude = 0;
-	//        }
+    //    void Event1()
+    //    {
+    //        Terminal.WriteLine("You run into your friend at the coffee shop. He says he's sorry for what he did and wants to be friends again.");
+    //        Terminal.WriteLine("Enter '1' to be friends again, or '2' to walk away from him");
+    //        //input manager handles the input
+    //        answer = Input;
+    //        if (answer = 1)
+    //       {
+    //           happiness = (happiness + 5);
+    //           stress = (stress - 5);
+    //           friendAttitude = 0;
+    //        }
     //        else
-	//       {
-	//            happiness = (happiness - 3);
+    //       {
+    //            happiness = (happiness - 3);
     //            stress = (stress + 2);
-	//        }
-	//    }
+    //        }
+    //    }
 
-    void WomenList()
+
+
+    void IntroHandler(string input)
     {
-        foreach (string women in knownWomen)
+        Introduction();
+        if (input == "next")
         {
-            Terminal.WriteLine(women);
+            introState++;
+            Terminal.ClearScreen();
+            Introduction();
+        }
+    }
+
+    private void Introduction()
+    {
+        if (introState == 0)
+        {
+            Terminal.ClearScreen();
+            Terminal.WriteLine(@"
+ █████╗ ██████╗ ███████╗                                           
+██╔══██╗██╔══██╗██╔════╝                                           
+███████║██████╔╝█████╗                                             
+██╔══██║██╔══██╗██╔══╝                                             
+██║  ██║██║  ██║███████╗                                           
+╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝                                           
+                                                                   
+        ██╗   ██╗ ██████╗ ██╗   ██╗                                
+        ╚██╗ ██╔╝██╔═══██╗██║   ██║                                
+         ╚████╔╝ ██║   ██║██║   ██║                                
+          ╚██╔╝  ██║   ██║██║   ██║                                
+           ██║   ╚██████╔╝╚██████╔╝                                
+           ╚═╝    ╚═════╝  ╚═════╝                                 
+                                                                   
+                 █████╗ ██╗      ██████╗ ███╗   ██╗███████╗██████╗ 
+                ██╔══██╗██║     ██╔═══██╗████╗  ██║██╔════╝╚════██╗
+                ███████║██║     ██║   ██║██╔██╗ ██║█████╗    ▄███╔╝
+                ██╔══██║██║     ██║   ██║██║╚██╗██║██╔══╝    ▀▀══╝ 
+                ██║  ██║███████╗╚██████╔╝██║ ╚████║███████╗  ██╗   
+                ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝  ╚═╝   
+                                                                    ");
+            Terminal.WriteLine("Enter 'next' to continue.");
+        }
+        else if (introState == 1)
+        {
+            RefreshScreen();
+            AddSpace();
+            Terminal.WriteLine("Play the game by entering commands on the keyboard.");
+            Terminal.WriteLine("You can type 'home' from almost any screen to return to the main screen.");
+            AddSpace();
+            Terminal.WriteLine("You can usually perform three actions per day. These are called spoons.");
+            Terminal.WriteLine("Spoons are tracked at the top right of your screen.");
+            Terminal.WriteLine("Most actions can only be performed once per day.");
+            AddSpace();
+            Terminal.WriteLine("You can learn about most actions by typing them with an exclamation mark.");
+            Terminal.WriteLine("For instance, type '!home' to learn about the home command.");
+            AddSpace();
+            Terminal.WriteLine("Type 'next' for the next page.");
+            AddSpace();
+        }
+        else if (introState == 2)
+        {
+            currentScreen = Screen.Gameplay;
+            RefreshScreen();
+            Terminal.WriteLine("You can 'Win' the game by becoming happy or giving yourself a good future.");
+            Terminal.WriteLine("You will lose the game if you become too sad or otherwise can't continue.");
+            Terminal.WriteLine("If your stress, pride, or happiness get too low you won't be able to do certain things.");
+            AddSpace();
+            Terminal.WriteLine("Increase your happiness by doing things you enjoy.");
+            Terminal.WriteLine("Decrease your stress by relaxing and doing things that aren't strenuous.");
+            Terminal.WriteLine("Increase your pride by doing things you'd be proud of yourself for.");
+            AddSpace();
+            Terminal.WriteLine("You also need to manage your loneliness and relationships.");
+            Terminal.WriteLine("Make sure not to neglect people in your life or there may be consequences.");
+            AddSpace();
+            Terminal.WriteLine("Enter 'home' to begin the game.");
+        }
+        else
+        {
+            return;
         }
     }
 
@@ -227,6 +323,14 @@ public class Gameplay : MonoBehaviour {
             RefreshScreen();
             Terminal.WriteLine("Out of spoons. It's time for bed.");
             Invoke("Night", 5f);
+        }
+    }
+
+    void WomenList()
+    {
+        foreach (string women in knownWomen)
+        {
+            Terminal.WriteLine(women);
         }
     }
 
@@ -382,65 +486,6 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         absences();
         Terminal.WriteLine("Write 'next' to continue to a new day.");
-    }
-
-    void Tutorial()
-    {
-        currentScreen = Screen.Tutorial;
-        RefreshScreen();
-        AddSpace();
-        Terminal.WriteLine("Play the game by entering commands on the keyboard.");
-        Terminal.WriteLine("You can type 'home' from almost any screen to return to the main screen.");
-        AddSpace();
-        Terminal.WriteLine("You can usually perform three actions per day. These are called spoons.");
-        Terminal.WriteLine("Spoons are tracked at the top right of your screen.");
-        Terminal.WriteLine("Most actions can only be performed once per day.");
-        AddSpace();
-        Terminal.WriteLine("You can learn about most actions by typing them with an exclamation mark.");
-        Terminal.WriteLine("For instance, type '!home' to learn about the home command.");
-        AddSpace();
-        Terminal.WriteLine("Type 'next' for the next page.");
-        AddSpace();
-        Terminal.WriteLine(@"
- █████╗ ██████╗ ███████╗                                           
-██╔══██╗██╔══██╗██╔════╝                                           
-███████║██████╔╝█████╗                                             
-██╔══██║██╔══██╗██╔══╝                                             
-██║  ██║██║  ██║███████╗                                           
-╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝                                           
-                                                                   
-        ██╗   ██╗ ██████╗ ██╗   ██╗                                
-        ╚██╗ ██╔╝██╔═══██╗██║   ██║                                
-         ╚████╔╝ ██║   ██║██║   ██║                                
-          ╚██╔╝  ██║   ██║██║   ██║                                
-           ██║   ╚██████╔╝╚██████╔╝                                
-           ╚═╝    ╚═════╝  ╚═════╝                                 
-                                                                   
-                 █████╗ ██╗      ██████╗ ███╗   ██╗███████╗██████╗ 
-                ██╔══██╗██║     ██╔═══██╗████╗  ██║██╔════╝╚════██╗
-                ███████║██║     ██║   ██║██╔██╗ ██║█████╗    ▄███╔╝
-                ██╔══██║██║     ██║   ██║██║╚██╗██║██╔══╝    ▀▀══╝ 
-                ██║  ██║███████╗╚██████╔╝██║ ╚████║███████╗  ██╗   
-                ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝  ╚═╝   
-                                                                    ");
-    }
-
-    void TutorialTwo()
-    {
-        currentScreen = Screen.Gameplay;
-        RefreshScreen();
-        Terminal.WriteLine("You can 'Win' the game by becoming happy or giving yourself a good future.");
-        Terminal.WriteLine("You will lose the game if you become too sad or otherwise can't continue.");
-        Terminal.WriteLine("If your stress, pride, or happiness get too low you won't be able to do certain things.");
-        AddSpace();
-        Terminal.WriteLine("Increase your happiness by doing things you enjoy.");
-        Terminal.WriteLine("Decrease your stress by relaxing and doing things that aren't strenuous.");
-        Terminal.WriteLine("Increase your pride by doing things you'd be proud of yourself for.");
-        AddSpace();
-        Terminal.WriteLine("You also need to manage your loneliness and relationships.");
-        Terminal.WriteLine("Make sure not to neglect people in your life or there may be consequences.");
-        AddSpace();
-        Terminal.WriteLine("Enter 'home' to begin the game.");
     }
 
     void FulfillmentCheck()
@@ -1170,16 +1215,13 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
         }
+        else if (currentScreen == Screen.Introduction && input == "next")
+        {
+            IntroHandler(input);
+        }
         else if ((input == "actions" || input == "action") && currentScreen == Screen.Gameplay) // List available actions
         {
             ActionList();
-        }
-        else if (currentScreen == Screen.Tutorial) // Pass username/go to main screen
-        {
-            if (input == "next")
-            {
-                TutorialTwo();
-            }
         }
         else if (currentScreen == Screen.Flirt)
         {
@@ -1318,7 +1360,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("*No school today*");
         }
-        if (knownWomen.Count > 0)
+        if (knownWomen.Count > 0 && flirted == false)
         {
             Terminal.WriteLine("flirt");
         }
@@ -2129,27 +2171,27 @@ public class Gameplay : MonoBehaviour {
         currentScreen = Screen.Flirt;
         RefreshScreen();
         Terminal.WriteLine("Who would you like to flirt with?");
-        if (knownWomen.Contains("Lina") == true)
+        if (knownWomen.Contains("Lina") == true && flirtLina == false)
         {
             Terminal.WriteLine("Lina");
         }
-        if (knownWomen.Contains("Jenna") == true)
+        if (knownWomen.Contains("Jenna") == true && flirtJenna == false)
         {
             Terminal.WriteLine("Jenna");
         }
-        if (knownWomen.Contains("Alex") == true)
+        if (knownWomen.Contains("Alex") == true && flirtAlex == false)
         {
             Terminal.WriteLine("Alex");
         }
-        if (knownWomen.Contains("Pina") == true)
+        if (knownWomen.Contains("Pina") == true && flirtPina == false)
         {
             Terminal.WriteLine("Pina");
         }
-        if (knownWomen.Contains("Sammy") == true)
+        if (knownWomen.Contains("Sammy") == true && flirtSammy == false)
         {
             Terminal.WriteLine("Sammy");
         }
-        if (knownWomen.Contains("Winry") == true)
+        if (knownWomen.Contains("Winry") == true && flirtWinry == false)
         {
             Terminal.WriteLine("Winry");
         }
