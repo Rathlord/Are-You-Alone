@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -283,6 +284,16 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
+    void WomenList()
+    {
+        StringBuilder womenlist = new StringBuilder();
+        foreach (string women in knownWomen)
+        {
+            womenlist.Append(women + " ");
+        }
+        Terminal.WriteLine(womenlist.ToString());
+    }
+
     void MainScreen()
     {
         currentScreen = Screen.Gameplay;
@@ -315,14 +326,6 @@ public class Gameplay : MonoBehaviour {
             RefreshScreen();
             Terminal.WriteLine("Out of spoons. It's time for bed.");
             Invoke("Night", 5f);
-        }
-    }
-
-    void WomenList()
-    {
-        foreach (string women in knownWomen)
-        {
-            Terminal.WriteLine(women);
         }
     }
 
@@ -586,7 +589,7 @@ public class Gameplay : MonoBehaviour {
             money = (money + 5);
             friendAttitude = (friendAttitude - 15);
         }
-        else
+        else if (money < 1)
         {
             MoneyGameOver();
         }
@@ -995,7 +998,7 @@ public class Gameplay : MonoBehaviour {
         GirlfriendAttitude();
     }
 
-    private void LeaveLife()
+    void LeaveLife()
     {
         if (knownWomen.Contains("Winry") == true && winryAttitude < -100)
         {
@@ -1470,7 +1473,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
         }
-        else if (currentScreen == Screen.JobQuery)
+        if (currentScreen == Screen.JobQuery)
         {
             JobSearch(input);
         }
