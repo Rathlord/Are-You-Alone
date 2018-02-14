@@ -180,7 +180,6 @@ public class Gameplay : MonoBehaviour {
 
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO WINS
-    // TODO SHOW ACTIONS ON MAIN?
 
 
     //    void Event1()
@@ -1582,7 +1581,7 @@ public class Gameplay : MonoBehaviour {
         }
     }     // Pass user input to other methods via this
 
-    void ActionList() //List available actions to player                        TODO show all the time at mainscreen      
+    void ActionList() //List available actions to player                       
     {
         RefreshScreen();
         Terminal.WriteLine("You can do the following:");
@@ -1625,12 +1624,12 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("*Already interacted with your friend today*");
             availableActions--;
         }
-        if (stress > -50 && dailyRand > 50)
+        if (stress > -50)
         {
             Terminal.WriteLine("jobsearch");
             availableActions++;
         }
-        else
+        else if (dailyRand > 50)
         {
             Terminal.WriteLine("*You're too stressed to look for a job today.");
         }
