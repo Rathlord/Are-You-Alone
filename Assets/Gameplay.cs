@@ -188,20 +188,20 @@ public class Gameplay : MonoBehaviour {
         {
             Application.Quit();
         }
+        if (input == "hiddenstats") // Dev command to see all stats
+        {
+            Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
+        }
         if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Flirt))
         {
             RefreshScreen();
             MainScreen();
         }
-        if (input == "hiddenstats") // Dev command to see all stats
-        {
-            Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
-        }
-        if (currentScreen == Screen.Event)
+        else if (currentScreen == Screen.Event)
         {
             ExecuteEvent(input);
         }
-        if (currentScreen == Screen.JobQuery)
+        else if (currentScreen == Screen.JobQuery)
         {
             JobSearch(input);
         }
@@ -446,6 +446,7 @@ public class Gameplay : MonoBehaviour {
         dailyRand = UnityEngine.Random.Range(1, 101);
         Attitudes();
         Invoke("RNGChecker", 3f);                                                       // Game never gets to main screen
+        currentScreen = Screen.Event;
         yesterdayStress = stress;
         yesterdayHappiness = happiness;
         yesterdayPride = pride;
@@ -3941,9 +3942,13 @@ public class Gameplay : MonoBehaviour {
         }
     }
 
+
+
     void InitializeEvents()
     {
         events = new List<MyEvent>();                                                                                           // Initialized the events list
+
+        
 
         MyEvent myEvent = new MyEvent("You can't remember how you got here.");                                                  // Declare and initialize object MyEvent called myEvent, and pass the same-named MyEvent the attached string
         myEvent.addLine("Where do we go?");                                                                                     // Pass addLine method of myEvent the attahed string
@@ -3952,7 +3957,7 @@ public class Gameplay : MonoBehaviour {
         response.setTrigger("1"); // What the user will enter to execute this response.                                         // Sets the trigger as per setTrigger
         response.addResponseLine("You start walking towards the field.");                                                       // Adds a response to the trigger
         response.setStatChange(+1, -1, 0); // Happiness, stress, friend attitude                                                // Sets the potential stat changes for the action
-        response.setNextEvent(1); // Next event in events list this response will take you to.                                  // Which event the given response would point to
+        response.setNextEvent(() => StartEvent(1)); // Next event in events list this response will take you to.                                  // Which event the given response would point to
         myEvent.addResponse(response); // Our response is finished being set up so we add it to the event.                      // Basically initializes the response
 
         // Begin setting up next possible response for our first event.
@@ -3960,7 +3965,7 @@ public class Gameplay : MonoBehaviour {
         response.setTrigger("2");
         response.addResponseLine("You take a deep breath and head into the darkness.");
         response.setStatChange(-1, +2, 0);
-        response.setNextEvent(2);
+        response.setNextEvent(() => StartEvent(2));
         myEvent.addResponse(response);
 
         // We decided we're done adding possible responses to our event, so we add it to the list.
@@ -3975,15 +3980,23 @@ public class Gameplay : MonoBehaviour {
         response.setTrigger("1");
         response.addResponseLine("You start walking.");
         response.setStatChange(+1, -1, 0);
-        response.setNextEvent(0);
+        response.setNextEvent(() => 
+        {
+            MainScreen();
+            return -1;
+        });
         myEvent.addResponse(response);
 
         // We decided we're done adding possible responses to our event, so we add it to the list.
         events.Add(myEvent);
     }
 
-    void StartEvent(int eventId)
+    int StartEvent(int eventId)
     {
+        if (eventId < 0)
+        {
+            return eventId;
+        }
         RefreshScreen();
         currentEvent = events[eventId];
         Terminal.WriteLine(currentEvent.question + "\n");
@@ -3992,6 +4005,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Press " + response.trigger + " to " + response.name);
         }
+        return eventId;
     }
 
     void ExecuteEvent(string input)
@@ -4012,7 +4026,7 @@ public class Gameplay : MonoBehaviour {
         updateStats(response);
         Terminal.ClearScreen();
         Terminal.WriteLine(response.response);
-        StartEvent(response.nextEvent);
+        StartEvent(response.nextEvent());
     }
 
     void updateStats(Response response)

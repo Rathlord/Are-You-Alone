@@ -1,11 +1,13 @@
-﻿class Response {
+﻿using System;
+
+class Response {
     public string name;
     public string response = "";
     public int happinessChange;
     public int stressChange;
     public int friendAttitudeChange;
     public string trigger;
-    public int nextEvent;
+    public Func<int> nextEvent;
 
     public Response(string name) {
         this.name = name;
@@ -25,7 +27,10 @@
         this.trigger = trigger;
     }
 
-    public void setNextEvent(int nextEvent) {
+    public void setNextEvent(Func<int> nextEvent)
+    {
         this.nextEvent = nextEvent;
     }
+
+
 }
