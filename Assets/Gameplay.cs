@@ -9,7 +9,7 @@ public class Gameplay : MonoBehaviour {
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    enum Screen { Introduction, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut, JobQuery };
+    enum Screen { Introduction, Event, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut, JobQuery, RandomEvents };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -30,6 +30,11 @@ public class Gameplay : MonoBehaviour {
 
     [SerializeField] int dailyRand;
 
+    // Random Event System variables
+
+    List<MyEvent> events;                                                                                                       // Declare a list called events that contains MyEvent object (other class)
+    MyEvent currentEvent;
+
     // Relationship variables go here
 
     List<string> unknownWomen = new List<string>();
@@ -44,30 +49,12 @@ public class Gameplay : MonoBehaviour {
     bool flirtPina = false;
     bool flirtSammy = false;
     bool flirtWinry = false;
+    bool flirtTooks = false;
     bool inLove = false;
 
     // Random events variables (test)
 
-    /*
-    List<Action> randEvent = new List<Action>();
 
-    void Test()
-    {
-        randEvent.Add(Test2);
-        randEvent.Add(Test3);
-        randEvent[1]();
-    }
-
-    void Test2()
-    {
-        print("This is a test of the random event system");
-    }
-
-    void Test3()
-    {
-        print("This is a further test");
-    }
-    */
 
     // Many character variables will be stored here
 
@@ -156,6 +143,15 @@ public class Gameplay : MonoBehaviour {
     int winryGiftMod = 1;
     int winrySweetMod = 3;
 
+    // Tooks vars
+
+    int tooksDifficulty = 60;
+    int tooksAttitude = 30;
+    bool tooksLove = false;
+    int tooksJokeMod = 8;
+    int tooksGiftMod = 0;
+    int tooksSweetMod = 6;
+
     // Use this for initialization
     void Start()
     {
@@ -175,33 +171,144 @@ public class Gameplay : MonoBehaviour {
         unknownWomen.Add("Pina");
         unknownWomen.Add("Sammy");
         unknownWomen.Add("Winry");
+        InitializeEvents();
     }
 
 
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO WINS
 
-
-    //    void Event1()
-    //    {
-    //        Terminal.WriteLine("You run into your friend at the coffee shop. He says he's sorry for what he did and wants to be friends again.");
-    //        Terminal.WriteLine("Enter '1' to be friends again, or '2' to walk away from him");
-    //        //input manager handles the input
-    //        answer = Input;
-    //        if (answer = 1)
-    //       {
-    //           happiness = (happiness + 5);
-    //           stress = (stress - 5);
-    //           friendAttitude = 0;
-    //        }
-    //        else
-    //       {
-    //            happiness = (happiness - 3);
-    //            stress = (stress + 2);
-    //        }
-    //    }
-
-
+    void OnUserInput(string input)
+    {
+        if (input == "Find a Friendly Bear" || input == "find a friendly bear")
+        {
+            knownWomen.Add("Tooks");
+        }
+        if (input == "exit") // Exit the game
+        {
+            Application.Quit();
+        }
+        if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Flirt))
+        {
+            RefreshScreen();
+            MainScreen();
+        }
+        if (input == "hiddenstats") // Dev command to see all stats
+        {
+            Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
+        }
+        if (currentScreen == Screen.Event)
+        {
+            ExecuteEvent(input);
+        }
+        if (currentScreen == Screen.JobQuery)
+        {
+            JobSearch(input);
+        }
+        else if (currentScreen == Screen.Introduction && input == "next")
+        {
+            IntroHandler(input);
+        }
+        else if ((input == "actions" || input == "action") && currentScreen == Screen.Gameplay) // List available actions
+        {
+            ActionList();
+        }
+        else if (currentScreen == Screen.Flirt)
+        {
+            FlirtInput(input);
+        }
+        else if (currentScreen == Screen.Date)
+        {
+            DateInput(input);
+        }
+        else if (currentScreen == Screen.FlirtLina)
+        {
+            LinaFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtJenna)
+        {
+            JennaFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtAlex)
+        {
+            AlexFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtPina)
+        {
+            PinaFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtSammy)
+        {
+            SammyFlirt(input);
+        }
+        else if (currentScreen == Screen.FlirtWinry)
+        {
+            WinryFlirt(input);
+        }
+        else if (currentScreen == Screen.Gameplay && spoons > 0) // Pass info to input manager
+        {
+            InputManager(input);
+        }
+        else if (currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
+        {
+            RefreshScreen();
+            Terminal.WriteLine("Out of spoons.");
+            Invoke("MainScreen", 1f);
+        }
+        else if (currentScreen == Screen.Night)
+        {
+            if (input == "next")
+            {
+                RelationshipStats();
+            }
+        }
+        else if (currentScreen == Screen.NightStats)
+        {
+            if (input == "next")
+            {
+                Morning();
+            }
+        }
+        else if (currentScreen == Screen.RelationshipsScreen)
+        {
+            if (input == "next")
+            {
+                NightStats();
+            }
+        }
+        else if (currentScreen == Screen.Moving)
+        {
+            if (input == "parents" && parentsAttitude > 0 && school == true)
+            {
+                currentHouse = House.Parents;
+                Moved();
+            }
+            else if (input == "friend" && friendAttitude > 0)
+            {
+                currentHouse = House.Friend;
+                Moved();
+            }
+            else if (input == "rent" && money > 10)
+            {
+                currentHouse = House.Rent;
+                Moved();
+            }
+            else if (input == "homeless")
+            {
+                currentHouse = House.None;
+                Moved();
+            }
+            else if (input == "cancel")
+            {
+                currentScreen = Screen.Gameplay;
+                MainScreen();
+            }
+        }
+        else
+        {
+            throw new NotImplementedException(); // Handle weird screen cases
+        }
+    }     // Pass user input to other methods via this
 
     void IntroHandler(string input)
     {
@@ -338,7 +445,7 @@ public class Gameplay : MonoBehaviour {
         CheckDays();
         dailyRand = UnityEngine.Random.Range(1, 101);
         Attitudes();
-        Invoke("MainScreen", 3f);
+        Invoke("RNGChecker", 3f);                                                       // Game never gets to main screen
         yesterdayStress = stress;
         yesterdayHappiness = happiness;
         yesterdayPride = pride;
@@ -349,6 +456,7 @@ public class Gameplay : MonoBehaviour {
         flirtPina = false;
         flirtSammy = false;
         flirtWinry = false;
+        flirtTooks = false;
         if (employed == true)
         {
             employedYesterday = true;
@@ -1029,6 +1137,11 @@ public class Gameplay : MonoBehaviour {
             knownWomen.Remove("Pina");
             Terminal.WriteLine("Pina moves on. She is no longer in your life.");
         }
+        if (knownWomen.Contains("Tooks") == true && tooksAttitude < -100)
+        {
+            knownWomen.Remove("Tooks");
+            Terminal.WriteLine("Tooks returns to the woods. He is no longer in your life.");
+        }
     }
 
     void GirlfriendAttitude()
@@ -1060,7 +1173,60 @@ public class Gameplay : MonoBehaviour {
             {
                 Terminal.WriteLine(WinryStatus());
             }
+            if (girlfriendName == "Tooks")
+            {
+                Terminal.WriteLine(TooksStatus());
+            }
         }
+    }
+
+    string TooksStatus()
+    {
+        string statusMessage;
+        if (tooksAttitude > 75 && dailyRand > 50)
+        {
+            statusMessage = "Tooks nuzzles you with his snout, and you get the impression he's expressing his love.";
+            happiness = (happiness + 5);
+            tooksLove = true;
+            inLove = true;
+            pride = (pride + 2);
+            stress = (stress + 2);
+            loneliness = (loneliness + 3);
+        }
+        else if (tooksAttitude > 75)
+        {
+            statusMessage = "Tooks invites you to the secret bear picnic in the woods. \n You bring sandwiches. It goes rather well.";
+            happiness = (happiness + 2);
+            stress = (stress + 3);
+            loneliness = (loneliness + 2);
+        }
+        else if (tooksAttitude > 0 && dailyRand > 50)
+        {
+            statusMessage = "Tooks somehow calls you and makes bear noises before snoring into the phone.";
+            happiness = (happiness + 1);
+            loneliness = (loneliness + 1);
+        }
+        else if (tooksAttitude > 0)
+        {
+            statusMessage = "You find a small piece of salmon in your pocket. It must be from Tooks.";
+        }
+        else if (dailyRand > 50)
+        {
+            statusMessage = "Tooks refuses to share his honey with you today.";
+        }
+        else
+        {
+            statusMessage = "Tooks storms out of your apartment. Through the wall. You're heartbroken.";
+            inLove = false;
+            tooksLove = false;
+            happiness = (happiness - 999);
+            stress = (stress - 999);
+            loneliness = (loneliness - 999);
+            pride = (pride - 999);
+            girlfriend = false;
+            girlfriendName = "none";
+        }
+        return statusMessage;
     }
 
     string WinryStatus()
@@ -1366,6 +1532,11 @@ public class Gameplay : MonoBehaviour {
 
     void RelationshipAttitudes()
     {
+        if (knownWomen.Contains("Tooks") == true && flirtTooks == false)
+        {
+            Terminal.WriteLine("You didn't spend time with Tooks today. He is a sad bear.");
+            tooksAttitude -= 1;
+        }
 		if (knownWomen.Contains("Lina") == true && flirted == true && dailyRand > 70 && flirtLina == false)
 		{
 			Terminal.WriteLine("Lina is jealous you spent time with someone else today.");
@@ -1456,130 +1627,6 @@ public class Gameplay : MonoBehaviour {
             workDay = false;
         }
     }
-
-    void OnUserInput(string input)
-    {
-        if (input == "exit") // Exit the game
-        {
-            Application.Quit();
-        }
-        if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Flirt))
-        {
-            RefreshScreen();
-            MainScreen();
-        }
-        if (input == "hiddenstats") // Dev command to see all stats
-        {
-            Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
-        }
-        if (currentScreen == Screen.JobQuery)
-        {
-            JobSearch(input);
-        }
-        else if (currentScreen == Screen.Introduction && input == "next")
-        {
-            IntroHandler(input);
-        }
-        else if ((input == "actions" || input == "action") && currentScreen == Screen.Gameplay) // List available actions
-        {
-            ActionList();
-        }
-        else if (currentScreen == Screen.Flirt)
-        {
-            FlirtInput(input);
-        }
-        else if (currentScreen == Screen.Date)
-        {
-            DateInput(input);
-        }
-        else if (currentScreen == Screen.FlirtLina)
-        {
-            LinaFlirt(input);
-        }
-        else if (currentScreen == Screen.FlirtJenna)
-        {
-            JennaFlirt(input);
-        }
-        else if (currentScreen == Screen.FlirtAlex)
-        {
-            AlexFlirt(input);
-        }
-        else if (currentScreen == Screen.FlirtPina)
-        {
-            PinaFlirt(input);
-        }
-        else if (currentScreen == Screen.FlirtSammy)
-        {
-            SammyFlirt(input);
-        }
-        else if (currentScreen == Screen.FlirtWinry)
-        {
-            WinryFlirt(input);
-        }
-        else if (currentScreen == Screen.Gameplay && spoons > 0) // Pass info to input manager
-        {
-            InputManager(input);
-        }
-        else if (currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
-        {
-            RefreshScreen();
-            Terminal.WriteLine("Out of spoons.");
-            Invoke("MainScreen", 1f);
-        }
-        else if (currentScreen == Screen.Night)
-        {
-            if (input == "next")
-            {
-                RelationshipStats();
-            }
-        }
-        else if (currentScreen == Screen.NightStats)
-        {
-            if (input == "next")
-            {
-                Morning();
-            }
-        }
-        else if (currentScreen == Screen.RelationshipsScreen)
-        {
-            if (input == "next")
-            {
-                NightStats();
-            }
-        }
-        else if (currentScreen == Screen.Moving)
-        {
-            if (input == "parents" && parentsAttitude > 0 && school == true)
-            {
-                currentHouse = House.Parents;
-                Moved();
-            }
-            else if (input == "friend" && friendAttitude > 0)
-            {
-                currentHouse = House.Friend;
-                Moved();
-            }
-            else if (input == "rent" && money > 10)
-            {
-                currentHouse = House.Rent;
-                Moved();
-            }
-            else if (input == "homeless")
-            {
-                currentHouse = House.None;
-                Moved();
-            }
-            else if (input == "cancel")
-            {
-                currentScreen = Screen.Gameplay;
-                MainScreen();
-            }
-        }
-        else
-        {
-            throw new NotImplementedException(); // Handle weird screen cases
-        }
-    }     // Pass user input to other methods via this
 
     void ActionList() //List available actions to player                       
     {
@@ -1835,6 +1882,15 @@ public class Gameplay : MonoBehaviour {
 
     void WomanInfo(string input)
     {
+        if (input == "!Tooks" && knownWomen.Contains("Tooks"))
+        {
+            Terminal.WriteLine("Tooks is a literal bear. Like a real bear.");
+            Terminal.WriteLine("He is friendly, cuddly, and quite shy.");
+            Terminal.WriteLine("He has bear fur and a bear body.");
+            Terminal.WriteLine("He is quite chubby, as he is a bear.");
+            Terminal.WriteLine("He is good at eating, sleeping, and playing.");
+            Terminal.WriteLine("He enjoys being a bear.");
+        }
         if (input == "!Lina" && knownWomen.Contains("Lina"))
             {
             Terminal.WriteLine("Lina is friendly, sweet, and talented.");
@@ -2258,6 +2314,10 @@ public class Gameplay : MonoBehaviour {
         currentScreen = Screen.Date;
         RefreshScreen();
         Terminal.WriteLine("Who would you to ask on a date?");
+        if (knownWomen.Contains("Tooks") == true)
+        {
+            Terminal.WriteLine("Tooks");
+        }
         if (knownWomen.Contains("Lina") == true)
         {
             Terminal.WriteLine("Lina");
@@ -2340,6 +2400,19 @@ public class Gameplay : MonoBehaviour {
 
     void DateInput(string input)
     {
+        if (knownWomen.Contains("Tooks") == true && input == "Tooks")
+        {
+            RefreshScreen();
+            Terminal.WriteLine("Tooks takes you on the best bear-date of your life.");
+            flirted = true;
+            flirtTooks = true;
+            tooksAttitude += 10;
+            loneliness += 10;
+            happiness += 10;
+            stress += 10;
+            pride += 10;
+            Terminal.WriteLine("Enter 'home' to return.");
+        }
         if (knownWomen.Contains("Lina") == true && input == "Lina")
         {
             RefreshScreen();
@@ -2575,12 +2648,29 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Winry");
         }
+        if (knownWomen.Contains("Tooks") == true && flirtTooks == false)
+        {
+            Terminal.WriteLine("Tooks");
+        }
         AddSpace();
         Terminal.WriteLine("Chose someone or enter 'home' to go back.");
     }
 
     void FlirtInput(string input)
     {
+        if (knownWomen.Contains("Tooks") == true && input == "Tooks")
+        {
+            RefreshScreen();
+            Terminal.WriteLine("How would you like to flirt with Tooks?");
+            Terminal.WriteLine("You can:    gift   joke     sweet    relationship");
+            TooksFlirt(input);
+            happiness = (happiness + 5);
+            stress = (stress + 1);
+            pride = (pride + 1);
+            loneliness = (loneliness + 4);
+            flirtTooks = true;
+            flirted = true;
+        }
         if (knownWomen.Contains("Lina") == true && input == "Lina")
         {
             RefreshScreen();
@@ -2749,6 +2839,49 @@ public class Gameplay : MonoBehaviour {
             randomLine = "You swing by her place and ask her out.";
         }
         return randomLine;
+    }
+
+    void TooksFlirt(string input)
+    {
+        AddSpace();
+        flirtToday = true;
+        if (input == "gift")
+        {
+            Terminal.WriteLine("You give Tooks some honey. He seems indifferent. But takes it.");
+            tooksAttitude += tooksGiftMod;
+        }
+        else if (input == "joke")
+        {
+            Terminal.WriteLine("You tell tooks a joke: \n How do you catch fish without a fishing rod? \n 'With your bear hands' \n The universe groans in agony but Tooks is delighted.");
+            tooksAttitude += tooksJokeMod;
+        }
+        else if (input == "sweet")
+        {
+            Terminal.WriteLine("You tell Tooks he's the bestest bear ever. He gives you a bear grin.");
+            tooksAttitude += tooksSweetMod;
+        }
+        else if (input == "relationship")
+        {
+            if (girlfriend == true)
+            {
+                Terminal.WriteLine("You have a girlfriend! You'd have to break up with her first!");
+                return;
+            }
+            else
+            {
+                Terminal.WriteLine("You ask Tooks out. He wraps you in a bear hug. You think that means yes.");
+                girlfriend = true;
+                girlfriendName = "Tooks";
+                Invoke("MainScreen", 3f);
+                tooksAttitude += 10;
+            }
+        }
+        else if (input == "home")
+        {
+            MainScreen();
+        }
+        AddSpace();
+        Terminal.WriteLine("Enter 'home' to go to the main screen.");
     }
 
     void WinryFlirt(string input)
@@ -3119,7 +3252,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (tempName == "Sammy")
         {
-            Terminal.WriteLine("You get a phone call, but it's a wrong number, but the girl on the other end talks to you for a while.");
+            Terminal.WriteLine("You get a phone call, but it's a wrong number. A girl named Sammy on the other end talks to you for a while.");
             Terminal.WriteLine("She seems bored, and tells you to call her sometime!");
         }
         if (tempName == "Winry")
@@ -3795,4 +3928,108 @@ public class Gameplay : MonoBehaviour {
             Application.Quit();
         }
 	}
+
+    void RNGChecker()
+    {
+        if (dailyRand < 101) //change this amount to something viable
+        {
+            StartEvent(0); // set to dailyrand instead of 0
+        }
+        else
+        {
+            // Deal with circumstance checks and then star the event if plausible
+        }
+    }
+
+    void InitializeEvents()
+    {
+        events = new List<MyEvent>();                                                                                           // Initialized the events list
+
+        MyEvent myEvent = new MyEvent("You can't remember how you got here.");                                                  // Declare and initialize object MyEvent called myEvent, and pass the same-named MyEvent the attached string
+        myEvent.addLine("Where do we go?");                                                                                     // Pass addLine method of myEvent the attahed string
+
+        Response response = new Response("Walk Into The Field");                                                                // Declare and initialize the Response object as response and pass the Response function the string
+        response.setTrigger("1"); // What the user will enter to execute this response.                                         // Sets the trigger as per setTrigger
+        response.addResponseLine("You start walking towards the field.");                                                       // Adds a response to the trigger
+        response.setStatChange(+1, -1, 0); // Happiness, stress, friend attitude                                                // Sets the potential stat changes for the action
+        response.setNextEvent(1); // Next event in events list this response will take you to.                                  // Which event the given response would point to
+        myEvent.addResponse(response); // Our response is finished being set up so we add it to the event.                      // Basically initializes the response
+
+        // Begin setting up next possible response for our first event.
+        response = new Response("Head Down Into The Cave");                                                                     // See above
+        response.setTrigger("2");
+        response.addResponseLine("You take a deep breath and head into the darkness.");
+        response.setStatChange(-1, +2, 0);
+        response.setNextEvent(2);
+        myEvent.addResponse(response);
+
+        // We decided we're done adding possible responses to our event, so we add it to the list.
+        events.Add(myEvent);
+
+        // Now we can create our second event. This would be event ID #1 with the one above being 0.
+        // Therefore this is called by Walk into the field trigger on line 32.
+        myEvent = new MyEvent("Beautiful grass.");
+        myEvent.addLine("There's a stranger in the distance.");
+
+        response = new Response("Walk towards the stranger.");
+        response.setTrigger("1");
+        response.addResponseLine("You start walking.");
+        response.setStatChange(+1, -1, 0);
+        response.setNextEvent(0);
+        myEvent.addResponse(response);
+
+        // We decided we're done adding possible responses to our event, so we add it to the list.
+        events.Add(myEvent);
+    }
+
+    void StartEvent(int eventId)
+    {
+        RefreshScreen();
+        currentEvent = events[eventId];
+        Terminal.WriteLine(currentEvent.question + "\n");
+
+        foreach (Response response in currentEvent.responses)
+        {
+            Terminal.WriteLine("Press " + response.trigger + " to " + response.name);
+        }
+    }
+
+    void ExecuteEvent(string input)
+    {
+        foreach (Response response in currentEvent.responses)
+        {
+            if (input == response.trigger)
+            {
+                ExecuteResponse(response);
+                return;
+            }
+        }
+        Terminal.WriteLine("Invalid Entry.");
+    }
+
+    void ExecuteResponse(Response response)
+    {
+        updateStats(response);
+        Terminal.ClearScreen();
+        Terminal.WriteLine(response.response);
+        StartEvent(response.nextEvent);
+    }
+
+    void updateStats(Response response)
+    {
+        happiness += response.happinessChange;
+        stress += response.stressChange;
+        friendAttitude += response.friendAttitudeChange;
+    }
+
+
+
+
+
 }
+
+
+
+
+
+
