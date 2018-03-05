@@ -25,6 +25,8 @@ public class Gameplay : MonoBehaviour {
     int askOutVar = 0;
     int introState = 0; //determine which intro screen is being shown
     int availableActions = 0; //gameover if available actions hits zero in actions screen
+    bool spoonsDown = false;
+    int spoonsDownTimer = 0;
 
     // Special value, daily random number, impacts many things
 
@@ -441,6 +443,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine(WakeUp());
         turn++;
         spoons = 3;
+        SpoonsDownCheck();
         CheckDays();
         dailyRand = UnityEngine.Random.Range(1, 101);
         Attitudes();
@@ -3931,68 +3934,321 @@ public class Gameplay : MonoBehaviour {
 
     void RNGChecker()
     {
-        eventRand = UnityEngine.Random.Range(1, 101);
+        eventRand = UnityEngine.Random.Range(0, 101);
         if (eventRand < 101) //change this amount to something viable
         {
-            StartEvent(0); // set to dailyrand instead of 0
+            StartEvent(1); // set to dailyrand instead of 0
         }
         else
         {
-            eventRand = UnityEngine.Random.Range(1, 101); // Deal with circumstance checks and then star the event if plausible
+            eventRand = UnityEngine.Random.Range(0, 101); // Deal with circumstance checks and then star the event if plausible
         }
     }
 
-
     void InitializeEvents()
     {
-        events = new List<MyEvent>();                                                                                           
+        events = new List<MyEvent>();
 
         // To call a next event use response.setNextEvent(() => StartEvent(#))
 
-        MyEvent myEvent = new MyEvent("You find 5$ in your pocket.");                                                  
-        myEvent.addLine("What do you do with it?");                                                                                     
 
-        Response response = new Response("spend it on something fun for yourself");                                                  
-        response.setTrigger("1"); // What the user will enter to execute this response.                   
-        response.addResponseLine("You buy something cool for yourself, and feel rather giddy!");        
-        response.setStatChange(+5, 0, -1, 0, 0); // Happiness, stress, friend attitude                               
+        /* EXAMPLE EVENT
+         * 
+        // EVENT #
+        myEvent = new MyEvent("Scenario");                                                 
+        myEvent.addLine("Question?");                                                                                     
+
+        response = new Response("do thing number 1");                                                  
+        response.setTrigger("1");                   
+        response.addResponseLine("Outcome text.");        
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
         response.setNextEvent(() =>
         {
             MainScreen();
             return -1;
-        }); // Next event in events list this response will take you to.                            
-        myEvent.addResponse(response); // Our response is finished being set up so we add it to the event.                 
+        });                         
+        myEvent.addResponse(response);               
 
-        // Begin setting up next possible response for our first event.
-        response = new Response("save it for something responsible");                                                          
+        
+        response = new Response("do thing number 2");                                                          
         response.setTrigger("2");
-        response.addResponseLine("You make the smart choice and save the money for a rainy day.");
-        response.setStatChange(0, +1, +1, 0, 5);
-        response.setNextEvent(() => StartEvent(2));
-        myEvent.addResponse(response);
-
-        // We decided we're done adding possible responses to our event, so we add it to the list.
-        events.Add(myEvent);
-
-        // Now we can create our second event. This would be event ID #1 with the one above being 0.
-        // Therefore this is called by Walk into the field trigger on line 32.
-        myEvent = new MyEvent("Beautiful grass.");
-        myEvent.addLine("There's a stranger in the distance.");
-
-        response = new Response("Walk towards the stranger.");
-        response.setTrigger("1");
-        response.addResponseLine("You start walking.");
-        response.setStatChange(+1, -1, 0, 0, 0);
-        response.setNextEvent(() => 
+        response.addResponseLine("Outcome text.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
         {
             MainScreen();
             return -1;
         });
         myEvent.addResponse(response);
 
-        // We decided we're done adding possible responses to our event, so we add it to the list.
+        
+        events.Add(myEvent);
+        */
+
+
+
+        // EVENT #0
+        MyEvent myEvent = new MyEvent("You find 5$ in your pocket.");                                                  
+        myEvent.addLine("What do you do with it?");                                                                                     
+
+        Response response = new Response("spend it on something fun for yourself");                                                  
+        response.setTrigger("1");                   
+        response.addResponseLine("You buy something cool for yourself, and feel rather giddy!");        
+        response.setStatChange(+5, 0, -1, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });                         
+        myEvent.addResponse(response);               
+
+        
+        response = new Response("save it for something responsible");                                                          
+        response.setTrigger("2");
+        response.addResponseLine("You make the smart choice and save the money for a rainy day.");
+        response.setStatChange(0, +1, +1, 0, 5);
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        
+        events.Add(myEvent);
+
+        // EVENT #1
+        myEvent = new MyEvent("You rake up a huge pile of leaves in the yard.");                                               
+        myEvent.addLine("What should you do with them?");
+
+        response = new Response("jump into the giant pile and make a mess");
+        response.setTrigger("1");
+        response.addResponseLine("You have a surprising amount of fun being silly in the leaves. \n");
+        response.addResponseLine("However, after cleaning it all up you feel exhausted and can't do as much today.");
+        response.setStatChange(7, 3, -1, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            SpoonsDecrease();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("bag them up and take them to the curb");
+        response.setTrigger("2");
+        response.addResponseLine("Outcome text.");
+        response.setStatChange(-1, 0, 3, 1, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+        // EVENT #2
+        myEvent = new MyEvent("You and your friend get in an argument about politics and it gets a little heated.");
+        myEvent.addLine("You are sure you're in the right, but during the argument you both yell some.");
+        myEvent.addLine("How do you handle it?");
+
+        response = new Response("ignore him for a while and wait for it to blow over");
+        response.setTrigger("1");
+        response.addResponseLine("You pretend it never happened and don't talk for a few days. \n");
+        response.addResponseLine("Eventually you both forget about it.");
+        response.setStatChange(-3, -5, -2, -5, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("apologize, even though you don't feel it was your fault");
+        response.setTrigger("2");
+        response.addResponseLine("You're still a little upset, but he is happy you apologized.");
+        response.setStatChange(-5, 0, 5, 3, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            FriendAttitudeUp();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        response = new Response("ask him to apologize to you");
+        response.setTrigger("3");
+        response.addResponseLine("He begrudgingly apologizes to you. You feel like you won. \n");
+        response.addResponseLine("He doesn't seem as happy, though.");
+        response.setStatChange(2, 2, 1, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            FriendAttitudeDown();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+        // EVENT #3
+        myEvent = new MyEvent("Your car breaks down while you're driving to pick up a cheeseburger.");
+        myEvent.addLine("You need to be able to get around, what do you do?");
+
+        response = new Response("spend 5$ (if you have it) to get the car fixed");
+        response.setTrigger("1");
+        response.addResponseLine("You get the car to a mechanic and have the work done. \n");
+        response.addResponseLine("It's expensive and came at a bad time, but at least you got it fixed.");
+        response.setStatChange(0, -3, 5, 0, -5); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("bum a ride off of people until you can save up the money");
+        response.setTrigger("2");
+        response.addResponseLine("You slowly save up from your regular expenditure to get it fixed. \n");
+        response.addResponseLine("In the mean time, you get rides from people you know. \n");
+        response.addResponseLine("This is frustrating and troublesome, not to mention embarassing.");
+        response.setStatChange(-7, -5, -3, 1, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+        // EVENT #4
+        myEvent = new MyEvent("You go on vacation to the beach with your family.");
+        myEvent.addLine("How do you spend the trip?");
+
+        response = new Response("read books on the beach and relax");
+        response.setTrigger("1");
+        response.addResponseLine("You have a nice time reading, and the stress just melts away.");
+        response.setStatChange(3, 15, -1, -3, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("spend the time with your family, cooking and talking with them");
+        response.setTrigger("2");
+        response.addResponseLine("You reconnect with your family and have a wonderful holiday.");
+        response.setStatChange(5, 3, 3, 5, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            ParentsAttitudeIncrease();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        response = new Response("go meet people at the beach and have fun");
+        response.setTrigger("3");
+        response.addResponseLine("You meet some fun people- no one really meaningful, but it's a good time.");
+        response.setStatChange(3, 3, 0, 5, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+        // EVENT #5
+        myEvent = new MyEvent("You fall down the staircase and feel pretty shaken up.");
+        myEvent.addLine("What do you do?");
+
+        response = new Response("go to the hospital, even though it'll be expensive, and make sure you're okay");
+        response.setTrigger("1");
+        response.addResponseLine("As expected it's expensive, but you get checked out. Luckily you're not badly injured.");
+        response.setStatChange(-1, -1, -1, 0, -3); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("hobble into bed and rest for a bit");
+        response.setTrigger("2");
+        response.addResponseLine("You fall asleep in pain. When you wake up you feel like you may have cracked a rib. \n");
+        response.addResponseLine("You aren't able to get around well or do as much for a while.");
+        response.setStatChange(-3, -4, 1, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            SpoonsDown();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
         events.Add(myEvent);
     }
+
+    //EVENT OUTCOMES
+
+    void SpoonsDownCheck()
+    {
+        if (spoonsDown == true)
+        {
+            spoons -= 1;
+            spoonsDownTimer -= 1;
+            if (spoonsDownTimer <= 0)
+            {
+                spoonsDown = false;
+            }
+        }
+    }
+
+    void SpoonsDown()
+    {
+        spoonsDown = true;
+        spoonsDownTimer = 5;
+        MainScreen();
+    }
+
+    void ParentsAttitudeIncrease()
+    {
+        parentsAttitude += 10;
+        MainScreen();
+    }
+
+    void SpoonsDecrease()
+    {
+        spoons -= 1;
+        MainScreen();
+    }
+
+    void FriendAttitudeUp()
+    {
+        friendAttitude += 5;
+        MainScreen();
+    }
+
+    void FriendAttitudeDown()
+    {
+        friendAttitude -= 5;
+        MainScreen();
+    }
+
+
+
+
+
+
 
     int StartEvent(int eventId)
     {
@@ -4038,7 +4294,7 @@ public class Gameplay : MonoBehaviour {
     }
     IEnumerator CallStartEvent(Response response)
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         StartEvent(response.nextEvent());
     }
 
