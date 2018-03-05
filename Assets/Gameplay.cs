@@ -3945,26 +3945,26 @@ public class Gameplay : MonoBehaviour {
 
     void InitializeEvents()
     {
-        events = new List<MyEvent>();                                                                                           // Initialized the events list
+        events = new List<MyEvent>();                                                                                           
 
         // To call a next event use response.setNextEvent(() => StartEvent(#))
 
-        MyEvent myEvent = new MyEvent("You find 5$ in your pocket.");                                                  // Declare and initialize object MyEvent called myEvent, and pass the same-named MyEvent the attached string
-        myEvent.addLine("What do you do with it?");                                                                                     // Pass addLine method of myEvent the attahed string
+        MyEvent myEvent = new MyEvent("You find 5$ in your pocket.");                                                  
+        myEvent.addLine("What do you do with it?");                                                                                     
 
-        Response response = new Response("spend it on something fun for yourself");                                                                // Declare and initialize the Response object as response and pass the Response function the string
-        response.setTrigger("1"); // What the user will enter to execute this response.                                         // Sets the trigger as per setTrigger
-        response.addResponseLine("You buy something cool for yourself, and feel rather giddy!");                                                       // Adds a response to the trigger
-        response.setStatChange(+5, 0, -1, 0, 0); // Happiness, stress, friend attitude                                                // Sets the potential stat changes for the action
+        Response response = new Response("spend it on something fun for yourself");                                                  
+        response.setTrigger("1"); // What the user will enter to execute this response.                   
+        response.addResponseLine("You buy something cool for yourself, and feel rather giddy!");        
+        response.setStatChange(+5, 0, -1, 0, 0); // Happiness, stress, friend attitude                               
         response.setNextEvent(() =>
         {
             MainScreen();
             return -1;
-        }); // Next event in events list this response will take you to.                                  // Which event the given response would point to
-        myEvent.addResponse(response); // Our response is finished being set up so we add it to the event.                      // Basically initializes the response
+        }); // Next event in events list this response will take you to.                            
+        myEvent.addResponse(response); // Our response is finished being set up so we add it to the event.                 
 
         // Begin setting up next possible response for our first event.
-        response = new Response("save it for something responsible");                                                                     // See above
+        response = new Response("save it for something responsible");                                                          
         response.setTrigger("2");
         response.addResponseLine("You make the smart choice and save the money for a rainy day.");
         response.setStatChange(0, +1, +1, 0, 5);
