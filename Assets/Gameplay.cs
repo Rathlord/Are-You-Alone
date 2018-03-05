@@ -29,6 +29,7 @@ public class Gameplay : MonoBehaviour {
     // Special value, daily random number, impacts many things
 
     [SerializeField] int dailyRand;
+    [SerializeField] int eventRand;
 
     // Random Event System variables
 
@@ -51,8 +52,6 @@ public class Gameplay : MonoBehaviour {
     bool flirtWinry = false;
     bool flirtTooks = false;
     bool inLove = false;
-
-    // Random events variables (test)
 
 
 
@@ -431,7 +430,7 @@ public class Gameplay : MonoBehaviour {
         {
             RefreshScreen();
             Terminal.WriteLine("Out of spoons. It's time for bed.");
-            Invoke("Night", 5f);
+            Invoke("Night", 1.5f);
         }
     }
 
@@ -3752,7 +3751,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (loneliness > 49)
 		{
-			lonelyMeter = "│││∥ ";
+			lonelyMeter = "│││∣ ";
 		}
 		else if (loneliness > 24)
 		{
@@ -3760,7 +3759,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (loneliness > 5)
 		{
-			lonelyMeter = "││∥ ·";
+			lonelyMeter = "││∣·";
 		}
 		else if (loneliness > -6 && loneliness < 6)
 		{
@@ -3768,7 +3767,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (loneliness > -26)
 		{
-			lonelyMeter = "│∥··";
+			lonelyMeter = "│∣··";
 		}
 		else if (loneliness > -51)
 		{
@@ -3776,7 +3775,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (loneliness > -76)
 		{
-			lonelyMeter = "∥···";
+			lonelyMeter = "∣···";
 		}
 		else
 		{
@@ -3794,7 +3793,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (happiness > 49)
 		{
-			happyMeter = "│││∥ ";
+			happyMeter = "│││∣";
 		}
 		else if (happiness > 24)
 		{
@@ -3802,7 +3801,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (happiness > 5)
 		{
-			happyMeter = "││∥ ·";
+			happyMeter = "││∣·";
 		}
 		else if (happiness > -6 && happiness < 6)
 		{
@@ -3810,7 +3809,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (happiness > -26)
 		{
-			happyMeter = "│∥··";
+			happyMeter = "│∣··";
 		}
 		else if (happiness > -51)
 		{
@@ -3818,7 +3817,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (happiness > -76)
 		{
-			happyMeter = "∥···";
+			happyMeter = "∣···";
 		}
 		else
 		{
@@ -3836,7 +3835,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (stress > 49)
 		{
-			stressMeter = "│││∥ ";
+			stressMeter = "│││∣";
 		}
 		else if (stress > 24)
 		{
@@ -3844,7 +3843,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (stress > 5)
 		{
-			stressMeter = "││∥ ·";
+			stressMeter = "││∣·";
 		}
 		else if (stress > -6 && stress < 6)
 		{
@@ -3852,7 +3851,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (stress > -26)
 		{
-			stressMeter = "│∥··";
+			stressMeter = "│∣··";
 		}
 		else if (stress > -51)
 		{
@@ -3860,7 +3859,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (stress > -76)
 		{
-			stressMeter = "∥···";
+			stressMeter = "∣···";
 		}
 		else
 		{
@@ -3878,7 +3877,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (pride > 49)
 		{
-			prideMeter = "│││∥ ";
+			prideMeter = "│││∣";
 		}
 		else if (pride > 24)
 		{
@@ -3886,7 +3885,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (pride > 5)
 		{
-			prideMeter = "││∥ ·";
+			prideMeter = "││∣·";
 		}
 		else if (pride > -6 && pride < 6)
 		{
@@ -3894,7 +3893,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (pride > -26)
 		{
-			prideMeter = "│∥··";
+			prideMeter = "│∣··";
 		}
 		else if (pride > -51)
 		{
@@ -3902,7 +3901,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (pride > -76)
 		{
-			prideMeter = "∥···";
+			prideMeter = "∣···";
 		}
 		else
 		{
@@ -3932,39 +3931,43 @@ public class Gameplay : MonoBehaviour {
 
     void RNGChecker()
     {
-        if (dailyRand < 101) //change this amount to something viable
+        eventRand = UnityEngine.Random.Range(1, 101);
+        if (eventRand < 101) //change this amount to something viable
         {
             StartEvent(0); // set to dailyrand instead of 0
         }
         else
         {
-            // Deal with circumstance checks and then star the event if plausible
+            eventRand = UnityEngine.Random.Range(1, 101); // Deal with circumstance checks and then star the event if plausible
         }
     }
-
 
 
     void InitializeEvents()
     {
         events = new List<MyEvent>();                                                                                           // Initialized the events list
 
-        
+        // To call a next event use response.setNextEvent(() => StartEvent(#))
 
-        MyEvent myEvent = new MyEvent("You can't remember how you got here.");                                                  // Declare and initialize object MyEvent called myEvent, and pass the same-named MyEvent the attached string
-        myEvent.addLine("Where do we go?");                                                                                     // Pass addLine method of myEvent the attahed string
+        MyEvent myEvent = new MyEvent("You find 5$ in your pocket.");                                                  // Declare and initialize object MyEvent called myEvent, and pass the same-named MyEvent the attached string
+        myEvent.addLine("What do you do with it?");                                                                                     // Pass addLine method of myEvent the attahed string
 
-        Response response = new Response("Walk Into The Field");                                                                // Declare and initialize the Response object as response and pass the Response function the string
+        Response response = new Response("spend it on something fun for yourself");                                                                // Declare and initialize the Response object as response and pass the Response function the string
         response.setTrigger("1"); // What the user will enter to execute this response.                                         // Sets the trigger as per setTrigger
-        response.addResponseLine("You start walking towards the field.");                                                       // Adds a response to the trigger
-        response.setStatChange(+1, -1, 0); // Happiness, stress, friend attitude                                                // Sets the potential stat changes for the action
-        response.setNextEvent(() => StartEvent(1)); // Next event in events list this response will take you to.                                  // Which event the given response would point to
+        response.addResponseLine("You buy something cool for yourself, and feel rather giddy!");                                                       // Adds a response to the trigger
+        response.setStatChange(+5, 0, -1, 0, 0); // Happiness, stress, friend attitude                                                // Sets the potential stat changes for the action
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        }); // Next event in events list this response will take you to.                                  // Which event the given response would point to
         myEvent.addResponse(response); // Our response is finished being set up so we add it to the event.                      // Basically initializes the response
 
         // Begin setting up next possible response for our first event.
-        response = new Response("Head Down Into The Cave");                                                                     // See above
+        response = new Response("save it for something responsible");                                                                     // See above
         response.setTrigger("2");
-        response.addResponseLine("You take a deep breath and head into the darkness.");
-        response.setStatChange(-1, +2, 0);
+        response.addResponseLine("You make the smart choice and save the money for a rainy day.");
+        response.setStatChange(0, +1, +1, 0, 5);
         response.setNextEvent(() => StartEvent(2));
         myEvent.addResponse(response);
 
@@ -3979,7 +3982,7 @@ public class Gameplay : MonoBehaviour {
         response = new Response("Walk towards the stranger.");
         response.setTrigger("1");
         response.addResponseLine("You start walking.");
-        response.setStatChange(+1, -1, 0);
+        response.setStatChange(+1, -1, 0, 0, 0);
         response.setNextEvent(() => 
         {
             MainScreen();
@@ -4026,6 +4029,16 @@ public class Gameplay : MonoBehaviour {
         updateStats(response);
         Terminal.ClearScreen();
         Terminal.WriteLine(response.response);
+        PrintResponses(response);
+    }
+
+    void PrintResponses(Response response)
+    {
+        StartCoroutine(CallStartEvent(response));
+    }
+    IEnumerator CallStartEvent(Response response)
+    {
+        yield return new WaitForSeconds(2f);
         StartEvent(response.nextEvent());
     }
 
@@ -4033,8 +4046,11 @@ public class Gameplay : MonoBehaviour {
     {
         happiness += response.happinessChange;
         stress += response.stressChange;
-        friendAttitude += response.friendAttitudeChange;
+        pride += response.prideChange;
+        loneliness += response.lonelinessChange;
+        money += response.moneyChange;
     }
+
 
 
 
