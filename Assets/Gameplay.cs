@@ -193,7 +193,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
         }
-        if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Flirt))
+        if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Flirt || currentScreen == Screen.Date))
         {
             RefreshScreen();
             MainScreen();
@@ -252,9 +252,9 @@ public class Gameplay : MonoBehaviour {
         }
         else if (currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
         {
-            RefreshScreen();
+            AddSpace();
             Terminal.WriteLine("Out of spoons.");
-            Invoke("MainScreen", 1f);
+            Invoke("MainScreen", 3f);
         }
         else if (currentScreen == Screen.Night)
         {
@@ -2875,7 +2875,7 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("You ask Tooks out. He wraps you in a bear hug. You think that means yes.");
                 girlfriend = true;
                 girlfriendName = "Tooks";
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 tooksAttitude += 10;
             }
         }
@@ -2920,13 +2920,13 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("She says she would love to be your girlfriend and wraps you in a huge hug.");
                 girlfriend = true;
                 girlfriendName = "Winry";
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 winryAttitude = (winryAttitude + 10);
             }
             else
             {
                 Terminal.WriteLine("She says you're sweet, but she doesn't think she knows you well enough quite yet.");
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 loneliness = (loneliness - 4);
                 happiness = (happiness - 1);
                 stress = (stress - 1);
@@ -2974,13 +2974,13 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("She shrugs and agrees to be your girlfriend. She kisses you, and seems a lot more interested in that.");
                 girlfriend = true;
                 girlfriendName = "Sammy";
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 sammyAttitude = (sammyAttitude + 10);
             }
             else
             {
                 Terminal.WriteLine("She shrugs and tells you she's fine with your current relationship.");
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 loneliness = (loneliness - 4);
                 happiness = (happiness - 4);
                 stress = (stress - 4);
@@ -3028,13 +3028,13 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("She says she doesn't like you... but smiles and stays the night at your place.");
                 girlfriend = true;
                 girlfriendName = "Pina";
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 pinaAttitude = (pinaAttitude + 10);
             }
             else
             {
                 Terminal.WriteLine("She asks who would like you, and doesn't talk to you anymore that day.");
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 loneliness = (loneliness - 4);
                 happiness = (happiness - 4);
                 stress = (stress - 4);
@@ -3082,13 +3082,13 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("She ignores your question, but pulls you to her bedroom and closes the door.");
                 girlfriend = true;
                 girlfriendName = "Alex";
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 alexAttitude = (alexAttitude + 10);
             }
             else
             {
                 Terminal.WriteLine("She says she doesn't really know what she's looking for right now, but that she's flattered.");
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 loneliness = (loneliness - 4);
                 happiness = (happiness - 2);
                 stress = (stress - 2);
@@ -3136,13 +3136,13 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("She gives you a big smile, and you spend all night cuddling and talking together.");
                 girlfriend = true;
                 girlfriendName = "Jenna";
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 jennaAttitude = (jennaAttitude + 10);
             }
             else
             {
                 Terminal.WriteLine("She says she's not quite ready for that yet.");
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 loneliness = (loneliness - 4);
                 happiness = (happiness - 4);
                 stress = (stress - 4);
@@ -3190,13 +3190,13 @@ public class Gameplay : MonoBehaviour {
                 Terminal.WriteLine("She says yes, and you spend the day gaming together. What a blast!");
                 girlfriend = true;
                 girlfriendName = "Lina";
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 linaAttitude = (linaAttitude + 10);
             }
             else
             {
                 Terminal.WriteLine("She says she's just not happy enough right now for that.");
-                Invoke("MainScreen", 3f);
+                Invoke("MainScreen", 5f);
                 loneliness = (loneliness - 4);
                 happiness = (happiness - 4);
                 stress = (stress - 4);
@@ -3758,7 +3758,7 @@ public class Gameplay : MonoBehaviour {
 		}
 		else if (loneliness > 24)
 		{
-			lonelyMeter = "{│││·";
+			lonelyMeter = "│││·";
 		}
 		else if (loneliness > 5)
 		{
@@ -3934,10 +3934,10 @@ public class Gameplay : MonoBehaviour {
 
     void RNGChecker()
     {
-        eventRand = UnityEngine.Random.Range(0, 101);
+        eventRand = UnityEngine.Random.Range(0, 8);
         if (eventRand < 101) //change this amount to something viable
         {
-            StartEvent(1); // set to dailyrand instead of 0
+            StartEvent(eventRand); // set to dailyrand instead of 0
         }
         else
         {
@@ -4196,6 +4196,80 @@ public class Gameplay : MonoBehaviour {
 
 
         events.Add(myEvent);
+
+        // EVENT #6
+        myEvent = new MyEvent("You get a new game you've been waiting a long time for.");
+        myEvent.addLine("How much should you play?");
+
+        response = new Response("save it for later- you've got stuff to do");
+        response.setTrigger("1");
+        response.addResponseLine("You were looking forward to it, but what's a bit longer of waiting?\n");
+        response.addResponseLine("You hold off and save your time to get stuff done.");
+        response.setStatChange(-1, 0, 3, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("play for a little while");
+        response.setTrigger("2");
+        response.addResponseLine("You enjoy running from and fighting zombies for a while.");
+        response.setStatChange(3, 2, 0, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        response = new Response("binge it all day");
+        response.setTrigger("3");
+        response.addResponseLine("You throw responsibility to the wind and spend all day playing.\n");
+        response.addResponseLine("You become a master of the Kentucky apocalypse with your handy fireaxe.");
+        response.setStatChange(7, 3, 1, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            SpoonsDecrease();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        events.Add(myEvent);
+
+        // EVENT #7
+        myEvent = new MyEvent("You feel suddenly depressed and decided to spend money on a whim to make yourself feel better.");
+        myEvent.addLine("What do you buy?");
+
+        response = new Response("buy some video games off Steam you've had your eye on");
+        response.setTrigger("1");
+        response.addResponseLine("You particularly enjoy playing one roguelike\n.");
+        response.addResponseLine("It's a great time, but you die to a troll named Bill many times.");
+        response.setStatChange(5, 3, 0, 0, -3); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("purchase some delicious (although not entirely health) foods");
+        response.setTrigger("2");
+        response.addResponseLine("You make an awesome meal, surprising even yourself with how tasty it is.");
+        response.setStatChange(3, 0, 5, 0, -1); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
     }
 
     //EVENT OUTCOMES
