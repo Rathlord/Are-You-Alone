@@ -9,7 +9,7 @@ public class Gameplay : MonoBehaviour {
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    enum Screen { Introduction, Event, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, FlirtWinry, Date, AskOut, JobQuery, RandomEvents };
+    enum Screen { Introduction, Event, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, Flirtkrissi, Date, AskOut, JobQuery, RandomEvents };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -51,7 +51,7 @@ public class Gameplay : MonoBehaviour {
     bool flirtAlex = false;
     bool flirtPina = false;
     bool flirtSammy = false;
-    bool flirtWinry = false;
+    bool flirtKrissi = false;
     bool flirtTooks = false;
     bool inLove = false;
 
@@ -135,14 +135,14 @@ public class Gameplay : MonoBehaviour {
     int sammyGiftMod = 8;
     int sammySweetMod = 0;
 
-    // Winry vars
+    // krissi vars
 
-    int winryDifficulty = 150;
-    int winryAttitude = 0;
-    bool winryLove = false;
-    int winryJokeMod = 3;
-    int winryGiftMod = 1;
-    int winrySweetMod = 3;
+    int krissiDifficulty = 150;
+    int krissiAttitude = 0;
+    bool krissiLove = false;
+    int krissiJokeMod = 3;
+    int krissiGiftMod = 1;
+    int krissiSweetMod = 3;
 
     // Tooks vars
 
@@ -156,6 +156,7 @@ public class Gameplay : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        print("game start");
         AddSpace();
         IntroHandler("");
         currentHouse = House.Parents;
@@ -171,19 +172,13 @@ public class Gameplay : MonoBehaviour {
         unknownWomen.Add("Alex");
         unknownWomen.Add("Pina");
         unknownWomen.Add("Sammy");
-        unknownWomen.Add("Winry");
+        unknownWomen.Add("krissi");
         InitializeEvents();
     }
 
-
     // TODO IMPLEMENT RANDOM DAILY EVENTS
-    // TODO WINS
-    // TODO TURNING DOWN JOB BREAKS GAME
-    // TODO "NEXT" AT GAME OVER DOESN'T WORK
-    // TODO ADD "NO ONE" TO LIST OF KNOWN PEOPLE
-    // TODO INCREASE FREQUENCY OF MEETING WOMEN
-    // TODO MAJOR FEATURE >HEADERS<
-    // TODO NIGHTLY MESSAGE ABOUT BEING INJURED?
+
+
 
     void OnUserInput(string input)
     {
@@ -211,6 +206,7 @@ public class Gameplay : MonoBehaviour {
         else if (currentScreen == Screen.JobQuery)
         {
             JobSearch(input);
+            print("input passed to jobsearch");
         }
         else if (currentScreen == Screen.Introduction && input == "next")
         {
@@ -248,13 +244,14 @@ public class Gameplay : MonoBehaviour {
         {
             SammyFlirt(input);
         }
-        else if (currentScreen == Screen.FlirtWinry)
+        else if (currentScreen == Screen.Flirtkrissi)
         {
-            WinryFlirt(input);
+            krissiFlirt(input);
         }
         else if (currentScreen == Screen.Gameplay && spoons > 0) // Pass info to input manager
         {
             InputManager(input);
+            print("input passed into input manager from onuserinput");
         }
         else if (currentScreen == Screen.Gameplay && spoons <= 0) // Stop user from doing actions if out of spoons
         {
@@ -405,6 +402,11 @@ public class Gameplay : MonoBehaviour {
             womenlist.Append(women + " ");
         }
         Terminal.WriteLine(womenlist.ToString());
+        if (womenlist.Length == 0)
+        {
+            Terminal.WriteLine("No One");
+            AddSpace();
+        }
     }
 
     void MainScreen()
@@ -414,7 +416,6 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Enter an action!                (You can enter 'actions' to see a list)");
         AddSpace();
         Terminal.WriteLine("These are the people you know:");
-        AddSpace();
         WomenList();
         AddSpace();
         if (schoolDay == true && school == true && schooledToday == false)
@@ -464,7 +465,7 @@ public class Gameplay : MonoBehaviour {
         flirtAlex = false;
         flirtPina = false;
         flirtSammy = false;
-        flirtWinry = false;
+        flirtKrissi = false;
         flirtTooks = false;
         if (employed == true)
         {
@@ -597,7 +598,13 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         StatChecks();
         Absences();
-        Terminal.WriteLine("Write 'next' to continue to a new day.");
+        if (currentScreen == Screen.Gameplay){
+            Terminal.WriteLine("Write 'next' to continue to a new day.");
+        }
+        else{
+            print("Game Over");
+        }
+
     }
 
     void StatChecks() // Caps stats at 100/-100 and fires events at day end if they exceed cap
@@ -1115,10 +1122,10 @@ public class Gameplay : MonoBehaviour {
 
     void LeaveLife()
     {
-        if (knownWomen.Contains("Winry") == true && winryAttitude < -100)
+        if (knownWomen.Contains("krissi") == true && krissiAttitude < -100)
         {
-            knownWomen.Remove("Winry");
-            Terminal.WriteLine("Winry moves on. She is no longer in your life.");
+            knownWomen.Remove("krissi");
+            Terminal.WriteLine("krissi moves on. She is no longer in your life.");
         }
         if (knownWomen.Contains("Sammy") == true && sammyAttitude < -100)
         {
@@ -1177,9 +1184,9 @@ public class Gameplay : MonoBehaviour {
             {
                 Terminal.WriteLine(SammyStatus());
             }
-            if (girlfriendName == "Winry")
+            if (girlfriendName == "krissi")
             {
-                Terminal.WriteLine(WinryStatus());
+                Terminal.WriteLine(krissiStatus());
             }
             if (girlfriendName == "Tooks")
             {
@@ -1237,45 +1244,45 @@ public class Gameplay : MonoBehaviour {
         return statusMessage;
     }
 
-    string WinryStatus()
+    string krissiStatus()
     {
         string statusMessage;
-        if (winryAttitude > 75 && dailyRand > 50)
+        if (krissiAttitude > 75 && dailyRand > 50)
         {
-            statusMessage = "Winry tells you she's in love with you. It makes you very happy";
+            statusMessage = "Krissi tells you she's in love with you. It makes you very happy";
             happiness = (happiness + 5);
-            winryLove = true;
+            krissiLove = true;
             inLove = true;
             pride = (pride + 2);
             stress = (stress + 2);
             loneliness = (loneliness + 3);
         }
-        else if (winryAttitude > 75)
+        else if (krissiAttitude > 75)
         {
-            statusMessage = "Winry invites you to stay the night with her, and you both have a great time.";
+            statusMessage = "Krissi invites you to stay the night with her, and you both have a great time.";
             happiness = (happiness + 2);
             stress = (stress + 3);
             loneliness = (loneliness + 2);
         }
-        else if (winryAttitude > 0 && dailyRand > 50)
+        else if (krissiAttitude > 0 && dailyRand > 50)
         {
-            statusMessage = "Winry calls to say goodnight before you fall asleep.";
+            statusMessage = "Krissi calls to say goodnight before you fall asleep.";
             happiness = (happiness + 1);
             loneliness = (loneliness + 1);
         }
-        else if (winryAttitude > 0)
+        else if (krissiAttitude > 0)
         {
-            statusMessage = "Winry texts you to say goodnight.";
+            statusMessage = "Krissi texts you to say goodnight.";
         }
         else if (dailyRand > 50)
         {
-            statusMessage = "Winry isn't talking to you tonight.";
+            statusMessage = "Krissi isn't talking to you tonight.";
         }
         else
         {
-            statusMessage = "Winry breaks up with you. You're heartbroken.";
+            statusMessage = "Krissi breaks up with you. You're heartbroken.";
             inLove = false;
-            winryLove = false;
+            krissiLove = false;
             happiness = (happiness - 45);
             stress = (stress - 15);
             loneliness = (loneliness - 40);
@@ -1558,32 +1565,32 @@ public class Gameplay : MonoBehaviour {
         if (knownWomen.Contains("Jenna") == true && flirtJenna == false)
         {
             Terminal.WriteLine("You didn't spend time with Jenna today. She misses you some.");
-            linaAttitude = (linaAttitude - 1);
+            jennaAttitude = (jennaAttitude - 1);
         }
 		if (knownWomen.Contains("Alex") == true && flirted == true && dailyRand > 80 && flirtAlex == false)
 		{
 			Terminal.WriteLine("Alex is jealous you spent time with someone else today.");
-			linaAttitude = (linaAttitude - 4);
+			alexAttitude = (alexAttitude - 4);
 		}
         else if (knownWomen.Contains("Alex") == true && flirtAlex == false)
         {
             Terminal.WriteLine("You didn't spend time with Alex today. She misses you some.");
-            linaAttitude = (linaAttitude - 1);
+            alexAttitude = (alexAttitude - 1);
         }
 		if (knownWomen.Contains("Pina") == true && flirted == true && flirtPina == false)
 		{
 			Terminal.WriteLine("Pina is very jealous you spent time with someone else today.");
-			linaAttitude = (linaAttitude - 8);
+			pinaAttitude = (pinaAttitude - 8);
 		}
         else if (knownWomen.Contains("Pina") == true && flirtPina == false)
         {
             Terminal.WriteLine("You didn't spend time with Pina today. She misses you.");
-            linaAttitude = (linaAttitude - 2);
+            pinaAttitude = (pinaAttitude - 2);
         }
-        if (knownWomen.Contains("Winry") == true && flirtWinry == false)
+        if (knownWomen.Contains("krissi") == true && flirtKrissi == false)
         {
-            Terminal.WriteLine("You didn't spend time with Winry today. She misses you.");
-            linaAttitude = (linaAttitude - 1);
+            Terminal.WriteLine("You didn't spend time with Krissi today. She misses you.");
+            krissiAttitude = (krissiAttitude - 1);
         }
     }
 
@@ -1814,6 +1821,7 @@ public class Gameplay : MonoBehaviour {
         if (input == "jobsearch" && stress > -50)
         {
             JobSearch(input);
+            print("input passed to jobsearch from inputmanager");
             spoons--;
         }
         if (input == "breakup" && girlfriend == true)
@@ -1855,8 +1863,8 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Even though it was your decision it makes you feel terrible.");
         switch (girlfriendName)
         {
-            case "Winry":
-                winryAttitude = (winryAttitude - 50);
+            case "Krissi":
+                krissiAttitude = (krissiAttitude - 50);
                 break;
             case "Sammy":
                 sammyAttitude = (sammyAttitude - 50);
@@ -1875,7 +1883,7 @@ public class Gameplay : MonoBehaviour {
                 break;
         }
         inLove = false;
-        winryLove = false;
+        krissiLove = false;
         sammyLove = false;
         linaLove = false;
         jennaLove = false;
@@ -1944,14 +1952,14 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("She's good at banter and dancing.");
             Terminal.WriteLine("She loves music and meeting guys.");
         }
-        if (input == "!Winry" && knownWomen.Contains("Winry"))
+        if (input == "!Krissi" && knownWomen.Contains("krissi"))
         {
-            Terminal.WriteLine("Winry is smart, bold, and honest.");
-            Terminal.WriteLine("She is outgoing and somewhat nerdy.");
-            Terminal.WriteLine("She has wavy blonde hair and is a little short.");
+            Terminal.WriteLine("Krissi is smart, bold, and honest.");
+            Terminal.WriteLine("She is outgoing and very nerdy.");
+            Terminal.WriteLine("She has thick brown hair and is super short.");
             Terminal.WriteLine("She is attractive and decisive.");
-            Terminal.WriteLine("She's good at cooking and singing.");
-            Terminal.WriteLine("She likes having fun debates and listening to music.");
+            Terminal.WriteLine("She's good at cooking, writing code, and singing.");
+            Terminal.WriteLine("She likes gaming, music, and watching TV.");
         }
     }
 
@@ -2133,7 +2141,7 @@ public class Gameplay : MonoBehaviour {
         workedToday = true;
         if (currentJob == Job.DepartmentStore)
         {
-            if (dailyRand == 1)
+            if (dailyRand < 5)
             {
                 MeetGirl();
                 happiness = (happiness + 3);
@@ -2159,7 +2167,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentJob == Job.LumberYard)
         {
-            if (dailyRand == 1)
+            if (dailyRand > 10 && dailyRand < 16)
             {
                 MeetGirl();
                 happiness = (happiness + 3);
@@ -2193,7 +2201,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentJob == Job.PaintStore)
         {
-            if (dailyRand == 1)
+            if (dailyRand < 5)
             {
                 MeetGirl();
                 happiness = (happiness + 3);
@@ -2251,7 +2259,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (currentJob == Job.TravelingSales)
         {
-            if (dailyRand == 1)
+            if (dailyRand < 5)
             {
                 MeetGirl();
                 happiness = (happiness + 3);
@@ -2346,9 +2354,9 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Sammy");
         }
-        if (knownWomen.Contains("Winry") == true)
+        if (knownWomen.Contains("krissi") == true)
         {
-            Terminal.WriteLine("Winry");
+            Terminal.WriteLine("krissi");
         }
         AddSpace();
         Terminal.WriteLine("Chose someone or enter 'home' to go back.");
@@ -2593,18 +2601,18 @@ public class Gameplay : MonoBehaviour {
                 pride = (pride - 2);
             }
         }
-        if (knownWomen.Contains("Winry") == true && input == "Winry")
+        if (knownWomen.Contains("krissi") == true && input == "krissi")
         {
             RefreshScreen();
-            dateAttitude = winryAttitude;
-            if (dailyRand + winryAttitude >= (winryDifficulty / 2))
+            dateAttitude = krissiAttitude;
+            if (dailyRand + krissiAttitude >= (krissiDifficulty / 2))
             {
                 Terminal.WriteLine(DateRandom());
                 flirted = true;
-                flirtWinry = true;
+                flirtKrissi = true;
                 if (dailyRand < 76)
                 {
-                    winryAttitude = (winryAttitude + 10);
+                    krissiAttitude = (krissiAttitude + 10);
                     loneliness = (loneliness + 10);
                     happiness = (happiness + 9);
                     stress = (stress + 3);
@@ -2612,7 +2620,7 @@ public class Gameplay : MonoBehaviour {
                 }
                 else
                 {
-                    winryAttitude = (winryAttitude - 1);
+                    krissiAttitude = (krissiAttitude - 1);
                     loneliness = (loneliness + 1);
                 }
             }
@@ -2652,9 +2660,9 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Sammy");
         }
-        if (knownWomen.Contains("Winry") == true && flirtWinry == false)
+        if (knownWomen.Contains("krissi") == true && flirtKrissi == false)
         {
-            Terminal.WriteLine("Winry");
+            Terminal.WriteLine("krissi");
         }
         if (knownWomen.Contains("Tooks") == true && flirtTooks == false)
         {
@@ -2743,17 +2751,17 @@ public class Gameplay : MonoBehaviour {
             flirtSammy = true;
             flirted = true;
         }
-        if (knownWomen.Contains("Winry") == true && input == "Winry")
+        if (knownWomen.Contains("krissi") == true && input == "krissi")
         {
             RefreshScreen();
-            Terminal.WriteLine("How would you like to flirt with Winry?");
+            Terminal.WriteLine("How would you like to flirt with krissi?");
             Terminal.WriteLine("You can:    gift   joke     sweet    relationship");
-            WinryFlirt(input);
+            krissiFlirt(input);
             happiness = (happiness + 5);
             stress = (stress + 5);
             pride = (pride + 5);
             loneliness = (loneliness + 8);
-            flirtWinry = true;
+            flirtKrissi = true;
             flirted = true;
         }
     }
@@ -2892,25 +2900,25 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Enter 'home' to go to the main screen.");
     }
 
-    void WinryFlirt(string input)
+    void krissiFlirt(string input)
     {
         AddSpace();
         flirtToday = true;
-        currentScreen = Screen.FlirtWinry;
+        currentScreen = Screen.Flirtkrissi;
         if (input == "gift")
         {
             Terminal.WriteLine(RandomGift());
-            winryAttitude = (winryAttitude + winryGiftMod + giftVar);
+            krissiAttitude = (krissiAttitude + krissiGiftMod + giftVar);
         }
         else if (input == "joke")
         {
             Terminal.WriteLine(RandomJoke());
-            winryAttitude = (winryAttitude + winryJokeMod);
+            krissiAttitude = (krissiAttitude + krissiJokeMod);
         }
         else if (input == "sweet")
         {
             Terminal.WriteLine(RandomSweet());
-            winryAttitude = (winryAttitude + winrySweetMod);
+            krissiAttitude = (krissiAttitude + krissiSweetMod);
         }
         else if (input == "relationship")
         {
@@ -2920,13 +2928,13 @@ public class Gameplay : MonoBehaviour {
 				return;
 			}
             Terminal.WriteLine(RandomAskOut());
-            if (dailyRand + winryAttitude >= winryDifficulty)
+            if (dailyRand + krissiAttitude >= krissiDifficulty)
             {
                 Terminal.WriteLine("She says she would love to be your girlfriend and wraps you in a huge hug.");
                 girlfriend = true;
-                girlfriendName = "Winry";
+                girlfriendName = "krissi";
                 Invoke("MainScreen", 5f);
-                winryAttitude = (winryAttitude + 10);
+                krissiAttitude = (krissiAttitude + 10);
             }
             else
             {
@@ -3263,7 +3271,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You get a phone call, but it's a wrong number. A girl named Sammy on the other end talks to you for a while.");
             Terminal.WriteLine("She seems bored, and tells you to call her sometime!");
         }
-        if (tempName == "Winry")
+        if (tempName == "krissi")
         {
             Terminal.WriteLine("You go out and meet a girl in your favorite aisle of the old bookstore. You hit it off immediately!");
             Terminal.WriteLine("She's charming and excited to talk to you!");
@@ -3276,7 +3284,7 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("You go to university...");
         schooledToday = true;
         loneliness = (loneliness + 1);
-        if (dailyRand > 85 && dailyRand < 90)
+        if (dailyRand > 83 && dailyRand < 90)
         {
             MeetGirl();
         }
@@ -3365,7 +3373,7 @@ public class Gameplay : MonoBehaviour {
                 }
             }
         }
-        if (dailyRand > 90 && dailyRand <= 93)
+        else if (dailyRand > 90 && dailyRand <= 93)
         {
             if (employed == false)
             {
@@ -3396,11 +3404,10 @@ public class Gameplay : MonoBehaviour {
                 {
                     Terminal.WriteLine("You decline the job.");
                     Invoke("MainScreen", 1f);
-                    currentScreen = Screen.Gameplay;
                 }
             }
         }
-        if (dailyRand > 96 && dailyRand <= 98)
+        else if (dailyRand > 96 && dailyRand <= 98)
         {
             if (employed == false)
             {
@@ -3431,11 +3438,10 @@ public class Gameplay : MonoBehaviour {
                 {
                     Terminal.WriteLine("You decline the job.");
                     Invoke("MainScreen", 1f);
-                    currentScreen = Screen.Gameplay;
                 }
             }
         }
-        if (dailyRand >93 && dailyRand <= 95)
+        else if (dailyRand >93 && dailyRand <= 95)
         {
             if (employed == false)
             {
@@ -3466,11 +3472,10 @@ public class Gameplay : MonoBehaviour {
                 {
                     Terminal.WriteLine("You decline the job.");
                     Invoke("MainScreen", 1f);
-                    currentScreen = Screen.Gameplay;
                 }
             }
         }
-        if (dailyRand == 96)
+        else if (dailyRand == 96)
         {
             if (employed == false)
             {
@@ -3501,11 +3506,10 @@ public class Gameplay : MonoBehaviour {
                 {
                     Terminal.WriteLine("You decline the job.");
                     Invoke("MainScreen", 1f);
-                    currentScreen = Screen.Gameplay;
                 }
             }
         }
-        if (dailyRand == 99)
+        else if (dailyRand == 99)
         {
             if (employed == false)
             {
@@ -3536,7 +3540,6 @@ public class Gameplay : MonoBehaviour {
                 {
                     Terminal.WriteLine("You decline the job.");
                     Invoke("MainScreen", 1f);
-                    currentScreen = Screen.Gameplay;
                 }
             }
         }
@@ -3547,6 +3550,7 @@ public class Gameplay : MonoBehaviour {
             happiness--;
             stress--;
             pride++;
+            currentScreen = Screen.Gameplay;
         }
         AddSpace();
         Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
@@ -3611,7 +3615,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("Your online clan doesn't want to talk to you today.");
             onlineAttitude++;
         }
-        else if (dailyRand == 99)
+        else if (dailyRand > 70 && dailyRand < 75)
         {
             MeetGirl();
         }
@@ -3666,7 +3670,11 @@ public class Gameplay : MonoBehaviour {
         dailyRand = UnityEngine.Random.Range(1, 101);
         RefreshScreen();
         loneliness = (loneliness - 1);
-        if (dailyRand > 90)
+        if (dailyRand > 45 && dailyRand < 55){
+            Terminal.WriteLine("You go out to the store, and meet someone interesting while you're out!");
+            Invoke("MeetGirl", 3f);
+        }
+        else if (dailyRand > 90)
         {
             Terminal.WriteLine("You read a book. You feel edified!");
             stress = (stress + 2);
@@ -4245,7 +4253,7 @@ public class Gameplay : MonoBehaviour {
         events.Add(myEvent);
 
         // EVENT #7
-        myEvent = new MyEvent("You feel suddenly depressed and decided to spend money on a whim to make yourself feel better.");
+        myEvent = new MyEvent("You feel suddenly depressed and decided to spend money to make yourself feel better.");
         myEvent.addLine("What do you buy?");
 
         response = new Response("buy some video games off Steam you've had your eye on");
@@ -4283,6 +4291,8 @@ public class Gameplay : MonoBehaviour {
     {
         if (spoonsDown == true)
         {
+            AddSpace();
+            Terminal.WriteLine("Your injury prevents you from accomplishing as much today.");
             spoons -= 1;
             spoonsDownTimer -= 1;
             if (spoonsDownTimer <= 0)
