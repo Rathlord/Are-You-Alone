@@ -178,6 +178,12 @@ public class Gameplay : MonoBehaviour {
 
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO WINS
+    // TODO TURNING DOWN JOB BREAKS GAME
+    // TODO "NEXT" AT GAME OVER DOESN'T WORK
+    // TODO ADD "NO ONE" TO LIST OF KNOWN PEOPLE
+    // TODO INCREASE FREQUENCY OF MEETING WOMEN
+    // TODO MAJOR FEATURE >HEADERS<
+    // TODO NIGHTLY MESSAGE ABOUT BEING INJURED?
 
     void OnUserInput(string input)
     {
@@ -1105,7 +1111,6 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         LeaveLife();
         AddSpace();
-        GirlfriendAttitude();
     }
 
     void LeaveLife()
@@ -1808,7 +1813,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (input == "jobsearch" && stress > -50)
         {
-            JobSearch("");
+            JobSearch(input);
             spoons--;
         }
         if (input == "breakup" && girlfriend == true)
@@ -4036,7 +4041,7 @@ public class Gameplay : MonoBehaviour {
 
         response = new Response("bag them up and take them to the curb");
         response.setTrigger("2");
-        response.addResponseLine("Outcome text.");
+        response.addResponseLine("You buckle down and get the chore done, tired but glad to have it finished.");
         response.setStatChange(-1, 0, 3, 1, 0); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
         {
@@ -4245,7 +4250,7 @@ public class Gameplay : MonoBehaviour {
 
         response = new Response("buy some video games off Steam you've had your eye on");
         response.setTrigger("1");
-        response.addResponseLine("You particularly enjoy playing one roguelike\n.");
+        response.addResponseLine("You particularly enjoy playing one roguelike.\n");
         response.addResponseLine("It's a great time, but you die to a troll named Bill many times.");
         response.setStatChange(5, 3, 0, 0, -3); // Happiness, stress, pride, loneliness, money                              
         response.setNextEvent(() =>
