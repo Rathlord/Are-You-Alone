@@ -20,6 +20,7 @@ public class Gameplay : MonoBehaviour {
     int dailyExpenses = 1;
     int housingExpenses;
     int totalExpenses;
+    int extraExpenses;
     int earnings = 0;
     int giftVar = 0;
     int askOutVar = 0;
@@ -76,6 +77,7 @@ public class Gameplay : MonoBehaviour {
     [SerializeField] int friendAttitude = 50;
     [SerializeField] int onlineAttitude = 50;
     [SerializeField] int parentsAttitude = 30;
+    int extraHappiness = 0;
     bool friendToday;
     bool onlineToday;
     bool flirtToday;
@@ -533,7 +535,7 @@ public class Gameplay : MonoBehaviour {
     {
         currentScreen = Screen.Night;
         RefreshScreen();
-        totalExpenses = (dailyExpenses + housingExpenses);
+        totalExpenses = (dailyExpenses + housingExpenses + extraExpenses);
         AddSpace();
         Terminal.WriteLine("Your expense for the day is -" + totalExpenses + "$");
         money = (money - totalExpenses);
@@ -542,6 +544,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You earned " + earnings + "$ today.");
             money = (money + earnings);
         }
+        happiness = happiness + extraHappiness;
         KickedOutCheck();
         AddSpace();
         HousingCheck();
@@ -3951,11 +3954,11 @@ public class Gameplay : MonoBehaviour {
         eventRand = UnityEngine.Random.Range(0, 8);
         if (eventRand < 101) //change this amount to something viable
         {
-            StartEvent(eventRand); // set to dailyrand instead of 0
+            StartEvent(eventRand); // Check conditions for event to start
         }
         else
         {
-            eventRand = UnityEngine.Random.Range(0, 101); // Deal with circumstance checks and then star the event if plausible
+            StartEvent(eventRand); // if no conditional clauses, just start it
         }
     }
 
@@ -4336,7 +4339,7 @@ public class Gameplay : MonoBehaviour {
         response.setTrigger("1");
         response.addResponseLine("You create a wild and fun adventure for your party of friends!");
         response.addResponseLine("It's a little stressful, but everyone seems to have a blast.");
-        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setStatChange(3, -2, 4, 5, 0); // Happiness, stress, pride, loneliness, money                              
         response.setNextEvent(() =>
         {
             MainScreen();
@@ -4345,10 +4348,55 @@ public class Gameplay : MonoBehaviour {
         myEvent.addResponse(response);
 
 
-        response = new Response("do thing number 2");
+        response = new Response("play a cool Elf Wizard");
         response.setTrigger("2");
-        response.addResponseLine("Outcome text.");
-        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.addResponseLine("You're of tremendous service to your party, if a bit haughty.");
+        response.addResponseLine("You have a great time playing the game.");
+        response.setStatChange(3, 2, 0, 3, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+        // EVENT #10
+        myEvent = new MyEvent("A nearby cat shelter has a show at a store that you're shopping in.");
+        myEvent.addLine("There are lots of cats needing homes and money for supplies, what do you do?");
+
+        response = new Response("adopt one of the cats");
+        response.setTrigger("1");
+        response.addResponseLine("You adopt a beautiful cat named Winry who brings you lots of happiness.");
+        response.addResponseLine("It costs you a little bit of money to adopt her and ongoing costs to take care of her, though.");
+        response.setStatChange(5, 5, 5, 3, -4); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            DailyHappinessBoost();
+            ExtraExpense();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("donate a little money to the shelter");
+        response.setTrigger("2");
+        response.addResponseLine("You drop some money into the shelter's collection. You feel a little sad to leave the cats behind,");
+        response.addResponseLine("but you also feel proud for helping the shelter out a little.");
+        response.setStatChange(1, 0, 3, -1, -1); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        response = new Response("look at the cats for a while and then leave");
+        response.setTrigger("3");
+        response.addResponseLine("You stick your fingers in the cages and look at the cats for a while, then go about your day.");
+        response.setStatChange(1, 0, -3, -3, 0); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
         {
             MainScreen();
@@ -4362,6 +4410,17 @@ public class Gameplay : MonoBehaviour {
     }
 
     //EVENT OUTCOMES
+
+    void DailyHappinessBoost()
+    {
+        extraHappiness++;
+    }
+
+    void ExtraExpense()
+    {
+        extraExpenses++;
+        MainScreen();
+    }
 
     void DelayedMeetGirl()
     {
