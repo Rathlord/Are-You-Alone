@@ -3239,6 +3239,7 @@ public class Gameplay : MonoBehaviour {
             AddSpace();
             knownWomen.Add((string)unknownWomen[womenRand]);
             unknownWomen.Remove((string)unknownWomen[womenRand]);
+            currentScreen = Screen.Gameplay;
         }
         else
             return;
@@ -4283,9 +4284,89 @@ public class Gameplay : MonoBehaviour {
 
         events.Add(myEvent);
 
+       
+        
+        // EVENT #8
+        myEvent = new MyEvent("You get unwittingly dragged out to a party with a friend. They disappear on you, though.");                                                 
+        myEvent.addLine("What do you do after they walk away from you?");                                                                                     
+
+        response = new Response("get trashed and do your best to mingle");                                                  
+        response.setTrigger("1");                   
+        response.addResponseLine("You drink... a lot. You're not sure if it was worth it. You meet someone kind of fun, though.");        
+        response.setStatChange(-2, 0, -3, 2, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            DelayedMeetGirl();
+            return -1;
+        });                         
+        myEvent.addResponse(response);               
+
+        
+        response = new Response("just leave");                                                          
+        response.setTrigger("2");
+        response.addResponseLine("You walk right out the door. You've got better things to do than get ditched.");
+        response.setStatChange(-1, 0, 2, -5, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        response = new Response("try to find your friend again");
+        response.setTrigger("3");
+        response.addResponseLine("You walk around awkwardly searching for your friend, but get claustrophobic.");
+        response.addResponseLine("Before too long you decide to just give up and leave.");
+        response.setStatChange(-4, -4, -2, -5, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+        // EVENT #9
+        myEvent = new MyEvent("You decide to play an online game of Dungeons and Dragons with your friends.");
+        myEvent.addLine("Do you volunteer to be the Dungeon Master, or just play a character?");
+
+        response = new Response("be the Dungeon Master");
+        response.setTrigger("1");
+        response.addResponseLine("You create a wild and fun adventure for your party of friends!");
+        response.addResponseLine("It's a little stressful, but everyone seems to have a blast.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("do thing number 2");
+        response.setTrigger("2");
+        response.addResponseLine("Outcome text.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
     }
 
     //EVENT OUTCOMES
+
+    void DelayedMeetGirl()
+    {
+        Invoke("MeetGirl", 3f);
+    }
 
     void SpoonsDownCheck()
     {
@@ -4307,6 +4388,7 @@ public class Gameplay : MonoBehaviour {
         spoonsDown = true;
         spoonsDownTimer = 5;
         MainScreen();
+        spoons--;
     }
 
     void ParentsAttitudeIncrease()
