@@ -601,10 +601,12 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         StatChecks();
         Absences();
-        if (currentScreen == Screen.Gameplay){
+        if (currentScreen == Screen.NightStats)
+        {
             Terminal.WriteLine("Write 'next' to continue to a new day.");
         }
-        else{
+        else
+        {
             print("Game Over");
         }
 
@@ -3951,10 +3953,10 @@ public class Gameplay : MonoBehaviour {
 
     void RNGChecker()
     {
-        eventRand = UnityEngine.Random.Range(0, 8);
-        if (eventRand < 101) //change this amount to something viable
+        eventRand = UnityEngine.Random.Range(0, 11);
+        if (eventRand == 11 && school == false) //check conditional events, if false reroll for an applicable event
         {
-            StartEvent(eventRand); // Check conditions for event to start
+            RNGChecker(); // reroll
         }
         else
         {
@@ -3972,6 +3974,7 @@ public class Gameplay : MonoBehaviour {
         /* EXAMPLE EVENT
          * 
         // EVENT #
+
         myEvent = new MyEvent("Scenario");                                                 
         myEvent.addLine("Question?");                                                                                     
 
@@ -4407,9 +4410,124 @@ public class Gameplay : MonoBehaviour {
 
         events.Add(myEvent);
 
+        // EVENT #11
+
+        myEvent = new MyEvent("Your professor finds a cheat sheet near your chair and accuses you of cheating.");
+        myEvent.addLine("How do you respond to the accusation?");
+
+        response = new Response("confess to cheating [LIE]");
+        response.setTrigger("1");
+        response.addResponseLine("You have no idea why, but you admitted to cheating even though you didn't do it.");
+        response.addResponseLine("You get kicked out of the university.");
+        response.setStatChange(-10, 0, -10, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            KickedFromSchool();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("confess to cheating [HONEST]");
+        response.setTrigger("2");
+        response.addResponseLine("The stress was just too much and you cheated. You confess.");
+        response.addResponseLine("You get kicked out of the university.");
+        response.setStatChange(-10, 3, -10, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            KickedFromSchool();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        response = new Response("explain your innocence [LIE]");
+        response.setTrigger("3");
+        response.addResponseLine("The cheat sheet was yours, but you attempt to lie your way out of it.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            LieGamble();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+        response = new Response("explain your innocence [HONEST]");
+        response.setTrigger("4");
+        response.addResponseLine("The cheat sheet belonged to someone else, which you explain.");
+        response.addResponseLine("You feel glad you didn't get wrongfully blamed.");
+        response.setStatChange(2, 1, 2, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #12
+
+        myEvent = new MyEvent("On a whim you decide to cook up a big meal for yourself!");
+        myEvent.addLine("What kind of food do you make?");
+
+        response = new Response("make something healthy. It costs a bit extra, but it's good for you!");
+        response.setTrigger("1");
+        response.addResponseLine("You make a healthy, tasty meal that you're proud of!");
+        response.setStatChange(3, 1, 4, 0, -1); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("make something unhealthy and impressive.");
+        response.setTrigger("2");
+        response.addResponseLine("You make an incredibly delicious, rich meal. Incredible!");
+        response.setStatChange(5, 2, 1, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
     }
 
     //EVENT OUTCOMES
+
+    void LieGamble()
+    {
+        RefreshScreen();
+        if (dailyRand > 50)
+        {
+            Terminal.WriteLine("The university doesn't believe your lie. You are kicked out!");
+            Invoke("KickedFromSchool", 3f);
+            happiness = happiness - 10;
+            stress = stress + 3;
+            pride = pride - 15;
+        }
+        else 
+        {
+            Terminal.WriteLine("The university believes your lie. You got away with it!");
+            happiness++;
+            stress++;
+            pride = pride - 7;
+            Invoke("MainScreen", 3f);
+        }
+    }
+
+    void KickedFromSchool()
+    {
+        school = false;
+        MainScreen();
+    }
 
     void DailyHappinessBoost()
     {
@@ -4514,6 +4632,7 @@ public class Gameplay : MonoBehaviour {
     {
         updateStats(response);
         Terminal.ClearScreen();
+        RefreshScreen(); // Keep screen format correct
         Terminal.WriteLine(response.response);
         PrintResponses(response);
     }
