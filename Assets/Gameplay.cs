@@ -3963,6 +3963,10 @@ public class Gameplay : MonoBehaviour {
         {
             RNGChecker(); // reroll
         }
+        else if (eventRand == 51 && employed == false)
+        {
+            RNGChecker(); // reroll
+        }
         else if (eventRand == 45 && employed == false)
         {
             RNGChecker(); // reroll
@@ -5759,6 +5763,70 @@ public class Gameplay : MonoBehaviour {
         response.setTrigger("1");
         response.addResponseLine("It bothers you the whole time.");
         response.setStatChange(-1, -2, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #50
+
+        myEvent = new MyEvent("While walking near home you see a stray dog. It looks cute!");
+        myEvent.addLine("What do you do?");
+
+        response = new Response("pet it");
+        response.setTrigger("1");
+        response.addResponseLine("You go to pet it, but it looks surprised and scared and bites your hand before running off. OUCH!");
+        response.setStatChange(-2, 0, 0, -1, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("let it sniff your hand");
+        response.setTrigger("2");
+        response.addResponseLine("It sniffs your hand cautiously before nuzzling you. You pet it for a while before it runs off. Awww.");
+        response.setStatChange(3, 3, 1, 3, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #51
+
+        myEvent = new MyEvent("You get in an argument with a coworker over something small.");
+        myEvent.addLine("What do you do about it?");
+
+        response = new Response("escalate it to your boss");
+        response.setTrigger("1");
+        response.addResponseLine("You complain to your boss, but he just seems annoyed.");
+        response.setStatChange(-2, -3, 1, -1, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("let it slide");
+        response.setTrigger("2");
+        response.addResponseLine("You ignore it and soon make up with your co-worker.");
+        response.setStatChange(-1, -1, -1, 0, 0); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
         {
             MainScreen();
