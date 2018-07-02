@@ -6454,6 +6454,38 @@ public class Gameplay : MonoBehaviour {
 
         events.Add(myEvent);
 
+
+        // EVENT #72
+
+        myEvent = new MyEvent("Something piques your interest online...");
+        myEvent.addLine("There's a very informative Wikipedia article about it.");
+
+        response = new Response("read the article and move on");
+        response.setTrigger("1");
+        response.addResponseLine("You check out the article and learn a bit and then go on with your day.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("click through to a couple of other pages to learn more");
+        response.setTrigger("2");
+        response.addResponseLine("Outcome text.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
         /* EXAMPLE EVENT
         * 
 
