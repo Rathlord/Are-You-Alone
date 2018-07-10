@@ -30,6 +30,8 @@ public class Gameplay : MonoBehaviour {
     int spoonsDownTimer = 0;
     bool moneyDown = false;
     int moneyDownTimer = 0;
+    string winText;
+    int creditsTimer = 0;
 
     // Special value, daily random number, impacts many things
 
@@ -84,6 +86,7 @@ public class Gameplay : MonoBehaviour {
     bool onlineToday;
     bool flirtToday;
     bool dateToday;
+    bool coffeeAddict = false;
 
     // Previous day stats to get end-of-day screen info
 
@@ -182,6 +185,8 @@ public class Gameplay : MonoBehaviour {
 
     // TODO IMPLEMENT RANDOM DAILY EVENTS
     // TODO UNCOMMENT EVENT RANDOMIZATION AT FIXME IN CODE
+    // TODO CREDITS
+    // TODO CHECK ALL GAMEOVERS
 
 
 
@@ -203,6 +208,10 @@ public class Gameplay : MonoBehaviour {
         {
             RefreshScreen();
             MainScreen();
+        }
+        else if (input == "credits" && currentScreen == Screen.Gameover)
+        {
+            Credits();
         }
         else if (currentScreen == Screen.Event)
         {
@@ -456,6 +465,11 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine(WakeUp());
         turn++;
         spoons = 3;
+        if (coffeeAddict == true)
+        {
+            spoons++;
+            happiness -= 2;
+        }
         SpoonsDownCheck();
         MoneyDownCheck();
         CheckDays();
@@ -583,6 +597,11 @@ public class Gameplay : MonoBehaviour {
         if (workDay == true && workedToday == false && employed == true && employedYesterday == true)
         {
             Terminal.WriteLine("You skipped work today. Better not do that too often...");
+        }
+        AddSpace();
+        if (coffeeAddict == true)
+        {
+            Terminal.WriteLine("You are addicted to coffee. You can do more, but get headaches sometimes that make you less happy.");
         }
         AddSpace();
         int picker = UnityEngine.Random.Range(0, 5);
@@ -3971,6 +3990,90 @@ public class Gameplay : MonoBehaviour {
         {
             RNGChecker(); // reroll
         }
+        else if (eventRand == 80 && employed == false)
+        {
+            RNGChecker(); // reroll
+        }
+        else if (eventRand == 81 && currentHouse != House.Rent)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 82 && employed == false)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 83 && employed == false)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 84 && employed == false)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 85 && girlfriend == false)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 86 && currentHouse != House.Rent)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 87 && girlfriend == false)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 88 && employed == false)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 89 && employed == false)
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 90 && employed == false)
+        {
+            RNGChecker(); //reroll  
+        }
+        else if (eventRand == 91 && girlfriendName != "Lina")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 92 && girlfriendName != "Jenna")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 93 && girlfriendName != "Jenna")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 94 && girlfriendName != "Alex")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 95 && girlfriendName != "Pina")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 96 && girlfriendName != "Alex")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 97 && girlfriendName != "Pina")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 98 && girlfriendName != "Sammy")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 99 && girlfriendName != "Krissi")
+        {
+            RNGChecker(); //reroll
+        }
+        else if (eventRand == 100 && (school == false || turn <= 10))
+        {
+            RNGChecker(); //reroll
+        }
         else
         {
             StartEvent(eventRand); // if no conditional clauses, just start it
@@ -5622,7 +5725,7 @@ public class Gameplay : MonoBehaviour {
         response.setStatChange(-4, -3, 2, 0, 0); // Happiness, stress, pride, loneliness, money                              
         response.setNextEvent(() =>
         {
-            MainScreen();
+            NoAddiction();
             return -1;
         });
         myEvent.addResponse(response);
@@ -5634,7 +5737,7 @@ public class Gameplay : MonoBehaviour {
         response.setStatChange(0, 0, 0, 0, -1); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
         {
-            MainScreen();
+            CoffeeAddiction();
             return -1;
         });
         myEvent.addResponse(response);
@@ -6102,6 +6205,7 @@ public class Gameplay : MonoBehaviour {
         response.setNextEvent(() =>
         {
             SpoonsIncrease();
+            CoffeeAddiction();
             return -1;
         });
         myEvent.addResponse(response);
@@ -6127,6 +6231,7 @@ public class Gameplay : MonoBehaviour {
         response.setNextEvent(() =>
         {
             SpoonsDecrease();
+            NoAddiction();
             return -1;
         });
         myEvent.addResponse(response);
@@ -6463,7 +6568,7 @@ public class Gameplay : MonoBehaviour {
         response = new Response("read the article and move on");
         response.setTrigger("1");
         response.addResponseLine("You check out the article and learn a bit and then go on with your day.");
-        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setStatChange(1, -1, 1, 0, 0); // Happiness, stress, pride, loneliness, money                              
         response.setNextEvent(() =>
         {
             MainScreen();
@@ -6474,11 +6579,882 @@ public class Gameplay : MonoBehaviour {
 
         response = new Response("click through to a couple of other pages to learn more");
         response.setTrigger("2");
-        response.addResponseLine("Outcome text.");
-        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.addResponseLine("You end up educating yourself on an entirely new subject... but you spent hours doing it!");
+        response.addResponseLine("You can't do as much today.");
+        response.setStatChange(2, -2, 3, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            SpoonsDecrease();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #73
+
+        myEvent = new MyEvent("Someone sends you a link to TVTropes.");
+        myEvent.addLine("You click on it and get sucked into TVTropes for hours.");
+
+        response = new Response("enjoy it");
+        response.setTrigger("1");
+        response.addResponseLine("You have lots of fun reading TVTropes, but you waste a lot of time and can't do as much.");
+        response.setStatChange(2, 4, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
         response.setNextEvent(() =>
         {
             MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("resist");
+        response.setTrigger("2");
+        response.addResponseLine("You try to stop clicking links, but you just can't.");
+        response.addResponseLine("You waste tons of time on it anwyay, but it's pretty fun.");
+        response.setStatChange(4, 2, -2, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #74
+
+        myEvent = new MyEvent("You get stuck on a difficult part of a game.");
+        myEvent.addLine("What do you do?");
+
+        response = new Response("take a break and then come back");
+        response.setTrigger("1");
+        response.addResponseLine("You grab a drink and check Reddit for a while before coming back to it.");
+        response.addResponseLine("When you get back, you find it much easier and beat it within a few attempts. Yes!");
+        response.setStatChange(2, 0, 1, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("try to push through");
+        response.setTrigger("2");
+        response.addResponseLine("You struggle for many grueling hours, but eventually manage to beat it.");
+        response.addResponseLine("While it was frustrating and challenging, you're exceedingly proud of having won.");
+        response.setStatChange(3, -2, 5, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("go do something else");
+        response.setTrigger("3");
+        response.addResponseLine("You just give up and walk away. Oh well.");
+        response.setStatChange(0, 1, -1, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #75
+
+        myEvent = new MyEvent("You pick up a new competitive PVP game and decide to get ranked.");
+        myEvent.addLine("What kind of strategy do you employ?");
+
+        response = new Response("focus on your skill");
+        response.setTrigger("1");
+        response.addResponseLine("You try your hardest, and while you feel you played well, your team mates got in the way.");
+        response.addResponseLine("Sometimes you didn't perform as well as you'd hope, either. You get ranked in bronze.");
+        response.addResponseLine("You feel frustrated, embarrassed, and discouraged.");
+        response.setStatChange(-4, -2, -5, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("focus on strategy");
+        response.setTrigger("2");
+        response.addResponseLine("You focus on playing strategically, outthinking your opponents and playing around their weaknesses and your strengths.");
+        response.addResponseLine("You do very well over all and get placed into platinum. Awesome!");
+        response.setStatChange(3, 1, 5, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("focus on team play");
+        response.setTrigger("3");
+        response.addResponseLine("You try to focus on supporting your team mates, but they're very inconsistent.");
+        response.addResponseLine("Even though you get some good matches, over all you lose more.");
+        response.addResponseLine("You're placed near the bottom of silver... oh well.");
+        response.setStatChange(1, -1, -1, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("group up with your friends");
+        response.setTrigger("4");
+        response.addResponseLine("While you feel your friends might be holding you back a bit, you have a really good time.");
+        response.addResponseLine("You rank near the top of silver... not great, but at least you had fun.");
+        response.setStatChange(3, 1, -1, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #76
+
+        myEvent = new MyEvent("You need to swap some parts out in your computer.");
+        myEvent.addLine("You spend the afternoon working at it.");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("You find the work strangely soothing and relaxing.");
+        response.addResponseLine("As you work and listen to some good music, you feel your cares fade away some.");
+        response.setStatChange(0, -4, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #77
+
+        myEvent = new MyEvent("A piece of software stops working on your computer and you get stumped fixing it.");
+        myEvent.addLine("How do you resolve it?");
+
+        response = new Response("look for help online");
+        response.setTrigger("1");
+        response.addResponseLine("No one online has the exact answer, but you eventually find enough clues to solve it.");
+        response.addResponseLine("You're happy to have it working again.");
+        response.setStatChange(1, 1, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("look at how its made for answers");
+        response.setTrigger("2");
+        response.addResponseLine("It takes you hours of pulling it apart, but you eventually find the solution and fix it on your own.");
+        response.addResponseLine("You're very proud of the hard work paying off without anyone's help even though it was frustrating.");
+        response.setStatChange(1, -2, 4, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #78
+
+        myEvent = new MyEvent("A distant relative dies and leaves you a spooky old house.");
+        myEvent.addLine("It unfortunately isn't in good enough shape to live in. What do you do with it?");
+
+        response = new Response("sell it");
+        response.setTrigger("1");
+        response.addResponseLine("You sell it and make a good chunk of money.");
+        response.addResponseLine("Sometimes you find yourself feeling uneasy about the decision, almost like someone is watching and judging....");
+        response.setStatChange(0, 0, 0, 1, 20); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("keep it");
+        response.setTrigger("2");
+        response.addResponseLine("You keep the house in your name even though you don't live there.");
+        response.addResponseLine("You feel good about having it in the family. Maybe you'll do something with it someday.");
+        response.setStatChange(1, 0, 2, -1, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #79
+
+        myEvent = new MyEvent("A taco place opens next to where you're living.");
+        myEvent.addLine("You try it out and it's great.");
+
+        response = new Response("eat there every night for a week");
+        response.setTrigger("1");
+        response.addResponseLine("The food is SO GOOD but you get a little tired of it and take a break.");
+        response.setStatChange(3, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("eat there once in a while");
+        response.setTrigger("2");
+        response.addResponseLine("You eat there on special occassions and it's always great.");
+        response.setStatChange(3, 1, 2, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #80
+
+        myEvent = new MyEvent("Coffee at work is now free!");
+        myEvent.addLine("Do you partake?");
+
+        response = new Response("start drinking coffee every morning");
+        response.setTrigger("1");
+        response.addResponseLine("You become addicted to coffee. Once in a while it gives you migraines.");
+        response.addResponseLine("However, you can now get more done each day.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            CoffeeAddiction();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("keep your usual routine");
+        response.setTrigger("2");
+        response.addResponseLine("You are sometimes envious of your coworker's coffee, but you don't need it.");
+        response.setStatChange(0, 0, 2, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #81
+
+        myEvent = new MyEvent("Your landlord calls to say she's coming over to look at something and needs to get into your apartment.");
+        myEvent.addLine("Your place is kinda messy and you feel stressed about her seeing it; how do you react?");
+
+        response = new Response("frantically clean");
+        response.setTrigger("1");
+        response.addResponseLine("You spend hours cleaning everything. She then calls to say nevermind, she can't make it.");
+        response.addResponseLine("You're frustrated, but at least you cleaned everything. It cost you a lot of time, though.");
+        response.setStatChange(-3, -3, 3, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("leave it messy");
+        response.setTrigger("2");
+        response.addResponseLine("She comes over briefly and shoots you a judgey look about the mess, but says nothing about it.");
+        response.setStatChange(0, -1, -3, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #82
+
+        myEvent = new MyEvent("The road you take to work is closed without any notice.");
+        myEvent.addLine("You're almost certainly going to be late.");
+
+        response = new Response("call and let the boss know");
+        response.setTrigger("1");
+        response.addResponseLine("Your boss sounds pissed, and you do indeed show up late. Shit.");
+        response.setStatChange(-2, -4, -2, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("speed the whole way on the alternate route");
+        response.setTrigger("2");
+        response.addResponseLine("You make it just in the nick of time. Awesome!");
+        response.setStatChange(0, 0, 2, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #83
+
+        myEvent = new MyEvent("Your boss quits and you get a new boss at work.");
+        myEvent.addLine("How do you approach them?");
+
+        response = new Response("find them immediately and try to make friends");
+        response.setTrigger("1");
+        response.addResponseLine("They don't seem to particularly care about talking to you, and brush you off. Oh well.");
+        response.setStatChange(-1, -3, 0, -1, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("do your job as always");
+        response.setTrigger("2");
+        response.addResponseLine("You notice the boss looking over your work, and they seem impressed. Excellent!");
+        response.setStatChange(1, 2, 4, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #84
+
+        myEvent = new MyEvent("You get assigned a project way outside your job description at work, and you're not sure you have time for it.");
+        myEvent.addLine("What do you do?");
+
+        response = new Response("do it anyway as best you can");
+        response.setTrigger("1");
+        response.addResponseLine("Work becomes much more stressful as you try to keep up with the workload.");
+        response.addResponseLine("Eventually you get it done, though, and you get a bonus when you finish. [$4]");
+        response.setStatChange(-4, -8, 2, 0, 4); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("tell your boss you can't do it");
+        response.setTrigger("2");
+        response.addResponseLine("To your dismay, your boss immediately fires you and says they'll find someone else who can do the work.");
+        response.addResponseLine("Nothing you say matters. You lose your job.");
+        response.setStatChange(-5, -5, -3, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            Fired();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("ask if someone else can help out");
+        response.setTrigger("2");
+        response.addResponseLine("You get told in no uncertain terms that if you don't do it you'll be fired.");
+        response.addResponseLine("It's hell to find time for it, but you eventually finish the project.");
+        response.setStatChange(-5, -9, 0, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #85
+
+        myEvent = new MyEvent("You get a call saying your girlfriend has been injured in a horrible accident.");
+        myEvent.addLine("You rush to the hospital immediately.");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("She'll be okay, but is badly injured. You stay by her side until she's better for days.");
+        response.addResponseLine("The hospital bill is expensive [-$4].");
+        response.setStatChange(-7, -5, 0, 3, -4); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+        // EVENT #86
+
+        myEvent = new MyEvent("A sinkhole opens up under your apartment. You have to move out in a hurry.");
+        myEvent.addLine("");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("You're homeless until you can find a new place.");
+        response.setStatChange(-3, -2, -2, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            Homeless();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #87
+
+        myEvent = new MyEvent("You get into an argument with your girlfriend. You know you're right, but she won't admit it.");
+        myEvent.addLine("How do you handle it?");
+
+        response = new Response("put your foot down. You won't apologize for something that's not your fault.");
+        response.setTrigger("1");
+        response.addResponseLine("It turns into a nasty fight that lasts all night. You eventually make up, but your relationship is damaged.");
+        response.setStatChange(-10, -5, 3, -3, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("give in. You still don't feel you were wrong, but it's not worth fighting more over.");
+        response.setTrigger("2");
+        response.addResponseLine("While you still feel very frustrated about the fight, you make up and spend the night cuddling after apologizing to each other.");
+        response.setStatChange(-2, -3, -5, 3, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            RelationshipHurt();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #88
+
+        myEvent = new MyEvent("You go to a work Christmas party with their coworkes and spouses.");
+        myEvent.addLine("What do you do?");
+
+        response = new Response("sit quietly and leave early");
+        response.setTrigger("1");
+        response.addResponseLine("You get some free food and booze and then take off.");
+        response.addResponseLine("Not the best night, but not the worst.");
+        response.addResponseLine("Your boss leaves you a voicemail later, but when you call him back he says nevermind.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("mingle and talk to people");
+        response.setTrigger("2");
+        response.addResponseLine("You're a little stressed out talking to so many people, but you have a decent time.");
+        response.addResponseLine("At the end of the night your boss gives you a Christmas bonus, though- nice! [$4]");
+        response.setStatChange(3, -1, 2, 4, 4); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #89
+
+        myEvent = new MyEvent("Your boss pulls you aside and thanks you for your hard work lately.");
+        myEvent.addLine("He hands you an envelope and walks away.");
+
+        response = new Response("open it");
+        response.setTrigger("1");
+        response.addResponseLine("Inside is a check- a bonus for your work- and a small note saying thanks again. Awesome! [$5]");
+        response.setStatChange(3, 3, 9, 1, 5); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("toss it in the trash");
+        response.setTrigger("2");
+        response.addResponseLine("It was probably just a card; at least your boss said some nice stuff, though.");
+        response.setStatChange(2, 2, 5, 0, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #90
+
+        myEvent = new MyEvent("You get pulled aside at work at the end of the day.");
+        myEvent.addLine("Your boss explains that due to budget reasons you're laid off effective immediately.");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("You're immediately stressed out and devastated... time to look for a new job.");
+        response.setStatChange(-5, -10, -3, -2, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            Fired();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #91
+
+        myEvent = new MyEvent("Lina's phone buzzes while she's in the bathroom and you idly look at the notification.");
+        myEvent.addLine("It's her ex-boyfriend texting her... about having fun meeting up last night, when she was supposed to be at work.");
+        myEvent.addLine("After confronting her about it, she confesses that she's been cheating on you.");
+
+        response = new Response("break up with her");
+        response.setTrigger("1");
+        response.addResponseLine("You break up, and while it's not a horrible breakup you feel absolutely worthless and used, like trash.");
+        response.addResponseLine("You reset your entire life. Everything feels bleaker and empty now.");
+        response.setStatChange(-15, -10, -20, -20, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            BreakUpEvent();
+            LoseLina();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("try to fix things");
+        response.setTrigger("2");
+        response.addResponseLine("You try to fix things with her, but she has no interest and you break up anyway.");
+        response.addResponseLine("You feel absolutely worthless and used, like trash.");
+        response.addResponseLine("You reset your entire life. Everything feels bleaker and empty now.");
+        response.setStatChange(-15, -10, -25, -25, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            BreakUpEvent();
+            LoseLina();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #92
+
+        myEvent = new MyEvent("You and Jenna decide to leave it all behind and move around the country together.");
+        myEvent.addLine("You pack everything into a vehicle and get ready to go.");
+
+        response = new Response("do it");
+        response.setTrigger("1");
+        response.addResponseLine("You get in the car, and only look back for a moment.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            GameWin();
+            JennaWin();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("back out");
+        response.setTrigger("2");
+        response.addResponseLine("Even though everything is packed, you can't handle the unknown in front of you.");
+        response.addResponseLine("Jenna, however, decides to go on without you. She leaves your life for good.");
+        response.setStatChange(-10, -5, -5, -15, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            BreakUpEvent();
+            LoseJenna();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #93
+
+        myEvent = new MyEvent("You come home one day and find Jenna lying on the floor unconscious.");
+        myEvent.addLine("You try to wake her up, but she won't wake. You call an ambulance.");
+        myEvent.addLine("They declare her dead on scene, and find an empty bottle of pills near her.");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("You knew she was depressed, but were never ready for this.");
+        response.addResponseLine("You'd been doing everything you could to help her, and she'd been seeing a counselor, but apparently it wasn't enough.");
+        response.setStatChange(-50, -30, -40, -40, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            BreakUpEvent();
+            LoseJenna();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #94
+
+        myEvent = new MyEvent("You and Alex come up with a great idea for a book and eventually get around to writing it.");
+        myEvent.addLine("Once you finish it, she suggests sending it into a publisher. Do you do it?");
+
+        response = new Response("yes, send it in!");
+        response.setTrigger("1");
+        response.addResponseLine("You get a letter back from the publishers saying they loved it!");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            AlexWin();
+            GameWin();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("no, it's probably not good enough!");
+        response.setTrigger("2");
+        response.addResponseLine("She calms down from the excitement a bit and agrees that you're right, it's probably not good enough. Still, you wrote something cool and feel good about it.");
+        response.setStatChange(4, 2, 5, 5, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            MainScreen();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #95
+
+        myEvent = new MyEvent("You and Pina start fighting almost daily. The fights are long and emotional and pointless.");
+        myEvent.addLine("Eventually it just becomes too much for both of you, and you have no choice but to split ways.");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("She leaves, and while it's very emotional you know deep down it's for the best.");
+        response.addResponseLine("Unfortunately, that doesn't really stop it from hurting.");
+        response.setStatChange(-10, -5, -5, -10, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            BreakUpEvent();
+            LosePina();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #96
+
+        myEvent = new MyEvent("One day Alex doesn't answer your calls or texts, so you swing by her place.");
+        myEvent.addLine("You knock, but there's no answer, and when you look in the window the entire apartment is empty.");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("You have no idea where she went, but she disappears from your life entirely. You never hear from her again.");
+        response.addResponseLine("You are, of course, devastated.");
+        response.setStatChange(-20, -15, -20, -20, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            BreakUpEvent();
+            LoseAlex();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #97
+
+        myEvent = new MyEvent("Pina sits you down over dinner and tells you she's leaving to travel the world.");
+        myEvent.addLine("She invites you to come with her. How do you respond?");
+
+        response = new Response("do it");
+        response.setTrigger("1");
+        response.addResponseLine("You pack light and get on a plane with her bound for Thailand.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            GameWin();
+            PinaWin();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        response = new Response("stay behind");
+        response.setTrigger("2");
+        response.addResponseLine("You chose to stay behind, and soon she leaves. You try to keep up with each other long distance, but it's hard.");
+        response.addResponseLine("Before long you just drift apart. She is busy and meets new people on her travels, and you have to move on.");
+        response.setStatChange(-10, -10, -20, -20, 0); // Happiness, stress, pride, loneliness, money
+        response.setNextEvent(() =>
+        {
+            BreakUpEvent();
+            LosePina();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #98
+
+        myEvent = new MyEvent("You always knew Sammy did drugs, but her addiction becomes so bad that she can no longer work or sustain her life.");
+        myEvent.addLine("You try to help her as much as you can, but she pushes you away and eventually you just stop trying to help.");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("You still see her around town sometimes- you suspect she's homeless and she looks sick, but she never talks to you.");
+        response.setStatChange(-10, -15, -7, -10, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            BreakUpEvent();
+            LoseSammy();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #99
+
+        myEvent = new MyEvent("You surprise Krissi one night by asking her to marry you. You'd talked about it before, but you wanted to make sure it was a surprise.");
+        myEvent.addLine("She looks elated and says yes immediately.");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("You get married soon at a cool burnt out old church you once visited.");
+        response.addResponseLine("Friends and family show up from all over, and it's a wonderful event.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            GameWin();
+            KrissiWin();
+            return -1;
+        });
+        myEvent.addResponse(response);
+
+
+        events.Add(myEvent);
+
+
+        // EVENT #100
+
+        myEvent = new MyEvent("You graduate from university today!");
+        myEvent.addLine("");
+
+        response = new Response("continue");
+        response.setTrigger("1");
+        response.addResponseLine("You're filled with pride at your achievement, as are your family and friends.");
+        response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money                              
+        response.setNextEvent(() =>
+        {
+            GameWin();
+            SchoolWin();
             return -1;
         });
         myEvent.addResponse(response);
@@ -6523,6 +7499,118 @@ public class Gameplay : MonoBehaviour {
     }
 
     //EVENT OUTCOMES
+
+
+
+    void SchoolWin()
+    {
+        winText = "After graduating, you realize you can do almost anything with your life. \n You don't know what your future will hold, but you realize you're not beholden to anyone for it. \n You stop trying to find someone so hard and just focus on making yourself happy. \n While the future is unknown, you are filled with hope and determination for it.";
+    }
+
+    void JennaWin()
+    {
+        winText = "While life on the road is challenging, you and Jenna manage to make it work. \n You spend the rest of your life shouldering most of the responsibilities for the two of you, but at least you have a good companion on the road. \n You find yourself wondering sometimes what else life could have been, but your busy life keeps you from wondering too much. \n Mostly, you're just happy you have someone by your side.";
+    }
+
+    void KrissiWin()
+    {
+        winText = "While you don't do anything extraordinary or especially meaningful with your lives, you remain happy together. \n Every day is an adventure with each other. \n You chose not to have children, but are great for your nieces and nephews. \n Every challenge you tackle, you tackle together, and while life isn't easy it is always worth it to be with each other, right until the end.";
+    }
+
+    void AlexWin()
+    {
+        winText = "With the money from your book being published, you manage to make ends meet and make a life together with Alex. \n While you remain very enamoured with her, you always feel a little more like business partners than a real relationship. \n Still, you make good money and always have a good time with her, and manage to live out your life in relative comfort and happiness.";
+    }
+
+    void PinaWin()
+    {
+        winText = "The two of you start in Thailand visiting her family, but eventually travel all over the world. \n You find yourself as in love with travel as Pina is with you. \n The two of you travel for many years before settling down in a foreign country. \n You do well for yourselves and provide a foster home for traveling young people. \n You don't know if you're happy, but you are satisfied with your life and what you did with it.";
+    }
+
+    void LoseJenna()
+    {
+        knownWomen.Remove("Jenna");
+    }
+
+    void LoseLina()
+    {
+        knownWomen.Remove("Lina");
+    }
+
+    void LoseAlex()
+    {
+        knownWomen.Remove("Alex");
+    }
+
+    void LosePina()
+    {
+        knownWomen.Remove("Pina");
+    }
+
+    void LoseSammy()
+    {
+        knownWomen.Remove("Sammy");
+    }
+
+    void BreakUpEvent()
+    {
+        girlfriend = false;
+        girlfriendName = "none";
+        MainScreen();
+    }
+
+    void RelationshipHurt()
+    {
+        if (girlfriendName == "Lina")
+        {
+            linaAttitude -= 10;
+        }
+        if (girlfriendName == "Jenna")
+        {
+            jennaAttitude -= 10;
+        }
+        if (girlfriendName == "Alex")
+        {
+            alexAttitude -= 10;
+        }
+        if (girlfriendName == "Pina")
+        {
+            pinaAttitude -= 10;
+        }
+        if (girlfriendName == "Sammy")
+        {
+            sammyAttitude -= 10;
+        }
+        if (girlfriendName == "Krissi")
+        {
+            krissiAttitude -= 10;
+        }
+        MainScreen();
+    }
+
+    void Homeless()
+    {
+        currentHouse = House.None;
+        MainScreen();
+    }
+
+    void Fired()
+    {
+        currentJob = Job.None;
+        MainScreen();
+    }
+
+    void NoAddiction()
+    {
+        coffeeAddict = false;
+        MainScreen();
+    }
+
+    void CoffeeAddiction()
+    {
+        coffeeAddict = true;
+        MainScreen();
+    }
 
     void Lucky()
     {
@@ -6663,6 +7751,30 @@ public class Gameplay : MonoBehaviour {
         Terminal.WriteLine("Type 'exit' to exit game");
         currentScreen = Screen.Gameover;
     }
+
+    void GameWin()
+    {
+        currentScreen = Screen.Gameover;
+        RefreshScreen();
+        Terminal.WriteLine("You have finished the game!");
+        AddSpace();
+        Terminal.WriteLine(winText);
+        AddSpace();
+        Terminal.WriteLine("Type 'credits' to view the game credits and end the game.");
+    }
+
+    void Credits()
+    {
+        Terminal.ClearScreen();
+        while (creditsTimer < 30)
+        {
+            InvokeRepeating("AddSpace", 1f, 2f);
+            creditsTimer++;
+        }
+        Terminal.WriteLine("Thanks for playing ARE YOU ALONE? !"); //FIXME ADD THIS STUFF TO A TIMER AND ADD THE REST
+        Terminal.WriteLine("I hope you enjoyed the game!");
+    }
+
 
 
 
