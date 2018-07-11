@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Gameplay : MonoBehaviour {
 
@@ -183,10 +184,8 @@ public class Gameplay : MonoBehaviour {
         InitializeEvents();
     }
 
-    // TODO IMPLEMENT RANDOM DAILY EVENTS
-    // TODO UNCOMMENT EVENT RANDOMIZATION AT FIXME IN CODE
-    // TODO CREDITS
-    // TODO CHECK ALL GAMEOVERS
+
+
 
 
 
@@ -196,15 +195,23 @@ public class Gameplay : MonoBehaviour {
         {
             knownWomen.Add("Tooks");
         }
-        if (input == "exit") // Exit the game
+        else if (input == "CHEATWIN")
+        {
+            GameWin();
+        }
+        else if (input == "exit") // Exit the game
         {
             Application.Quit();
         }
-        if (input == "hiddenstats") // Dev command to see all stats
+        else if (input == "restart")
+        {
+            SceneManager.LoadScene("Are You Alone");
+        }
+        else if (input == "hiddenstats") // Dev command to see all stats
         {
             Terminal.WriteLine("stress" + stress + " happiness" + happiness + " pride" + pride);
         }
-        if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Flirt || currentScreen == Screen.Date))
+        else if (input == "home" && (currentScreen == Screen.Gameplay || currentScreen == Screen.Flirt || currentScreen == Screen.Date))
         {
             RefreshScreen();
             MainScreen();
@@ -3595,10 +3602,10 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("Your friend doesn't want to talk to you today.");
             friendAttitude++;
         }
-        else if (friendAttitude + dailyRand > 190)
+        /*else if (friendAttitude + dailyRand > 190)     IMPLEMENT ME IN THE SEQUEL
         {
             FriendWin();
-        }
+        }*/
         else if (friendAttitude + dailyRand > 150)
         {
             Terminal.WriteLine("You have a lot of fun with your friend! You feel good.");
@@ -3977,7 +3984,7 @@ public class Gameplay : MonoBehaviour {
 
     void RNGChecker()
     {
-        //FIXME eventRand = UnityEngine.Random.Range(0, 45);
+        eventRand = UnityEngine.Random.Range(0, 100);
         if (eventRand == 11 && school == false) //check conditional events, if false reroll for an applicable event 
         {
             RNGChecker(); // reroll
@@ -7765,17 +7772,47 @@ public class Gameplay : MonoBehaviour {
 
     void Credits()
     {
+        print("About to clear screen");
         Terminal.ClearScreen();
-        while (creditsTimer < 30)
-        {
-            InvokeRepeating("AddSpace", 1f, 2f);
-            creditsTimer++;
-        }
-        Terminal.WriteLine("Thanks for playing ARE YOU ALONE? !"); //FIXME ADD THIS STUFF TO A TIMER AND ADD THE REST
+        print("About to add text");
+        Terminal.WriteLine("Thanks for playing ARE YOU ALONE? !"); 
         Terminal.WriteLine("I hope you enjoyed the game!");
+        print("About to hit the while function");
+        InvokeRepeating("AddSpace", 2f, 2f);
+        InvokeRepeating("CreditTimer", 2f, 2f);
+        print("About to print the credits");
     }
-
-
+    
+    void CreditTimer()
+    {
+        print("This is inside the Credits++ function");
+        creditsTimer++;
+        print(creditsTimer + "current credits time");
+        if (creditsTimer == 2)
+        {
+            Terminal.WriteLine("This game is dedicated to my girlfriend, Krissi. She's the good ending to \n my life, and her pushing me is what got this game finished.");
+        }
+        if (creditsTimer == 3)
+        {
+            Terminal.WriteLine("I also have to mention my friends over at The Pub, specifically Chibi, Ko, \n Tooks, and Kirrus. You guys are my best friends and I love you all.");
+        }
+        if (creditsTimer == 4)
+        {
+            Terminal.WriteLine("I also owe a big thank you to The Indie Stone, for helping me out and giving \n me the courage to do this on my own.");
+        }
+        if (creditsTimer == 5)
+        {
+            Terminal.WriteLine("Finally, a thank you to my parents for everything they've done for me.");
+        }
+        if (creditsTimer == 6)
+        {
+            Terminal.WriteLine("Well, thanks again for playing and I hope you aren't alone. \n If you think you are, remember- there's people out there who love you.");
+        }
+        if (creditsTimer > 10)
+        {
+            Terminal.WriteLine("                   You can type 'restart' or 'exit' now.");
+        }
+    }
 
 
 
