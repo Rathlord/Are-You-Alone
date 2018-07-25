@@ -4,13 +4,17 @@ using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
+
+[System.Serializable]
 public class Gameplay : MonoBehaviour {
 
     // Many  game variables will be stored here
 
     [SerializeField] int spoons = 3;
-    enum Screen { Introduction, Event, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, Flirtkrissi, Date, AskOut, JobQuery, RandomEvents };
+    enum Screen { Introduction, Event, Gameplay, Night, NightStats, Moving, Gameover, RelationshipsScreen, Flirt, FlirtLina, FlirtJenna, FlirtAlex, FlirtPina, FlirtSammy, Flirtkrissi, Date, AskOut, JobQuery, RandomEvents, Exit };
     Screen currentScreen;
     [SerializeField] int turn = 0;
     [SerializeField] int money = 25;
@@ -24,7 +28,6 @@ public class Gameplay : MonoBehaviour {
     int extraExpenses;
     int earnings = 0;
     int giftVar = 0;
-    int askOutVar = 0;
     int introState = 0; //determine which intro screen is being shown
     int availableActions = 0; //gameover if available actions hits zero in actions screen
     bool spoonsDown = false;
@@ -33,6 +36,8 @@ public class Gameplay : MonoBehaviour {
     int moneyDownTimer = 0;
     string winText;
     int creditsTimer = 0;
+    bool saveGame = false;
+    bool inLove = false;
 
     // Special value, daily random number, impacts many things
 
@@ -59,7 +64,6 @@ public class Gameplay : MonoBehaviour {
     bool flirtSammy = false;
     bool flirtKrissi = false;
     bool flirtTooks = false;
-    bool inLove = false;
 
 
 
@@ -184,7 +188,41 @@ public class Gameplay : MonoBehaviour {
         InitializeEvents();
     }
 
+    void SaveAndExit(string input)  // will need to copy paste every single variable to a new class, replace Gameplay() below with that class, and use data.thingy = thingy's all around to set them on save and then return them on load
+    {
+        if (input == "yes" || input == "Yes")
+        {
+            print("input was detected as a yes");
+            Application.Quit();
+        }
+        else
+        {
+            print("input deteced as not-yes");
+            Terminal.WriteLine("Returning to main screen");
+            Invoke("MainScreen", 3f);
+            currentScreen = Screen.Gameplay;
+        }
+        // BinaryFormatter bf = new BinaryFormatter();
+        // FileStream file = File.Create(Application.persistentDataPath + "/saveGame.aya");
+        // Gameplay data = new Gameplay();
+        // bf.Serialize(file, data);
+        // file.Close();
+    }
 
+
+
+    /*
+     * void Load()
+    {
+        if(File.Exists(Application.persistentDataPath + "/saveGame.aya"))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/saveGame.aya", FileMode.Open);
+            Gameplay data = (Gameplay)bf.Deserialize(file);
+            file.Close();
+        }
+    } 
+    */
 
 
 
@@ -195,13 +233,26 @@ public class Gameplay : MonoBehaviour {
         {
             knownWomen.Add("Tooks");
         }
+        else if (currentScreen == Screen.Exit)
+        {
+            print("I should be passing this to SaveAndExit");
+            SaveAndExit(input);
+        }
         else if (input == "CHEATWIN")
         {
             GameWin();
         }
         else if (input == "exit") // Exit the game
         {
-            Application.Quit();
+            print("I just passed exit into SaveAndExit");
+            print("Beginning to run the exit function");
+            currentScreen = Screen.Exit;
+            print("Screen should be set to exit");
+            RefreshScreen();
+            print("Refreshing screen and writing lines right after");
+            Terminal.WriteLine("Are you sure you want to exit?");
+            Terminal.WriteLine("(Answer yes or no)");
+            AddSpace();
         }
         else if (input == "restart")
         {
@@ -380,33 +431,45 @@ public class Gameplay : MonoBehaviour {
         {
             RefreshScreen();
             AddSpace();
-            Terminal.WriteLine("Play the game by entering commands on the keyboard.");
+            Terminal.WriteLine("Play the game by entering actions on the keyboard.");
             Terminal.WriteLine("You can type 'home' from almost any screen to return to the main screen.");
             AddSpace();
-            Terminal.WriteLine("You can usually perform three actions per day. These are called spoons.");
-            Terminal.WriteLine("Spoons are tracked at the top right of your screen.");
-            Terminal.WriteLine("Some actions can only be performed once per day.");
+            Terminal.WriteLine("You can use the 'restart' command at any time to start over.");
+            Terminal.WriteLine("You may also use the 'exit' command to close the game.");
             AddSpace();
             Terminal.WriteLine("You can learn about most actions by typing them with an exclamation mark.");
             Terminal.WriteLine("For instance, type '!home' at the main menu to learn about the home command.");
+            Terminal.WriteLine("Some actions can only be performed once per day.");
             AddSpace();
             Terminal.WriteLine("Type 'next' for the next page.");
             AddSpace();
         }
         else if (introState == 2)
         {
-            currentScreen = Screen.Gameplay;
             RefreshScreen();
-            Terminal.WriteLine("You can 'Win' the game by becoming happy or giving yourself a good future.");
-            Terminal.WriteLine("You will lose the game if you become too sad or otherwise can't continue.");
-            Terminal.WriteLine("If your stress, pride, or happiness get too low you won't be able to do certain things.");
+            Terminal.WriteLine("You can usually perform three actions per day. These are called spoons.");
             AddSpace();
-            Terminal.WriteLine("Increase your happiness by doing things you enjoy.");
-            Terminal.WriteLine("Decrease your stress by relaxing and doing things that aren't strenuous.");
-            Terminal.WriteLine("Increase your pride by doing things you'd be proud of yourself for.");
+            Terminal.WriteLine("Manage your happiness, stress, pride, loneliness, and money with your actions.");
+            Terminal.WriteLine("These levels are monitored at the top of your screen at all times.");
+            Terminal.WriteLine("If your stress, pride, or happiness get too low you won't be able to do certain things.");
             AddSpace();
             Terminal.WriteLine("You also need to manage your loneliness and relationships.");
             Terminal.WriteLine("Make sure not to neglect people in your life or there may be consequences.");
+            AddSpace();
+            Terminal.WriteLine("You'll also have to be a good steward of your money, or you may find \n yourself running out!");
+            AddSpace();
+            Terminal.WriteLine("Type 'next' for the next page.");
+            AddSpace();
+        }
+        else if (introState == 3)
+        {
+            currentScreen = Screen.Gameplay;
+            RefreshScreen();
+            Terminal.WriteLine("You can 'Win' the game by becoming happy and giving yourself a good future.");
+            Terminal.WriteLine("You will lose the game if you become too sad or otherwise can't continue.");
+            AddSpace();
+            Terminal.WriteLine("Each day will bring new events.");
+            Terminal.WriteLine("Make sure to navigate them with care as they may have lasting ramifications!");
             AddSpace();
             Terminal.WriteLine("Enter 'home' to begin the game.");
         }
@@ -2449,6 +2512,7 @@ public class Gameplay : MonoBehaviour {
 
     public string DateRandom()
     {
+        dateToday = true;
         RefreshScreen();
         string randomDate;
         if (dailyRand > 75)
@@ -4008,9 +4072,19 @@ public class Gameplay : MonoBehaviour {
     {
         if (Input.GetKey(KeyCode.Escape)) // Exit game on Escape
         {
-            Application.Quit();
+            currentScreen = Screen.Exit;
+            print("I just passed exit into SaveAndExit");
+            print("Beginning to run the exit function");
+            currentScreen = Screen.Exit;
+            print("Screen should be set to exit");
+            RefreshScreen();
+            print("Refreshing screen and writing lines right after");
+            Terminal.WriteLine("Are you sure you want to exit?");
+            Terminal.WriteLine("(Answer yes or no)");
+            AddSpace();
+            print("Escape key function input");
         }
-	}
+    }
 
     void RNGChecker()
     {
@@ -7825,23 +7899,32 @@ public class Gameplay : MonoBehaviour {
         }
         if (creditsTimer == 3)
         {
-            Terminal.WriteLine("I also have to mention my friends over at The Pub, specifically Chibi, Ko, \n Tooks, and Kirrus. You guys are my best friends and I love you all.");
+            Terminal.WriteLine("The music in the game is 'Beyond' by Pablo Perez. It's a no-rights song, \n and it's fantastic!");
         }
         if (creditsTimer == 4)
         {
-            Terminal.WriteLine("I also owe a big thank you to The Indie Stone, for helping me out and giving \n me the courage to do this on my own.");
+            Terminal.WriteLine("A huge shoutout to the Gamedev.TV Unity game development course on Udemy for \n giving me the skills to do this!");
         }
         if (creditsTimer == 5)
         {
-            Terminal.WriteLine("Finally, a thank you to my parents for everything they've done for me.");
+            Terminal.WriteLine("I also have to mention my friends over at The Pub, specifically Chibi, Ko, \n Tooks, and Kirrus. You guys are my best friends and I love you all.");
         }
         if (creditsTimer == 6)
+        {
+            Terminal.WriteLine("I also owe a big thank you to The Indie Stone, for helping me out and giving \n me the courage to do this on my own.");
+        }
+        if (creditsTimer == 7)
+        {
+            Terminal.WriteLine("Finally, a thank you to my parents for everything they've done for me.");
+        }
+        if (creditsTimer == 8)
         {
             Terminal.WriteLine("Well, thanks again for playing and I hope you aren't alone. \n If you think you are, remember- there's people out there who love you.");
         }
         if (creditsTimer > 10)
         {
             Terminal.WriteLine("                   You can type 'restart' or 'exit' now.");
+            CancelInvoke();
         }
     }
 
