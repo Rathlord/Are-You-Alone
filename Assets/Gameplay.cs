@@ -180,7 +180,7 @@ public class Gameplay : MonoBehaviour {
         unknownWomen.Add("Alex");
         unknownWomen.Add("Pina");
         unknownWomen.Add("Sammy");
-        unknownWomen.Add("krissi");
+        unknownWomen.Add("Krissi");
         InitializeEvents();
     }
 
@@ -475,7 +475,7 @@ public class Gameplay : MonoBehaviour {
         if (coffeeAddict == true)
         {
             spoons++;
-            happiness -= 2;
+            happiness -= 3;
         }
         SpoonsDownCheck();
         MoneyDownCheck();
@@ -608,16 +608,16 @@ public class Gameplay : MonoBehaviour {
         AddSpace();
         if (coffeeAddict == true)
         {
-            Terminal.WriteLine("You are addicted to coffee. You can do more, but get headaches sometimes that make you less happy.");
+            Terminal.WriteLine("You are addicted to coffee. You can do more, but get headaches sometimes that \n make you less happy.");
         }
         AddSpace();
         int picker = UnityEngine.Random.Range(0, 5);
-        string[] happinessGreat = { "You feel strangely hopeful.", "You fall asleep with a big grin.", "You're in a good mood despite everything.", "You fall asleep listening to music you love, dancing to the beat.", "You feel like everything will be okay" };
+        string[] happinessGreat = { "You feel strangely hopeful.", "You fall asleep with a big grin.", "You're in a good mood despite everything.", "You fall asleep listening to music you love, dancing to the beat.", "You feel like everything will be okay." };
         string[] happinessGood = { "You feel content.", "You let yourself think about good things in the future.", "You fall asleep with a slight smile.", "You're feeling good.", "You're thankful for your current situation." };
         string[] happinessBad = { "You're in a bad mood.", "You think about things ending.", "You're upset, even though you don't know exactly why.", "You don't feel hopeful about your future.", "You go to sleep feeling upset." };
         string[] happinessTerrible = { "Life doesn't feel worth living.", "You find yourself wanting to be in pain, but not knowing why.", "You're ready to give up.", "You wonder what the world would be like without you.", "You regret your choices in life." };
         string[] stressGreat = { "You feel like you can do anything!", "You're ready to tackle life.", "You feel incredibly focused.", "For once, you have no worries.", "You feel like you could learn anything." };
-        string[] stressGood = { "You feel at ease.", "You feel relaxed.", "You feel like going out and doing something.", "You're not worried about life", "Things aren't perfect, but you don't spend your time worrying about it." };
+        string[] stressGood = { "You feel at ease.", "You feel relaxed.", "You feel like going out and doing something.", "You're not worried about life.", "Things aren't perfect, but you don't spend your time worrying about it." };
         string[] stressBad = { "Stress feels like a weight on your shoulders.", "You're having trouble concentrating on anything.", "You're under a lot of pressure", "You don't feel like doing anything.", "Your worries are making you anxious." };
         string[] stressTerrible = { "You're done with life's shit.", "Why bother with anything?", "You can barely force yourself out of bed.", "You're buckling under the pressure.", "Any task, no matter how small, feels overwhelming." };
         string[] prideGreat = { "You're proud of yourself.", "You think you have a lot to offer the world.", "You know you're the best.", "You feel self sufficient.", "You don't care what others think of you." };
@@ -647,7 +647,7 @@ public class Gameplay : MonoBehaviour {
     {
         if (happiness > 100)
         {
-            happiness = (happiness - 25);
+            happiness = (happiness - 35);
             determination++;
             pride = (pride + 10);
             stress = (stress + 10);
@@ -672,7 +672,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (pride >= 100) // Grant determination
         {
-            pride = (pride - 25);
+            pride = (pride - 35);
             determination++;
             AddSpace();
             Terminal.WriteLine("You are extremely proud of what you've done with your life.");
@@ -695,7 +695,7 @@ public class Gameplay : MonoBehaviour {
         }
         if (stress > 100)
         {
-            stress = (stress - 25);
+            stress = (stress - 35);
             Terminal.WriteLine("You feel so carefree that your whole life just seems better.");
             happiness = (happiness + 20);
             pride = (pride + 10);
@@ -1158,10 +1158,10 @@ public class Gameplay : MonoBehaviour {
 
     void LeaveLife()
     {
-        if (knownWomen.Contains("krissi") == true && krissiAttitude < -100)
+        if (knownWomen.Contains("Krissi") == true && krissiAttitude < -100)
         {
-            knownWomen.Remove("krissi");
-            Terminal.WriteLine("krissi moves on. She is no longer in your life.");
+            knownWomen.Remove("Krissi");
+            Terminal.WriteLine("Krissi moves on. She is no longer in your life.");
         }
         if (knownWomen.Contains("Sammy") == true && sammyAttitude < -100)
         {
@@ -1220,7 +1220,7 @@ public class Gameplay : MonoBehaviour {
             {
                 Terminal.WriteLine(SammyStatus());
             }
-            if (girlfriendName == "krissi")
+            if (girlfriendName == "Krissi")
             {
                 Terminal.WriteLine(krissiStatus());
             }
@@ -1623,7 +1623,7 @@ public class Gameplay : MonoBehaviour {
             Terminal.WriteLine("You didn't spend time with Pina today. She misses you.");
             pinaAttitude = (pinaAttitude - 2);
         }
-        if (knownWomen.Contains("krissi") == true && flirtKrissi == false)
+        if (knownWomen.Contains("Krissi") == true && flirtKrissi == false)
         {
             Terminal.WriteLine("You didn't spend time with Krissi today. She misses you.");
             krissiAttitude = (krissiAttitude - 1);
@@ -1873,7 +1873,6 @@ public class Gameplay : MonoBehaviour {
         if (input == "flirt" && knownWomen.Count > 0 && flirted == false && happiness > -50)
         {
             Flirt();
-            spoons--;
         }
         if (input == "date" && ((girlfriend == true || knownWomen.Count > 0) && money > 0) && happiness > -50)
         {
@@ -1936,66 +1935,87 @@ public class Gameplay : MonoBehaviour {
     {
         if (input == "!Tooks" && knownWomen.Contains("Tooks"))
         {
+            RefreshScreen();
             Terminal.WriteLine("Tooks is a literal bear. Like a real bear.");
             Terminal.WriteLine("He is friendly, cuddly, and quite shy.");
             Terminal.WriteLine("He has bear fur and a bear body.");
             Terminal.WriteLine("He is quite chubby, as he is a bear.");
             Terminal.WriteLine("He is good at eating, sleeping, and playing.");
             Terminal.WriteLine("He enjoys being a bear.");
+            AddSpace();
+            Terminal.WriteLine("Enter 'home' to continue.");
         }
         if (input == "!Lina" && knownWomen.Contains("Lina"))
             {
+            RefreshScreen();
             Terminal.WriteLine("Lina is friendly, sweet, and talented.");
             Terminal.WriteLine("She is playful and quite nerdy.");
             Terminal.WriteLine("She has long light brown hair and a friendly smile.");
             Terminal.WriteLine("She's a little chubby and she's very short.");
             Terminal.WriteLine("She loves playing music, and is amazing at guitar and flute especially.");
             Terminal.WriteLine("She likes playing video games and going out.");
+            AddSpace();
+            Terminal.WriteLine("Enter 'home' to continue.");
         }
         if (input == "!Jenna" && knownWomen.Contains("Jenna"))
         {
+            RefreshScreen();
             Terminal.WriteLine("Jenna is bubbly, excitable, and gorgeous.");
             Terminal.WriteLine("She likes to have fun and is pretty cool.");
             Terminal.WriteLine("She has very long red hair and pale skin.");
             Terminal.WriteLine("She's skinny but curvy and very short.");
             Terminal.WriteLine("She's good at having fun and cuddling.");
             Terminal.WriteLine("She likes hanging out and doing whatever she can to relax.");
+            AddSpace();
+            Terminal.WriteLine("Enter 'home' to continue.");
         }
         if (input == "!Alex" && knownWomen.Contains("Alex"))
         {
+            RefreshScreen();
             Terminal.WriteLine("Alex is intelligent, pretty, and funny.");
             Terminal.WriteLine("She's gregarious and a huge nerd.");
             Terminal.WriteLine("She has long, dark brown hair and is kind of short.");
             Terminal.WriteLine("She's very skinny and beautiful.");
-            Terminal.WriteLine("She's good at writing and telling jokes");
+            Terminal.WriteLine("She's good at writing and telling jokes.");
             Terminal.WriteLine("She enjoys going out, writing, and being around lots of people.");
+            AddSpace();
+            Terminal.WriteLine("Enter 'home' to continue.");
         }
         if (input == "!Pina" && knownWomen.Contains("Pina"))
         {
+            RefreshScreen();
             Terminal.WriteLine("Pina is brilliant, adorable, and friendly.");
             Terminal.WriteLine("She is sometimes reserved, but very cool");
             Terminal.WriteLine("She has short very dark hair and is very short.");
-            Terminal.WriteLine("She is curvy and very pretty with an enchanting voice");
-            Terminal.WriteLine("She knows many languages and has traveled the world");
+            Terminal.WriteLine("She is curvy and very pretty with an enchanting voice.");
+            Terminal.WriteLine("She knows many languages and has traveled the world.");
             Terminal.WriteLine("She enjoys great food, deep conversations, and cuddling.");
+            AddSpace();
+            Terminal.WriteLine("Enter 'home' to continue.");
         }
         if (input == "!Sammy" && knownWomen.Contains("Sammy"))
         {
+            RefreshScreen();
             Terminal.WriteLine("Sammy is relaxed, smart, and wild.");
             Terminal.WriteLine("She is quiet and super cool.");
             Terminal.WriteLine("She has long black hair and is rather tall.");
             Terminal.WriteLine("She is skinny, pale, and has many tattoos.");
             Terminal.WriteLine("She's good at banter and dancing.");
             Terminal.WriteLine("She loves music and meeting guys.");
+            AddSpace();
+            Terminal.WriteLine("Enter 'home' to continue.");
         }
-        if (input == "!Krissi" && knownWomen.Contains("krissi"))
+        if (input == "!Krissi" && knownWomen.Contains("Krissi"))
         {
+            RefreshScreen();
             Terminal.WriteLine("Krissi is smart, bold, and honest.");
             Terminal.WriteLine("She is outgoing and very nerdy.");
             Terminal.WriteLine("She has thick brown hair and is super short.");
             Terminal.WriteLine("She is attractive and decisive.");
             Terminal.WriteLine("She's good at cooking, writing code, and singing.");
             Terminal.WriteLine("She likes gaming, music, and watching TV.");
+            AddSpace();
+            Terminal.WriteLine("Enter 'home' to continue.");
         }
     }
 
@@ -2390,7 +2410,7 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Sammy");
         }
-        if (knownWomen.Contains("krissi") == true)
+        if (knownWomen.Contains("Krissi") == true)
         {
             Terminal.WriteLine("krissi");
         }
@@ -2422,6 +2442,7 @@ public class Gameplay : MonoBehaviour {
             {
             dateDecline = "She says no way!";
             }
+        AddSpace();
         Terminal.WriteLine("Enter 'home' to return.");
         return dateDecline;
     }
@@ -2440,12 +2461,13 @@ public class Gameplay : MonoBehaviour {
         }
         else if (dailyRand > 25)
         {
-            randomDate = "You walk around downtown looking in shops and talking all afternoon. You have a good time!";
+            randomDate = "You walk around downtown looking in shops and talking all afternoon. \n You have a good time!";
         }
         else
         {
             randomDate = "You stay home watching TV and cuddling all night. It's so much fun!";
         }
+        AddSpace();
         Terminal.WriteLine("Enter 'home' to return.");
         return randomDate;
     }
@@ -2637,7 +2659,7 @@ public class Gameplay : MonoBehaviour {
                 pride = (pride - 2);
             }
         }
-        if (knownWomen.Contains("krissi") == true && input == "krissi")
+        if (knownWomen.Contains("Krissi") == true && input == "Krissi")
         {
             RefreshScreen();
             dateAttitude = krissiAttitude;
@@ -2696,9 +2718,9 @@ public class Gameplay : MonoBehaviour {
         {
             Terminal.WriteLine("Sammy");
         }
-        if (knownWomen.Contains("krissi") == true && flirtKrissi == false)
+        if (knownWomen.Contains("Krissi") == true && flirtKrissi == false)
         {
-            Terminal.WriteLine("krissi");
+            Terminal.WriteLine("Krissi");
         }
         if (knownWomen.Contains("Tooks") == true && flirtTooks == false)
         {
@@ -2722,6 +2744,7 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness + 4);
             flirtTooks = true;
             flirted = true;
+            spoons--;
         }
         if (knownWomen.Contains("Lina") == true && input == "Lina")
         {
@@ -2735,6 +2758,7 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness + 4);
             flirtLina = true;
             flirted = true;
+            spoons--;
         }
         if (knownWomen.Contains("Jenna") == true && input == "Jenna")
         {
@@ -2747,6 +2771,7 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness + 6);
             flirtJenna = true;
             flirted = true;
+            spoons--;
         }
         if (knownWomen.Contains("Alex") == true && input == "Alex")
         {
@@ -2760,6 +2785,7 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness + 6);
             flirtAlex = true;
             flirted = true;
+            spoons--;
         }
         if (knownWomen.Contains("Pina") == true && input == "Pina")
         {
@@ -2773,6 +2799,7 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness + 6);
             flirtPina = true;
             flirted = true;
+            spoons--;
         }
         if (knownWomen.Contains("Sammy") == true && input == "Sammy")
         {
@@ -2786,11 +2813,12 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness + 2);
             flirtSammy = true;
             flirted = true;
+            spoons--;
         }
-        if (knownWomen.Contains("krissi") == true && input == "krissi")
+        if (knownWomen.Contains("Krissi") == true && input == "Krissi")
         {
             RefreshScreen();
-            Terminal.WriteLine("How would you like to flirt with krissi?");
+            Terminal.WriteLine("How would you like to flirt with Krissi?");
             Terminal.WriteLine("You can:    gift   joke     sweet    relationship");
             krissiFlirt(input);
             happiness = (happiness + 5);
@@ -2799,6 +2827,7 @@ public class Gameplay : MonoBehaviour {
             loneliness = (loneliness + 8);
             flirtKrissi = true;
             flirted = true;
+            spoons--;
         }
     }
 
@@ -2968,7 +2997,7 @@ public class Gameplay : MonoBehaviour {
             {
                 Terminal.WriteLine("She says she would love to be your girlfriend and wraps you in a huge hug.");
                 girlfriend = true;
-                girlfriendName = "krissi";
+                girlfriendName = "Krissi";
                 Invoke("MainScreen", 5f);
                 krissiAttitude = (krissiAttitude + 10);
             }
@@ -3276,6 +3305,7 @@ public class Gameplay : MonoBehaviour {
             knownWomen.Add((string)unknownWomen[womenRand]);
             unknownWomen.Remove((string)unknownWomen[womenRand]);
             currentScreen = Screen.Gameplay;
+            Terminal.WriteLine("Enter 'home' to continue.");
         }
         else
             return;
@@ -3295,22 +3325,22 @@ public class Gameplay : MonoBehaviour {
         }
         if (tempName == "Alex")
         {
-            Terminal.WriteLine("While you have a bit of downtime you peruse a dating app and trade numbers with a girl named Alex!");
+            Terminal.WriteLine("You meet and trade numbers with a girl named Alex!");
             Terminal.WriteLine("She seems really interesting!");
         }
         if (tempName == "Pina")
         {
-            Terminal.WriteLine("You meet a girl named Pina completely by chance. She's really sweet and gives you her number.");
+            Terminal.WriteLine("You meet a girl named Pina completely by chance. She's really sweet and gives \n you her number.");
             Terminal.WriteLine("She seems fascinating!");
         }
         if (tempName == "Sammy")
         {
-            Terminal.WriteLine("You get a phone call, but it's a wrong number. A girl named Sammy on the other end talks to you for a while.");
+            Terminal.WriteLine("You get a phone call, but it's a wrong number. A girl named Sammy on the \n other end talks to you for a while.");
             Terminal.WriteLine("She seems bored, and tells you to call her sometime!");
         }
-        if (tempName == "krissi")
+        if (tempName == "Krissi")
         {
-            Terminal.WriteLine("You go out and meet a girl in your favorite aisle of the old bookstore. You hit it off immediately!");
+            Terminal.WriteLine("You go out and meet a girl in your favorite aisle of the old bookstore. You \n hit it off immediately!");
             Terminal.WriteLine("She's charming and excited to talk to you!");
         }
     }
@@ -3373,7 +3403,6 @@ public class Gameplay : MonoBehaviour {
     void JobSearch(string input)
     {
         RefreshScreen();
-        dailyRand = UnityEngine.Random.Range(1, 101);
         Terminal.WriteLine("You search for a job...");
         if (dailyRand == 100)
         {
@@ -3588,6 +3617,7 @@ public class Gameplay : MonoBehaviour {
             stress--;
             pride++;
             currentScreen = Screen.Gameplay;
+            dailyRand = UnityEngine.Random.Range(1, 101);
         }
         AddSpace();
         Terminal.WriteLine("Continue to 'home' or 'actions' from here.");
@@ -3612,7 +3642,7 @@ public class Gameplay : MonoBehaviour {
             stress = (stress + 5);
             happiness = (happiness + 15);
             pride = (pride + 7);
-            loneliness = (loneliness + 2);
+            loneliness = (loneliness + 3);
         }
         else if (friendAttitude + dailyRand > 100)
         {
@@ -3623,7 +3653,7 @@ public class Gameplay : MonoBehaviour {
         }
         else if (friendAttitude + dailyRand > 75)
         {
-            Terminal.WriteLine("You share silly texts with your friend. Fun.");
+            Terminal.WriteLine("You share goofy texts with your friend. Fun.");
             happiness = (happiness + 6);
             loneliness = (loneliness + 2);
         }
@@ -3662,7 +3692,7 @@ public class Gameplay : MonoBehaviour {
                 stress = (stress + 10);
                 happiness = (happiness + 20);
                 pride = (pride + 10);
-            loneliness = (loneliness + 1);
+            loneliness = (loneliness + 3);
         }
         else if (onlineAttitude + dailyRand > 150)
         {
@@ -3670,14 +3700,14 @@ public class Gameplay : MonoBehaviour {
             stress = (stress + 3);
             happiness = (happiness + 10);
             pride = (pride + 3);
-            loneliness = (loneliness + 1);
+            loneliness = (loneliness + 2);
         }
         else if (onlineAttitude + dailyRand > 100)
         {
             Terminal.WriteLine("You live stream gaming with some of your friends. Cool.");
             happiness = (happiness + 6);
             pride = (pride + 1);
-            loneliness = (loneliness + 1);
+            loneliness = (loneliness + 2);
         }
         else if (onlineAttitude + dailyRand > 75)
         {
@@ -4389,7 +4419,7 @@ public class Gameplay : MonoBehaviour {
 
         response = new Response("get trashed and do your best to mingle");                                                  
         response.setTrigger("1");                   
-        response.addResponseLine("You drink... a lot. You're not sure if it was worth it. You meet someone kind of fun, though.");        
+        response.addResponseLine("You drink... a lot. You're not sure if it was worth it. You meet someone kind \n of fun, though.");        
         response.setStatChange(-2, 0, -3, 2, 0); // Happiness, stress, pride, loneliness, money                              
         response.setNextEvent(() =>
         {
@@ -5303,7 +5333,7 @@ public class Gameplay : MonoBehaviour {
         // EVENT #33
 
         myEvent = new MyEvent("You plan out a camping trip with your friend.");
-        myEvent.addLine("However, it pours raining the day before and doesn't seem to be letting up. What do you do?");
+        myEvent.addLine("However, it pours raining the day before and doesn't seem to be letting up. \n What do you do?");
 
         response = new Response("brave the weather and go anyways");
         response.setTrigger("1");
@@ -5461,7 +5491,7 @@ public class Gameplay : MonoBehaviour {
         myEvent.addResponse(response);
 
         response = new Response("plant strawberries");
-        response.setTrigger("3");
+        response.setTrigger("2");
         response.addResponseLine("You plant strawberries, but they never grow. Darn.");
         response.setStatChange(-1, 0, -1, 0, 0); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
@@ -5472,7 +5502,7 @@ public class Gameplay : MonoBehaviour {
         myEvent.addResponse(response);
 
         response = new Response("plant tomatoes");
-        response.setTrigger("2");
+        response.setTrigger("3");
         response.addResponseLine("The tomatoes grow really well, and you have enough to share with friends!");
         response.setStatChange(1, 1, 3, 0, 0); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
@@ -5634,7 +5664,7 @@ public class Gameplay : MonoBehaviour {
         myEvent.addResponse(response);
 
         response = new Response("ignore it");
-        response.setTrigger("2");
+        response.setTrigger("3");
         response.addResponseLine("The knock only comes once, so it's easy to ignore.");
         response.setStatChange(0, 0, 0, 0, 0); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
@@ -5684,7 +5714,7 @@ public class Gameplay : MonoBehaviour {
 
 
         response = new Response("call the police");
-        response.setTrigger("2");
+        response.setTrigger("3");
         response.addResponseLine("You quietly sneak out the back of the building and call the police.");
         response.addResponseLine("A car happened to be in the area and pulls up only moments later.");
         response.addResponseLine("The robber is apprehended in front of you, and the business owner thanks you profusely.");
@@ -6396,7 +6426,7 @@ public class Gameplay : MonoBehaviour {
 
 
         response = new Response("watch a fantasy");
-        response.setTrigger("2");
+        response.setTrigger("3");
         response.addResponseLine("The show strikes you strangely; you secretly yearn for adventure like in the show and feel unfulfilled by your life.");
         response.setStatChange(-2, -1, -5, 0, 0); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
@@ -6897,7 +6927,7 @@ public class Gameplay : MonoBehaviour {
 
         // EVENT #81
 
-        myEvent = new MyEvent("Your landlord calls to say she's coming over to look at something and needs to get into your apartment.");
+        myEvent = new MyEvent("Your landlord calls to say she's coming over to look at something and needs to \n get into your apartment.");
         myEvent.addLine("Your place is kinda messy and you feel stressed about her seeing it; how do you react?");
 
         response = new Response("frantically clean");
@@ -6915,7 +6945,7 @@ public class Gameplay : MonoBehaviour {
 
         response = new Response("leave it messy");
         response.setTrigger("2");
-        response.addResponseLine("She comes over briefly and shoots you a judgey look about the mess, but says nothing about it.");
+        response.addResponseLine("She comes over briefly and shoots you a judgey look about the mess, but says \n nothing about it.");
         response.setStatChange(0, -1, -3, 0, 0); // Happiness, stress, pride, loneliness, money
         response.setNextEvent(() =>
         {
@@ -7024,7 +7054,7 @@ public class Gameplay : MonoBehaviour {
 
 
         response = new Response("ask if someone else can help out");
-        response.setTrigger("2");
+        response.setTrigger("3");
         response.addResponseLine("You get told in no uncertain terms that if you don't do it you'll be fired.");
         response.addResponseLine("It's hell to find time for it, but you eventually finish the project.");
         response.setStatChange(-5, -9, 0, 0, 0); // Happiness, stress, pride, loneliness, money
@@ -7604,6 +7634,7 @@ public class Gameplay : MonoBehaviour {
     void Fired()
     {
         currentJob = Job.None;
+        employed = false;
         MainScreen();
     }
 
